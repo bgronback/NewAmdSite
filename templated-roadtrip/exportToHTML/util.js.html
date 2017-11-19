@@ -1,0 +1,610 @@
+<html>
+<head>
+<title>util.js</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: #999999; font-weight: normal; font-style: normal; }
+.s0 { color: rgb(0,0,0); }
+.s1 { color: rgb(0,0,128); font-weight: bold; }
+.s2 { color: rgb(128,128,128); font-style: italic; }
+.s3 { color: rgb(128,128,128); font-weight: bold; font-style: italic; }
+.s4 { color: rgb(0,128,0); font-weight: bold; }
+.s5 { color: rgb(0,0,255); }
+</style>
+</head>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+util.js</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<span class="s0">(</span><span class="s1">function</span><span class="s0">($) { 
+ 
+    </span><span class="s2">/** 
+     * Generate an indented list of links from a nav. Meant for use with panel(). 
+     * </span><span class="s3">@return </span><span class="s2">{jQuery} jQuery object. 
+     */</span><span class="s0"> 
+    $.fn.navList = </span><span class="s1">function</span><span class="s0">() { 
+ 
+        </span><span class="s1">var </span><span class="s0">$this = $(</span><span class="s1">this</span><span class="s0">); 
+            $a = $this.find(</span><span class="s4">'a'</span><span class="s0">), 
+            b = []; 
+ 
+        $a.each(</span><span class="s1">function</span><span class="s0">() { 
+ 
+            </span><span class="s1">var </span><span class="s0">$this = $(</span><span class="s1">this</span><span class="s0">), 
+                indent = Math.max(</span><span class="s5">0</span><span class="s0">, $this.parents(</span><span class="s4">'li'</span><span class="s0">).length - </span><span class="s5">1</span><span class="s0">), 
+                href = $this.attr(</span><span class="s4">'href'</span><span class="s0">), 
+                target = $this.attr(</span><span class="s4">'target'</span><span class="s0">); 
+ 
+            b.push( 
+                </span><span class="s4">'&lt;a ' </span><span class="s0">+ 
+                    </span><span class="s4">'class=&quot;link depth-' </span><span class="s0">+ indent + </span><span class="s4">'&quot;' </span><span class="s0">+ 
+                    ( (</span><span class="s1">typeof </span><span class="s0">target !== </span><span class="s4">'undefined' </span><span class="s0">&amp;&amp; target != </span><span class="s4">''</span><span class="s0">) ? </span><span class="s4">' target=&quot;' </span><span class="s0">+ target + </span><span class="s4">'&quot;' </span><span class="s0">: </span><span class="s4">''</span><span class="s0">) + 
+                    ( (</span><span class="s1">typeof </span><span class="s0">href !== </span><span class="s4">'undefined' </span><span class="s0">&amp;&amp; href != </span><span class="s4">''</span><span class="s0">) ? </span><span class="s4">' href=&quot;' </span><span class="s0">+ href + </span><span class="s4">'&quot;' </span><span class="s0">: </span><span class="s4">''</span><span class="s0">) + 
+                </span><span class="s4">'&gt;' </span><span class="s0">+ 
+                    </span><span class="s4">'&lt;span class=&quot;indent-' </span><span class="s0">+ indent + </span><span class="s4">'&quot;&gt;&lt;/span&gt;' </span><span class="s0">+ 
+                    $this.text() + 
+                </span><span class="s4">'&lt;/a&gt;'</span><span class="s0"> 
+            ); 
+ 
+        }); 
+ 
+        </span><span class="s1">return </span><span class="s0">b.join(</span><span class="s4">''</span><span class="s0">); 
+ 
+    }; 
+ 
+    </span><span class="s2">/** 
+     * Panel-ify an element. 
+     * </span><span class="s3">@param </span><span class="s2">{object} userConfig User config. 
+     * </span><span class="s3">@return </span><span class="s2">{jQuery} jQuery object. 
+     */</span><span class="s0"> 
+    $.fn.panel = </span><span class="s1">function</span><span class="s0">(userConfig) { 
+ 
+        </span><span class="s2">// No elements?</span><span class="s0"> 
+            </span><span class="s1">if </span><span class="s0">(</span><span class="s1">this</span><span class="s0">.length == </span><span class="s5">0</span><span class="s0">) 
+                </span><span class="s1">return </span><span class="s0">$this; 
+ 
+        </span><span class="s2">// Multiple elements?</span><span class="s0"> 
+            </span><span class="s1">if </span><span class="s0">(</span><span class="s1">this</span><span class="s0">.length &gt; </span><span class="s5">1</span><span class="s0">) { 
+ 
+                </span><span class="s1">for </span><span class="s0">(</span><span class="s1">var </span><span class="s0">i=</span><span class="s5">0</span><span class="s0">; i &lt; </span><span class="s1">this</span><span class="s0">.length; i++) 
+                    $(</span><span class="s1">this</span><span class="s0">[i]).panel(userConfig); 
+ 
+                </span><span class="s1">return </span><span class="s0">$this; 
+ 
+            } 
+ 
+        </span><span class="s2">// Vars.</span><span class="s0"> 
+            </span><span class="s1">var </span><span class="s0">$this = $(</span><span class="s1">this</span><span class="s0">), 
+                $body = $(</span><span class="s4">'body'</span><span class="s0">), 
+                $window = $(window), 
+                id = $this.attr(</span><span class="s4">'id'</span><span class="s0">), 
+                config; 
+ 
+        </span><span class="s2">// Config.</span><span class="s0"> 
+            config = $.extend({ 
+ 
+                </span><span class="s2">// Delay.</span><span class="s0"> 
+                    delay: </span><span class="s5">0</span><span class="s0">, 
+ 
+                </span><span class="s2">// Hide panel on link click.</span><span class="s0"> 
+                    hideOnClick: </span><span class="s1">false</span><span class="s0">, 
+ 
+                </span><span class="s2">// Hide panel on escape keypress.</span><span class="s0"> 
+                    hideOnEscape: </span><span class="s1">false</span><span class="s0">, 
+ 
+                </span><span class="s2">// Hide panel on swipe.</span><span class="s0"> 
+                    hideOnSwipe: </span><span class="s1">false</span><span class="s0">, 
+ 
+                </span><span class="s2">// Reset scroll position on hide.</span><span class="s0"> 
+                    resetScroll: </span><span class="s1">false</span><span class="s0">, 
+ 
+                </span><span class="s2">// Reset forms on hide.</span><span class="s0"> 
+                    resetForms: </span><span class="s1">false</span><span class="s0">, 
+ 
+                </span><span class="s2">// Side of viewport the panel will appear.</span><span class="s0"> 
+                    side: </span><span class="s1">null</span><span class="s0">, 
+ 
+                </span><span class="s2">// Target element for &quot;class&quot;.</span><span class="s0"> 
+                    target: $this, 
+ 
+                </span><span class="s2">// Class to toggle.</span><span class="s0"> 
+                    visibleClass: </span><span class="s4">'visible'</span><span class="s0"> 
+ 
+            }, userConfig); 
+ 
+            </span><span class="s2">// Expand &quot;target&quot; if it's not a jQuery object already.</span><span class="s0"> 
+                </span><span class="s1">if </span><span class="s0">(</span><span class="s1">typeof </span><span class="s0">config.target != </span><span class="s4">'jQuery'</span><span class="s0">) 
+                    config.target = $(config.target); 
+ 
+        </span><span class="s2">// Panel.</span><span class="s0"> 
+ 
+            </span><span class="s2">// Methods.</span><span class="s0"> 
+                $this._hide = </span><span class="s1">function</span><span class="s0">(event) { 
+ 
+                    </span><span class="s2">// Already hidden? Bail.</span><span class="s0"> 
+                        </span><span class="s1">if </span><span class="s0">(!config.target.hasClass(config.visibleClass)) 
+                            </span><span class="s1">return</span><span class="s0">; 
+ 
+                    </span><span class="s2">// If an event was provided, cancel it.</span><span class="s0"> 
+                        </span><span class="s1">if </span><span class="s0">(event) { 
+ 
+                            event.preventDefault(); 
+                            event.stopPropagation(); 
+ 
+                        } 
+ 
+                    </span><span class="s2">// Hide.</span><span class="s0"> 
+                        config.target.removeClass(config.visibleClass); 
+ 
+                    </span><span class="s2">// Post-hide stuff.</span><span class="s0"> 
+                        window.setTimeout(</span><span class="s1">function</span><span class="s0">() { 
+ 
+                            </span><span class="s2">// Reset scroll position.</span><span class="s0"> 
+                                </span><span class="s1">if </span><span class="s0">(config.resetScroll) 
+                                    $this.scrollTop(</span><span class="s5">0</span><span class="s0">); 
+ 
+                            </span><span class="s2">// Reset forms.</span><span class="s0"> 
+                                </span><span class="s1">if </span><span class="s0">(config.resetForms) 
+                                    $this.find(</span><span class="s4">'form'</span><span class="s0">).each(</span><span class="s1">function</span><span class="s0">() { 
+                                        </span><span class="s1">this</span><span class="s0">.reset(); 
+                                    }); 
+ 
+                        }, config.delay); 
+ 
+                }; 
+ 
+            </span><span class="s2">// Vendor fixes.</span><span class="s0"> 
+                $this 
+                    .css(</span><span class="s4">'-ms-overflow-style'</span><span class="s0">, </span><span class="s4">'-ms-autohiding-scrollbar'</span><span class="s0">) 
+                    .css(</span><span class="s4">'-webkit-overflow-scrolling'</span><span class="s0">, </span><span class="s4">'touch'</span><span class="s0">); 
+ 
+            </span><span class="s2">// Hide on click.</span><span class="s0"> 
+                </span><span class="s1">if </span><span class="s0">(config.hideOnClick) { 
+ 
+                    $this.find(</span><span class="s4">'a'</span><span class="s0">) 
+                        .css(</span><span class="s4">'-webkit-tap-highlight-color'</span><span class="s0">, </span><span class="s4">'rgba(0,0,0,0)'</span><span class="s0">); 
+ 
+                    $this 
+                        .on(</span><span class="s4">'click'</span><span class="s0">, </span><span class="s4">'a'</span><span class="s0">, </span><span class="s1">function</span><span class="s0">(event) { 
+ 
+                            </span><span class="s1">var </span><span class="s0">$a = $(</span><span class="s1">this</span><span class="s0">), 
+                                href = $a.attr(</span><span class="s4">'href'</span><span class="s0">), 
+                                target = $a.attr(</span><span class="s4">'target'</span><span class="s0">); 
+ 
+                            </span><span class="s1">if </span><span class="s0">(!href || href == </span><span class="s4">'#' </span><span class="s0">|| href == </span><span class="s4">'' </span><span class="s0">|| href == </span><span class="s4">'#' </span><span class="s0">+ id) 
+                                </span><span class="s1">return</span><span class="s0">; 
+ 
+                            </span><span class="s2">// Cancel original event.</span><span class="s0"> 
+                                event.preventDefault(); 
+                                event.stopPropagation(); 
+ 
+                            </span><span class="s2">// Hide panel.</span><span class="s0"> 
+                                $this._hide(); 
+ 
+                            </span><span class="s2">// Redirect to href.</span><span class="s0"> 
+                                window.setTimeout(</span><span class="s1">function</span><span class="s0">() { 
+ 
+                                    </span><span class="s1">if </span><span class="s0">(target == </span><span class="s4">'_blank'</span><span class="s0">) 
+                                        window.open(href); 
+                                    </span><span class="s1">else</span><span class="s0"> 
+                                        window.location.href = href; 
+ 
+                                }, config.delay + </span><span class="s5">10</span><span class="s0">); 
+ 
+                        }); 
+ 
+                } 
+ 
+            </span><span class="s2">// Event: Touch stuff.</span><span class="s0"> 
+                $this.on(</span><span class="s4">'touchstart'</span><span class="s0">, </span><span class="s1">function</span><span class="s0">(event) { 
+ 
+                    $this.touchPosX = event.originalEvent.touches[</span><span class="s5">0</span><span class="s0">].pageX; 
+                    $this.touchPosY = event.originalEvent.touches[</span><span class="s5">0</span><span class="s0">].pageY; 
+ 
+                }); 
+ 
+                $this.on(</span><span class="s4">'touchmove'</span><span class="s0">, </span><span class="s1">function</span><span class="s0">(event) { 
+ 
+                    </span><span class="s1">if </span><span class="s0">($this.touchPosX === </span><span class="s1">null</span><span class="s0"> 
+                    ||  $this.touchPosY === </span><span class="s1">null</span><span class="s0">) 
+                        </span><span class="s1">return</span><span class="s0">; 
+ 
+                    </span><span class="s1">var </span><span class="s0">diffX = $this.touchPosX - event.originalEvent.touches[</span><span class="s5">0</span><span class="s0">].pageX, 
+                        diffY = $this.touchPosY - event.originalEvent.touches[</span><span class="s5">0</span><span class="s0">].pageY, 
+                        th = $this.outerHeight(), 
+                        ts = ($this.get(</span><span class="s5">0</span><span class="s0">).scrollHeight - $this.scrollTop()); 
+ 
+                    </span><span class="s2">// Hide on swipe?</span><span class="s0"> 
+                        </span><span class="s1">if </span><span class="s0">(config.hideOnSwipe) { 
+ 
+                            </span><span class="s1">var </span><span class="s0">result = </span><span class="s1">false</span><span class="s0">, 
+                                boundary = </span><span class="s5">20</span><span class="s0">, 
+                                delta = </span><span class="s5">50</span><span class="s0">; 
+ 
+                            </span><span class="s1">switch </span><span class="s0">(config.side) { 
+ 
+                                </span><span class="s1">case </span><span class="s4">'left'</span><span class="s0">: 
+                                    result = (diffY &lt; boundary &amp;&amp; diffY &gt; (-</span><span class="s5">1 </span><span class="s0">* boundary)) &amp;&amp; (diffX &gt; delta); 
+                                    </span><span class="s1">break</span><span class="s0">; 
+ 
+                                </span><span class="s1">case </span><span class="s4">'right'</span><span class="s0">: 
+                                    result = (diffY &lt; boundary &amp;&amp; diffY &gt; (-</span><span class="s5">1 </span><span class="s0">* boundary)) &amp;&amp; (diffX &lt; (-</span><span class="s5">1 </span><span class="s0">* delta)); 
+                                    </span><span class="s1">break</span><span class="s0">; 
+ 
+                                </span><span class="s1">case </span><span class="s4">'top'</span><span class="s0">: 
+                                    result = (diffX &lt; boundary &amp;&amp; diffX &gt; (-</span><span class="s5">1 </span><span class="s0">* boundary)) &amp;&amp; (diffY &gt; delta); 
+                                    </span><span class="s1">break</span><span class="s0">; 
+ 
+                                </span><span class="s1">case </span><span class="s4">'bottom'</span><span class="s0">: 
+                                    result = (diffX &lt; boundary &amp;&amp; diffX &gt; (-</span><span class="s5">1 </span><span class="s0">* boundary)) &amp;&amp; (diffY &lt; (-</span><span class="s5">1 </span><span class="s0">* delta)); 
+                                    </span><span class="s1">break</span><span class="s0">; 
+ 
+                                </span><span class="s1">default</span><span class="s0">: 
+                                    </span><span class="s1">break</span><span class="s0">; 
+ 
+                            } 
+ 
+                            </span><span class="s1">if </span><span class="s0">(result) { 
+ 
+                                $this.touchPosX = </span><span class="s1">null</span><span class="s0">; 
+                                $this.touchPosY = </span><span class="s1">null</span><span class="s0">; 
+                                $this._hide(); 
+ 
+                                </span><span class="s1">return false</span><span class="s0">; 
+ 
+                            } 
+ 
+                        } 
+ 
+                    </span><span class="s2">// Prevent vertical scrolling past the top or bottom.</span><span class="s0"> 
+                        </span><span class="s1">if </span><span class="s0">(($this.scrollTop() &lt; </span><span class="s5">0 </span><span class="s0">&amp;&amp; diffY &lt; </span><span class="s5">0</span><span class="s0">) 
+                        || (ts &gt; (th - </span><span class="s5">2</span><span class="s0">) &amp;&amp; ts &lt; (th + </span><span class="s5">2</span><span class="s0">) &amp;&amp; diffY &gt; </span><span class="s5">0</span><span class="s0">)) { 
+ 
+                            event.preventDefault(); 
+                            event.stopPropagation(); 
+ 
+                        } 
+ 
+                }); 
+ 
+            </span><span class="s2">// Event: Prevent certain events inside the panel from bubbling.</span><span class="s0"> 
+                $this.on(</span><span class="s4">'click touchend touchstart touchmove'</span><span class="s0">, </span><span class="s1">function</span><span class="s0">(event) { 
+                    event.stopPropagation(); 
+                }); 
+ 
+            </span><span class="s2">// Event: Hide panel if a child anchor tag pointing to its ID is clicked.</span><span class="s0"> 
+                $this.on(</span><span class="s4">'click'</span><span class="s0">, </span><span class="s4">'a[href=&quot;#' </span><span class="s0">+ id + </span><span class="s4">'&quot;]'</span><span class="s0">, </span><span class="s1">function</span><span class="s0">(event) { 
+ 
+                    event.preventDefault(); 
+                    event.stopPropagation(); 
+ 
+                    config.target.removeClass(config.visibleClass); 
+ 
+                }); 
+ 
+        </span><span class="s2">// Body.</span><span class="s0"> 
+ 
+            </span><span class="s2">// Event: Hide panel on body click/tap.</span><span class="s0"> 
+                $body.on(</span><span class="s4">'click touchend'</span><span class="s0">, </span><span class="s1">function</span><span class="s0">(event) { 
+                    $this._hide(event); 
+                }); 
+ 
+            </span><span class="s2">// Event: Toggle.</span><span class="s0"> 
+                $body.on(</span><span class="s4">'click'</span><span class="s0">, </span><span class="s4">'a[href=&quot;#' </span><span class="s0">+ id + </span><span class="s4">'&quot;]'</span><span class="s0">, </span><span class="s1">function</span><span class="s0">(event) { 
+ 
+                    event.preventDefault(); 
+                    event.stopPropagation(); 
+ 
+                    config.target.toggleClass(config.visibleClass); 
+ 
+                }); 
+ 
+        </span><span class="s2">// Window.</span><span class="s0"> 
+ 
+            </span><span class="s2">// Event: Hide on ESC.</span><span class="s0"> 
+                </span><span class="s1">if </span><span class="s0">(config.hideOnEscape) 
+                    $window.on(</span><span class="s4">'keydown'</span><span class="s0">, </span><span class="s1">function</span><span class="s0">(event) { 
+ 
+                        </span><span class="s1">if </span><span class="s0">(event.keyCode == </span><span class="s5">27</span><span class="s0">) 
+                            $this._hide(event); 
+ 
+                    }); 
+ 
+        </span><span class="s1">return </span><span class="s0">$this; 
+ 
+    }; 
+ 
+    </span><span class="s2">/** 
+     * Apply &quot;placeholder&quot; attribute polyfill to one or more forms. 
+     * </span><span class="s3">@return </span><span class="s2">{jQuery} jQuery object. 
+     */</span><span class="s0"> 
+    $.fn.placeholder = </span><span class="s1">function</span><span class="s0">() { 
+ 
+        </span><span class="s2">// Browser natively supports placeholders? Bail.</span><span class="s0"> 
+            </span><span class="s1">if </span><span class="s0">(</span><span class="s1">typeof </span><span class="s0">(document.createElement(</span><span class="s4">'input'</span><span class="s0">)).placeholder != </span><span class="s4">'undefined'</span><span class="s0">) 
+                </span><span class="s1">return </span><span class="s0">$(</span><span class="s1">this</span><span class="s0">); 
+ 
+        </span><span class="s2">// No elements?</span><span class="s0"> 
+            </span><span class="s1">if </span><span class="s0">(</span><span class="s1">this</span><span class="s0">.length == </span><span class="s5">0</span><span class="s0">) 
+                </span><span class="s1">return </span><span class="s0">$this; 
+ 
+        </span><span class="s2">// Multiple elements?</span><span class="s0"> 
+            </span><span class="s1">if </span><span class="s0">(</span><span class="s1">this</span><span class="s0">.length &gt; </span><span class="s5">1</span><span class="s0">) { 
+ 
+                </span><span class="s1">for </span><span class="s0">(</span><span class="s1">var </span><span class="s0">i=</span><span class="s5">0</span><span class="s0">; i &lt; </span><span class="s1">this</span><span class="s0">.length; i++) 
+                    $(</span><span class="s1">this</span><span class="s0">[i]).placeholder(); 
+ 
+                </span><span class="s1">return </span><span class="s0">$this; 
+ 
+            } 
+ 
+        </span><span class="s2">// Vars.</span><span class="s0"> 
+            </span><span class="s1">var </span><span class="s0">$this = $(</span><span class="s1">this</span><span class="s0">); 
+ 
+        </span><span class="s2">// Text, TextArea.</span><span class="s0"> 
+            $this.find(</span><span class="s4">'input[type=text],textarea'</span><span class="s0">) 
+                .each(</span><span class="s1">function</span><span class="s0">() { 
+ 
+                    </span><span class="s1">var </span><span class="s0">i = $(</span><span class="s1">this</span><span class="s0">); 
+ 
+                    </span><span class="s1">if </span><span class="s0">(i.val() == </span><span class="s4">''</span><span class="s0"> 
+                    ||  i.val() == i.attr(</span><span class="s4">'placeholder'</span><span class="s0">)) 
+                        i 
+                            .addClass(</span><span class="s4">'polyfill-placeholder'</span><span class="s0">) 
+                            .val(i.attr(</span><span class="s4">'placeholder'</span><span class="s0">)); 
+ 
+                }) 
+                .on(</span><span class="s4">'blur'</span><span class="s0">, </span><span class="s1">function</span><span class="s0">() { 
+ 
+                    </span><span class="s1">var </span><span class="s0">i = $(</span><span class="s1">this</span><span class="s0">); 
+ 
+                    </span><span class="s1">if </span><span class="s0">(i.attr(</span><span class="s4">'name'</span><span class="s0">).match(</span><span class="s5">/-polyfill-field$/</span><span class="s0">)) 
+                        </span><span class="s1">return</span><span class="s0">; 
+ 
+                    </span><span class="s1">if </span><span class="s0">(i.val() == </span><span class="s4">''</span><span class="s0">) 
+                        i 
+                            .addClass(</span><span class="s4">'polyfill-placeholder'</span><span class="s0">) 
+                            .val(i.attr(</span><span class="s4">'placeholder'</span><span class="s0">)); 
+ 
+                }) 
+                .on(</span><span class="s4">'focus'</span><span class="s0">, </span><span class="s1">function</span><span class="s0">() { 
+ 
+                    </span><span class="s1">var </span><span class="s0">i = $(</span><span class="s1">this</span><span class="s0">); 
+ 
+                    </span><span class="s1">if </span><span class="s0">(i.attr(</span><span class="s4">'name'</span><span class="s0">).match(</span><span class="s5">/-polyfill-field$/</span><span class="s0">)) 
+                        </span><span class="s1">return</span><span class="s0">; 
+ 
+                    </span><span class="s1">if </span><span class="s0">(i.val() == i.attr(</span><span class="s4">'placeholder'</span><span class="s0">)) 
+                        i 
+                            .removeClass(</span><span class="s4">'polyfill-placeholder'</span><span class="s0">) 
+                            .val(</span><span class="s4">''</span><span class="s0">); 
+ 
+                }); 
+ 
+        </span><span class="s2">// Password.</span><span class="s0"> 
+            $this.find(</span><span class="s4">'input[type=password]'</span><span class="s0">) 
+                .each(</span><span class="s1">function</span><span class="s0">() { 
+ 
+                    </span><span class="s1">var </span><span class="s0">i = $(</span><span class="s1">this</span><span class="s0">); 
+                    </span><span class="s1">var </span><span class="s0">x = $( 
+                                $(</span><span class="s4">'&lt;div&gt;'</span><span class="s0">) 
+                                    .append(i.clone()) 
+                                    .remove() 
+                                    .html() 
+                                    .replace(</span><span class="s5">/type=&quot;password&quot;/i</span><span class="s0">, </span><span class="s4">'type=&quot;text&quot;'</span><span class="s0">) 
+                                    .replace(</span><span class="s5">/type=password/i</span><span class="s0">, </span><span class="s4">'type=text'</span><span class="s0">) 
+                    ); 
+ 
+                    </span><span class="s1">if </span><span class="s0">(i.attr(</span><span class="s4">'id'</span><span class="s0">) != </span><span class="s4">''</span><span class="s0">) 
+                        x.attr(</span><span class="s4">'id'</span><span class="s0">, i.attr(</span><span class="s4">'id'</span><span class="s0">) + </span><span class="s4">'-polyfill-field'</span><span class="s0">); 
+ 
+                    </span><span class="s1">if </span><span class="s0">(i.attr(</span><span class="s4">'name'</span><span class="s0">) != </span><span class="s4">''</span><span class="s0">) 
+                        x.attr(</span><span class="s4">'name'</span><span class="s0">, i.attr(</span><span class="s4">'name'</span><span class="s0">) + </span><span class="s4">'-polyfill-field'</span><span class="s0">); 
+ 
+                    x.addClass(</span><span class="s4">'polyfill-placeholder'</span><span class="s0">) 
+                        .val(x.attr(</span><span class="s4">'placeholder'</span><span class="s0">)).insertAfter(i); 
+ 
+                    </span><span class="s1">if </span><span class="s0">(i.val() == </span><span class="s4">''</span><span class="s0">) 
+                        i.hide(); 
+                    </span><span class="s1">else</span><span class="s0"> 
+                        x.hide(); 
+ 
+                    i 
+                        .on(</span><span class="s4">'blur'</span><span class="s0">, </span><span class="s1">function</span><span class="s0">(event) { 
+ 
+                            event.preventDefault(); 
+ 
+                            </span><span class="s1">var </span><span class="s0">x = i.parent().find(</span><span class="s4">'input[name=' </span><span class="s0">+ i.attr(</span><span class="s4">'name'</span><span class="s0">) + </span><span class="s4">'-polyfill-field]'</span><span class="s0">); 
+ 
+                            </span><span class="s1">if </span><span class="s0">(i.val() == </span><span class="s4">''</span><span class="s0">) { 
+ 
+                                i.hide(); 
+                                x.show(); 
+ 
+                            } 
+ 
+                        }); 
+ 
+                    x 
+                        .on(</span><span class="s4">'focus'</span><span class="s0">, </span><span class="s1">function</span><span class="s0">(event) { 
+ 
+                            event.preventDefault(); 
+ 
+                            </span><span class="s1">var </span><span class="s0">i = x.parent().find(</span><span class="s4">'input[name=' </span><span class="s0">+ x.attr(</span><span class="s4">'name'</span><span class="s0">).replace(</span><span class="s4">'-polyfill-field'</span><span class="s0">, </span><span class="s4">''</span><span class="s0">) + </span><span class="s4">']'</span><span class="s0">); 
+ 
+                            x.hide(); 
+ 
+                            i 
+                                .show() 
+                                .focus(); 
+ 
+                        }) 
+                        .on(</span><span class="s4">'keypress'</span><span class="s0">, </span><span class="s1">function</span><span class="s0">(event) { 
+ 
+                            event.preventDefault(); 
+                            x.val(</span><span class="s4">''</span><span class="s0">); 
+ 
+                        }); 
+ 
+                }); 
+ 
+        </span><span class="s2">// Events.</span><span class="s0"> 
+            $this 
+                .on(</span><span class="s4">'submit'</span><span class="s0">, </span><span class="s1">function</span><span class="s0">() { 
+ 
+                    $this.find(</span><span class="s4">'input[type=text],input[type=password],textarea'</span><span class="s0">) 
+                        .each(</span><span class="s1">function</span><span class="s0">(event) { 
+ 
+                            </span><span class="s1">var </span><span class="s0">i = $(</span><span class="s1">this</span><span class="s0">); 
+ 
+                            </span><span class="s1">if </span><span class="s0">(i.attr(</span><span class="s4">'name'</span><span class="s0">).match(</span><span class="s5">/-polyfill-field$/</span><span class="s0">)) 
+                                i.attr(</span><span class="s4">'name'</span><span class="s0">, </span><span class="s4">''</span><span class="s0">); 
+ 
+                            </span><span class="s1">if </span><span class="s0">(i.val() == i.attr(</span><span class="s4">'placeholder'</span><span class="s0">)) { 
+ 
+                                i.removeClass(</span><span class="s4">'polyfill-placeholder'</span><span class="s0">); 
+                                i.val(</span><span class="s4">''</span><span class="s0">); 
+ 
+                            } 
+ 
+                        }); 
+ 
+                }) 
+                .on(</span><span class="s4">'reset'</span><span class="s0">, </span><span class="s1">function</span><span class="s0">(event) { 
+ 
+                    event.preventDefault(); 
+ 
+                    $this.find(</span><span class="s4">'select'</span><span class="s0">) 
+                        .val($(</span><span class="s4">'option:first'</span><span class="s0">).val()); 
+ 
+                    $this.find(</span><span class="s4">'input,textarea'</span><span class="s0">) 
+                        .each(</span><span class="s1">function</span><span class="s0">() { 
+ 
+                            </span><span class="s1">var </span><span class="s0">i = $(</span><span class="s1">this</span><span class="s0">), 
+                                x; 
+ 
+                            i.removeClass(</span><span class="s4">'polyfill-placeholder'</span><span class="s0">); 
+ 
+                            </span><span class="s1">switch </span><span class="s0">(</span><span class="s1">this</span><span class="s0">.type) { 
+ 
+                                </span><span class="s1">case </span><span class="s4">'submit'</span><span class="s0">: 
+                                </span><span class="s1">case </span><span class="s4">'reset'</span><span class="s0">: 
+                                    </span><span class="s1">break</span><span class="s0">; 
+ 
+                                </span><span class="s1">case </span><span class="s4">'password'</span><span class="s0">: 
+                                    i.val(i.attr(</span><span class="s4">'defaultValue'</span><span class="s0">)); 
+ 
+                                    x = i.parent().find(</span><span class="s4">'input[name=' </span><span class="s0">+ i.attr(</span><span class="s4">'name'</span><span class="s0">) + </span><span class="s4">'-polyfill-field]'</span><span class="s0">); 
+ 
+                                    </span><span class="s1">if </span><span class="s0">(i.val() == </span><span class="s4">''</span><span class="s0">) { 
+                                        i.hide(); 
+                                        x.show(); 
+                                    } 
+                                    </span><span class="s1">else </span><span class="s0">{ 
+                                        i.show(); 
+                                        x.hide(); 
+                                    } 
+ 
+                                    </span><span class="s1">break</span><span class="s0">; 
+ 
+                                </span><span class="s1">case </span><span class="s4">'checkbox'</span><span class="s0">: 
+                                </span><span class="s1">case </span><span class="s4">'radio'</span><span class="s0">: 
+                                    i.attr(</span><span class="s4">'checked'</span><span class="s0">, i.attr(</span><span class="s4">'defaultValue'</span><span class="s0">)); 
+                                    </span><span class="s1">break</span><span class="s0">; 
+ 
+                                </span><span class="s1">case </span><span class="s4">'text'</span><span class="s0">: 
+                                </span><span class="s1">case </span><span class="s4">'textarea'</span><span class="s0">: 
+                                    i.val(i.attr(</span><span class="s4">'defaultValue'</span><span class="s0">)); 
+ 
+                                    </span><span class="s1">if </span><span class="s0">(i.val() == </span><span class="s4">''</span><span class="s0">) { 
+                                        i.addClass(</span><span class="s4">'polyfill-placeholder'</span><span class="s0">); 
+                                        i.val(i.attr(</span><span class="s4">'placeholder'</span><span class="s0">)); 
+                                    } 
+ 
+                                    </span><span class="s1">break</span><span class="s0">; 
+ 
+                                </span><span class="s1">default</span><span class="s0">: 
+                                    i.val(i.attr(</span><span class="s4">'defaultValue'</span><span class="s0">)); 
+                                    </span><span class="s1">break</span><span class="s0">; 
+ 
+                            } 
+                        }); 
+ 
+                }); 
+ 
+        </span><span class="s1">return </span><span class="s0">$this; 
+ 
+    }; 
+ 
+    </span><span class="s2">/** 
+     * Moves elements to/from the first positions of their respective parents. 
+     * </span><span class="s3">@param </span><span class="s2">{jQuery} $elements Elements (or selector) to move. 
+     * </span><span class="s3">@param </span><span class="s2">{bool} condition If true, moves elements to the top. Otherwise, moves elements back to their original locations. 
+     */</span><span class="s0"> 
+    $.prioritize = </span><span class="s1">function</span><span class="s0">($elements, condition) { 
+ 
+        </span><span class="s1">var </span><span class="s0">key = </span><span class="s4">'__prioritize'</span><span class="s0">; 
+ 
+        </span><span class="s2">// Expand $elements if it's not already a jQuery object.</span><span class="s0"> 
+            </span><span class="s1">if </span><span class="s0">(</span><span class="s1">typeof </span><span class="s0">$elements != </span><span class="s4">'jQuery'</span><span class="s0">) 
+                $elements = $($elements); 
+ 
+        </span><span class="s2">// Step through elements.</span><span class="s0"> 
+            $elements.each(</span><span class="s1">function</span><span class="s0">() { 
+ 
+                </span><span class="s1">var </span><span class="s0">$e = $(</span><span class="s1">this</span><span class="s0">), $p, 
+                    $parent = $e.parent(); 
+ 
+                </span><span class="s2">// No parent? Bail.</span><span class="s0"> 
+                    </span><span class="s1">if </span><span class="s0">($parent.length == </span><span class="s5">0</span><span class="s0">) 
+                        </span><span class="s1">return</span><span class="s0">; 
+ 
+                </span><span class="s2">// Not moved? Move it.</span><span class="s0"> 
+                    </span><span class="s1">if </span><span class="s0">(!$e.data(key)) { 
+ 
+                        </span><span class="s2">// Condition is false? Bail.</span><span class="s0"> 
+                            </span><span class="s1">if </span><span class="s0">(!condition) 
+                                </span><span class="s1">return</span><span class="s0">; 
+ 
+                        </span><span class="s2">// Get placeholder (which will serve as our point of reference for when this element needs to move back).</span><span class="s0"> 
+                            $p = $e.prev(); 
+ 
+                            </span><span class="s2">// Couldn't find anything? Means this element's already at the top, so bail.</span><span class="s0"> 
+                                </span><span class="s1">if </span><span class="s0">($p.length == </span><span class="s5">0</span><span class="s0">) 
+                                    </span><span class="s1">return</span><span class="s0">; 
+ 
+                        </span><span class="s2">// Move element to top of parent.</span><span class="s0"> 
+                            $e.prependTo($parent); 
+ 
+                        </span><span class="s2">// Mark element as moved.</span><span class="s0"> 
+                            $e.data(key, $p); 
+ 
+                    } 
+ 
+                </span><span class="s2">// Moved already?</span><span class="s0"> 
+                    </span><span class="s1">else </span><span class="s0">{ 
+ 
+                        </span><span class="s2">// Condition is true? Bail.</span><span class="s0"> 
+                            </span><span class="s1">if </span><span class="s0">(condition) 
+                                </span><span class="s1">return</span><span class="s0">; 
+ 
+                        $p = $e.data(key); 
+ 
+                        </span><span class="s2">// Move element back to its original location (using our placeholder).</span><span class="s0"> 
+                            $e.insertAfter($p); 
+ 
+                        </span><span class="s2">// Unmark element as moved.</span><span class="s0"> 
+                            $e.removeData(key); 
+ 
+                    } 
+ 
+            }); 
+ 
+    }; 
+ 
+})(jQuery);</span></pre>
+</body>
+</html>

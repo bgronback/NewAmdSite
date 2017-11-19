@@ -1,0 +1,149 @@
+<html>
+<head>
+<title>main.js</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: #999999; font-weight: normal; font-style: normal; }
+.s0 { color: rgb(128,128,128); font-style: italic; }
+.s1 { color: rgb(0,0,0); }
+.s2 { color: rgb(0,0,128); font-weight: bold; }
+.s3 { color: rgb(0,128,0); font-weight: bold; }
+.s4 { color: rgb(0,0,255); }
+</style>
+</head>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+main.js</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<span class="s0">/* 
+    Road Trip by TEMPLATED 
+    templated.co @templatedco 
+    Released for free under the Creative Commons Attribution 3.0 license (templated.co/license) 
+*/</span><span class="s1"> 
+ 
+(</span><span class="s2">function</span><span class="s1">($) { 
+ 
+    skel.breakpoints({ 
+        xlarge: </span><span class="s3">'(max-width: 1680px)'</span><span class="s1">, 
+        large:  </span><span class="s3">'(max-width: 1280px)'</span><span class="s1">, 
+        medium: </span><span class="s3">'(max-width: 980px)'</span><span class="s1">, 
+        small:  </span><span class="s3">'(max-width: 736px)'</span><span class="s1">, 
+        xsmall: </span><span class="s3">'(max-width: 480px)'</span><span class="s1"> 
+    }); 
+ 
+    $(</span><span class="s2">function</span><span class="s1">() { 
+ 
+        </span><span class="s2">var </span><span class="s1">$window = $(window), 
+            $body = $(</span><span class="s3">'body'</span><span class="s1">), 
+            $header = $(</span><span class="s3">'#header'</span><span class="s1">), 
+            $banner = $(</span><span class="s3">'#banner'</span><span class="s1">); 
+ 
+        </span><span class="s2">var </span><span class="s1">$height = $(</span><span class="s3">'#header'</span><span class="s1">).height(); 
+ 
+        </span><span class="s0">// Disable animations/transitions until the page has loaded.</span><span class="s1"> 
+            $body.addClass(</span><span class="s3">'is-loading'</span><span class="s1">); 
+ 
+            $window.on(</span><span class="s3">'load'</span><span class="s1">, </span><span class="s2">function</span><span class="s1">() { 
+                window.setTimeout(</span><span class="s2">function</span><span class="s1">() { 
+                    $body.removeClass(</span><span class="s3">'is-loading'</span><span class="s1">); 
+                }, </span><span class="s4">100</span><span class="s1">); 
+            }); 
+ 
+        </span><span class="s0">// Fix: Placeholder polyfill.</span><span class="s1"> 
+            $(</span><span class="s3">'form'</span><span class="s1">).placeholder(); 
+ 
+        </span><span class="s0">// Prioritize &quot;important&quot; elements on medium.</span><span class="s1"> 
+            skel.on(</span><span class="s3">'+medium -medium'</span><span class="s1">, </span><span class="s2">function</span><span class="s1">() { 
+                $.prioritize( 
+                    </span><span class="s3">'.important</span><span class="s2">\\</span><span class="s3">28 medium</span><span class="s2">\\</span><span class="s3">29'</span><span class="s1">, 
+                    skel.breakpoint(</span><span class="s3">'medium'</span><span class="s1">).active 
+                ); 
+            }); 
+ 
+        </span><span class="s0">// Banner</span><span class="s1"> 
+ 
+            </span><span class="s2">if </span><span class="s1">($banner.length &gt; </span><span class="s4">0</span><span class="s1">) { 
+ 
+                </span><span class="s0">// IE: Height fix.</span><span class="s1"> 
+                    </span><span class="s2">if </span><span class="s1">(skel.vars.browser == </span><span class="s3">'ie'</span><span class="s1"> 
+                    &amp;&amp;  skel.vars.IEVersion &gt; </span><span class="s4">9</span><span class="s1">) { 
+ 
+                        skel.on(</span><span class="s3">'-small !small'</span><span class="s1">, </span><span class="s2">function</span><span class="s1">() { 
+                            $banner.css(</span><span class="s3">'height'</span><span class="s1">, </span><span class="s3">'100vh'</span><span class="s1">); 
+                        }); 
+ 
+                        skel.on(</span><span class="s3">'+small'</span><span class="s1">, </span><span class="s2">function</span><span class="s1">() { 
+                            $banner.css(</span><span class="s3">'height'</span><span class="s1">, </span><span class="s3">''</span><span class="s1">); 
+                        }); 
+ 
+                    } 
+ 
+                </span><span class="s0">// More button.</span><span class="s1"> 
+                    $banner.find(</span><span class="s3">'.more'</span><span class="s1">) 
+                        .addClass(</span><span class="s3">'scrolly'</span><span class="s1">); 
+ 
+            } 
+ 
+ 
+        </span><span class="s0">// Get BG Image</span><span class="s1"> 
+ 
+            </span><span class="s2">if </span><span class="s1">( $( </span><span class="s3">&quot;.bg-img&quot; </span><span class="s1">).length ) { 
+ 
+                $( </span><span class="s3">&quot;.bg-img&quot; </span><span class="s1">).each(</span><span class="s2">function</span><span class="s1">() { 
+ 
+                    </span><span class="s2">var </span><span class="s1">post    = $(</span><span class="s2">this</span><span class="s1">), 
+                        bg      = post.data(</span><span class="s3">'bg'</span><span class="s1">); 
+ 
+                    post.css( </span><span class="s3">'background-image'</span><span class="s1">, </span><span class="s3">'url(images/' </span><span class="s1">+ bg + </span><span class="s3">')' </span><span class="s1">); 
+ 
+                }); 
+ 
+ 
+            } 
+ 
+        </span><span class="s0">// Posts</span><span class="s1"> 
+ 
+            $( </span><span class="s3">&quot;.post&quot; </span><span class="s1">).each( </span><span class="s2">function</span><span class="s1">() { 
+                </span><span class="s2">var </span><span class="s1">p = $(</span><span class="s2">this</span><span class="s1">), 
+                    i = p.find(</span><span class="s3">'.inner'</span><span class="s1">), 
+                    m = p.find(</span><span class="s3">'.more'</span><span class="s1">); 
+ 
+                m.addClass(</span><span class="s3">'scrolly'</span><span class="s1">); 
+ 
+                p.scrollex({ 
+                    top: </span><span class="s3">'40vh'</span><span class="s1">, 
+                    bottom: </span><span class="s3">'40vh'</span><span class="s1">, 
+                    terminate:  </span><span class="s2">function</span><span class="s1">() { m.removeClass(</span><span class="s3">'current'</span><span class="s1">); i.removeClass(</span><span class="s3">'current'</span><span class="s1">); }, 
+                    enter:      </span><span class="s2">function</span><span class="s1">() { m.addClass(</span><span class="s3">'current'</span><span class="s1">); i.addClass(</span><span class="s3">'current'</span><span class="s1">); }, 
+                    leave:      </span><span class="s2">function</span><span class="s1">() { m.removeClass(</span><span class="s3">'current'</span><span class="s1">); i.removeClass(</span><span class="s3">'current'</span><span class="s1">); } 
+                }); 
+ 
+            }); 
+ 
+        </span><span class="s0">// Scrolly.</span><span class="s1"> 
+            </span><span class="s2">if </span><span class="s1">( $( </span><span class="s3">&quot;.scrolly&quot; </span><span class="s1">).length ) { 
+ 
+                $(</span><span class="s3">'.scrolly'</span><span class="s1">).scrolly(); 
+            } 
+ 
+        </span><span class="s0">// Menu.</span><span class="s1"> 
+            $(</span><span class="s3">'#menu'</span><span class="s1">) 
+                .append(</span><span class="s3">'&lt;a href=&quot;#menu&quot; class=&quot;close&quot;&gt;&lt;/a&gt;'</span><span class="s1">) 
+                .appendTo($body) 
+                .panel({ 
+                    delay: </span><span class="s4">500</span><span class="s1">, 
+                    hideOnClick: </span><span class="s2">true</span><span class="s1">, 
+                    hideOnSwipe: </span><span class="s2">true</span><span class="s1">, 
+                    resetScroll: </span><span class="s2">true</span><span class="s1">, 
+                    resetForms: </span><span class="s2">true</span><span class="s1">, 
+                    side: </span><span class="s3">'right'</span><span class="s1"> 
+                }); 
+ 
+    }); 
+ 
+})(jQuery);</span></pre>
+</body>
+</html>
