@@ -7,12 +7,15 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath group: 'com.bmuschko', name: 'gradle-docker-plugin', version: '3.0.1'
 	}
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
+
+import com.bmuschko.gradle.docker.tasks.image.*
 
 group = 'com.amdinstallation'
 version = '0.0.1-SNAPSHOT'
@@ -39,3 +42,68 @@ dependencies {
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
+
+def bundleName = 'com.amdinstallation.service.web'
+def packageRoot = '/opt/amd/service/web'
+def timestamp = '.v' + new Date().format('yyyyMMddHHmm')
+def config = System.getProperty('config', 'application.properties')
+
+group = 'amd'
+project.version = '1.0.0' + timestamp
+
+task stage(type: Copy, dependsOn: ['bootRepackage']) {
+    from ("./build/libs/com.amdinstallation.service.web-${project.version}.jar")
+    from (sourceSets.main.resources.srcDirs) {
+    	include "application-prod.properties"
+    	rename { String fileName -> "application.properties" }
+    }
+    into "./build/docker"
+}
+
+task stageDocker(type: Dockerfile) {
+    dependsOn 'stage'
+    destFile = project.file("build/docker/Dockerfile")
+    from "java:8"
+    copyFile ("com.amdinstallation.service.web-${project.version}.jar", "com.amdinstallation.service.web-${project.version}.jar")
+    copyFile ("application.properties", "/config/application.properties")
+    entryPoint ("java", "-jar", "com.amdinstallation.service.web-${project.version}.jar")
+    exposePort (8080)
+    Map<String,String> labels = new HashMap<String,String>();
+    labels.put("com.amd.service.id", "com.amdinstallation.service.web");
+    labels.put("com.amdinstallation.service.web.version", "${project.version}");
+    label(labels)
+}
+
+task buildDockerImage(type:Exec) {
+	dependsOn 'stageDocker'
+  	workingDir './build/docker'
+  	commandLine 'docker', 'build', '-t', 'amd/' + bundleName + ':' + project.version, '-t', 'amd/' + bundleName + ':latest', '.'
+}
+
+task tagDockerImage(type:Exec) {
+	dependsOn 'buildDockerImage'
+	workingDir './build/docker'
+	commandLine 'docker', 'tag', 'amd/' + bundleName + ':' + project.version, 'localhost:5000/amd/' + bundleName + ':' + project.version
+}
+
+task tagDockerImageLatest(type:Exec) {
+	dependsOn 'buildDockerImage'
+	workingDir './build/docker'
+	commandLine 'docker', 'tag', 'amd/' + bundleName + ':latest', 'localhost:5000/amd/' + bundleName + ':latest'
+}
+
+task pushDockerImage(type:Exec) {
+	dependsOn 'tagDockerImage'
+	workingDir './build/docker'
+	commandLine 'docker', 'push', 'localhost:5000/amd/' + bundleName + ':' + project.version
+}
+
+task pushDockerImageLatest(type:Exec) {
+	dependsOn 'tagDockerImageLatest'
+	workingDir './build/docker'
+	commandLine 'docker', 'push', 'localhost:5000/amd/' + bundleName + ':latest'
+}
+
+task publishDocker
+publishDocker.dependsOn pushDockerImage
+publishDocker.dependsOn pushDockerImageLatest

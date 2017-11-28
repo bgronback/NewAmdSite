@@ -1,0 +1,42 @@
+version: '2'
+services:
+  registry:
+    image: registry:latest
+    restart: always
+    container_name: registry
+    ports:
+      - "5000:5000"
+#    environment:
+#      REGISTRY_HTTP_TLS_CERTIFICATE: /certs/domain.crt
+#      REGISTRY_HTTP_TLS_KEY: /certs/domain.key
+#    volumes:
+#      - "/private/amd/registry:/var/lib/registry"
+#      - "/certs:/certs"
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    container_name: mongo
+    ports:
+      - "27017:27017"
+  
+  amd:
+    image: localhost:5000/amd/com.amdinstallation.service.web:latest
+    restart: always
+    container_name: amd
+    ports:
+      - "80:8080"
+      - "443:443"
+    links:
+      - mongo
+    environment:
+      - LOGGING_LEVEL=DEBUG
+  
+  mongo-ui:
+    image: mongo-express:latest
+    restart: always
+    container_name: mongo-ui
+    ports:
+      - "8081:8081"
+    links:
+      - mongo
