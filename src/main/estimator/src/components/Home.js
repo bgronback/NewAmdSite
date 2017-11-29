@@ -19,25 +19,6 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import TextInput from "./Widgets/FormFields/material/TextInput"
 import TextAreaInput from "./Widgets/FormFields/material/TextAreaInput"
 
-const getStyles = () => {
-    return {
-        root: {
-            width: '100%',
-            maxWidth: 700,
-            margin: 'auto',
-        },
-        content: {
-            margin: '0 16px',
-        },
-        actions: {
-            marginTop: 12,
-        },
-        backButton: {
-            marginRight: 12,
-        },
-    };
-};
-
 export class Home extends React.Component {
 
     constructor(props) {
@@ -97,6 +78,64 @@ export class Home extends React.Component {
         </div>
     }
 
+    render() {
+        const { handleSubmit, error, invalid, pristine, submitting } = this.props;
+        const { stepIndex } = this.state;
+
+        return (
+            <Row>
+                <Form horizontal onSubmit={handleSubmit(this.formSubmit)}>
+                    <Stepper linear={false} activeStep={stepIndex}>
+                        <Step>
+                            <StepButton onClick={() => this.setState({stepIndex: 0})}>
+                                Vehicle
+                            </StepButton>
+                        </Step>
+                        <Step>
+                            <StepButton onClick={() => this.setState({stepIndex: 1})}>
+                                Parts
+                            </StepButton>
+                        </Step>
+                        <Step>
+                            <StepButton onClick={() => this.setState({stepIndex: 2})}>
+                                Review
+                            </StepButton>
+                        </Step>
+                        <Step>
+                            <StepButton onClick={() => this.setState({stepIndex: 3})}>
+                                Submit
+                            </StepButton>
+                        </Step>
+                    </Stepper>
+                    <div>
+                        <Col>{this.getStepContent(stepIndex)}</Col>
+                        <div style={{textAlign: 'center', marginTop: 20}}>
+                            <FlatButton
+                                label="Back"
+                                disabled={stepIndex === 0}
+                                onClick={this.handlePrev}
+                                style={{marginRight: 12}}
+                            />
+                            <RaisedButton
+                                label={stepIndex === 3 ? "Submit" : "Next"}
+                                disabled={stepIndex === 3 ? (pristine || submitting) : false}
+                                primary={true}
+                                type="submit"
+                                onClick={this.handleNext}
+                            />
+                        </div>
+                    </div>
+                </Form>
+                <Snackbar
+                    open={this.state.snackbar}
+                    message="Your estimate was successfully submitted!"
+                    autoHideDuration={4000}
+                    onRequestClose={this.handleRequestSnackbarClose}
+                />
+            </Row>
+        );
+    }
+
     renderSelectCar() {
         const { estimate } = this.props;
 
@@ -115,7 +154,7 @@ export class Home extends React.Component {
             return value;
         };
 
-        return <div style={{width: '100%', maxWidth: 500, margin: 'auto'}}>
+        return <div className="container-fluid">
             <p style={{textAlign: 'center'}}>Select your car make, model, and year</p>
                 <Row>
                     <Col sm={4}>
@@ -139,14 +178,14 @@ export class Home extends React.Component {
 
     renderSelectParts() {
         var parts = this.props.estimate.parts;
-        return <div>
+        return <div className="container-fluid">
                 <p style={{textAlign: 'center'}}>Select sheet metal parts you will need.</p>
             <Table onRowSelection={(selection) => {this.handleRowSelection(selection)}} multiSelectable={true} wrapperStyle={{ maxHeight: '500px' }}>
                 <TableHeader enableSelectAll={false} displaySelectAll={false}>
                     <TableRow>
                         <TableHeaderColumn>Brand</TableHeaderColumn>
                         <TableHeaderColumn>Part Number</TableHeaderColumn>
-                        <TableHeaderColumn style={{ width: '40%' }}>Name</TableHeaderColumn>
+                        <TableHeaderColumn style={{ width: '30%' }}>Name</TableHeaderColumn>
                         <TableHeaderColumn>Price</TableHeaderColumn>
                         <TableHeaderColumn>Image</TableHeaderColumn>
                     </TableRow>
@@ -162,7 +201,7 @@ export class Home extends React.Component {
                 <TableRow key={index}>
                     <TableRowColumn>{row.brand}</TableRowColumn>
                     <TableRowColumn>{row.partNumber}</TableRowColumn>
-                    <TableRowColumn style={{ width: '40%' }}>{row.name}</TableRowColumn>
+                    <TableRowColumn style={{ width: '30%', whiteSpace: 'normal', wordWrap: 'break-word' }}>{row.name}</TableRowColumn>
                     <TableRowColumn>{row.price}</TableRowColumn>
                     <TableRowColumn><img src={row.image} alt={row.name} width="50"/></TableRowColumn>
                 </TableRow>
@@ -182,13 +221,8 @@ export class Home extends React.Component {
         const materialTotal = (laborTotal * 0.10).toFixed(2); // TODO make percentage configurable
         const grandTotal = (parseFloat(total) + parseFloat(materialTotal)).toFixed(2);
 
-        return <div style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
-                <div>
-                    <p><em>Please note that the labor prices are based on reductions for certain panel overlaps and are subject to increase if no adjacent panels are being replaced. Also note that some operations cannot be performed independently; for example, a complete one piece trunk floor cannot be installed without removing the quarter panels.</em></p>
-                </div>
-
-                <div>
-                    <h4>Estimate Summary</h4>
+        return <div className="container-fluid">
+                    <h4 style={{textAlign: 'center'}}>Estimate Summary</h4>
                     <Table selectable={false}>
                         <TableHeader adjustForCheckbox={false} enableSelectAll={false} displaySelectAll={false}>
                             <TableRow>
@@ -203,7 +237,7 @@ export class Home extends React.Component {
                             {parts ? parts.map((row, index) => (
                                 <TableRow key={index}>
                                     <TableRowColumn>{row.partNumber}</TableRowColumn>
-                                    <TableRowColumn style={{ width: '30%' }}>{row.name}</TableRowColumn>
+                                    <TableRowColumn style={{ width: '30%', whiteSpace: 'normal', wordWrap: 'break-word' }}>{row.name}</TableRowColumn>
                                     <TableRowColumn style={{textAlign: 'right'}}>{row.price}</TableRowColumn>
                                     <TableRowColumn style={{textAlign: 'right'}}>{row.labor ? row.labor : 0}</TableRowColumn>
                                     <TableRowColumn style={{textAlign: 'right'}}>{(row.price + row.labor).toFixed(2)}</TableRowColumn>
@@ -233,26 +267,26 @@ export class Home extends React.Component {
                             </TableRow>
                         </TableBody>
                     </Table>
+                    <p><em>Please note that the labor prices are based on reductions for certain panel overlaps and are subject to increase if no adjacent panels are being replaced. Also note that some operations cannot be performed independently; for example, a complete one piece trunk floor cannot be installed without removing the quarter panels.</em></p>
                 </div>
-            </div>
     }
 
     renderSubmit() {
-        return <div style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
+        return <div className="container-fluid">
             <Col>
                 <Row>
-                    <Col sm={4}>
+                    <Col sm={6}>
                         <Field component={TextInput} name="name" label="Name"/>
                     </Col>
-                    <Col sm={4}>
+                    <Col sm={6}>
                         <Field component={TextInput} name="email" label="Email"/>
-                    </Col>
-                    <Col sm={4}>
-                        <Field component={TextInput} name="phone" label="Phone"/>
                     </Col>
                 </Row>
                 <Row>
-                    <Col sm={12}>
+                    <Col sm={6}>
+                        <Field component={TextInput} name="phone" label="Phone"/>
+                    </Col>
+                    <Col sm={6}>
                         <Field component={TextInput} name="vin" label="Vehicle Identification Number (VIN)"/>
                     </Col>
                 </Row>
@@ -286,65 +320,6 @@ export class Home extends React.Component {
             snackbar: false
         });
     };
-
-    render() {
-        const { handleSubmit, error, invalid, pristine, submitting } = this.props;
-        const { stepIndex } = this.state;
-        const contentStyle = {margin: '0 16px'};
-
-        return (
-            <Row className="container">
-                <Form horizontal onSubmit={handleSubmit(this.formSubmit)}>
-                    <Stepper linear={false} activeStep={stepIndex}>
-                        <Step>
-                            <StepButton onClick={() => this.setState({stepIndex: 0})}>
-                                Select your car
-                            </StepButton>
-                        </Step>
-                        <Step>
-                            <StepButton onClick={() => this.setState({stepIndex: 1})}>
-                                Select your parts
-                            </StepButton>
-                        </Step>
-                        <Step>
-                            <StepButton onClick={() => this.setState({stepIndex: 2})}>
-                                Review
-                            </StepButton>
-                        </Step>
-                        <Step>
-                            <StepButton onClick={() => this.setState({stepIndex: 3})}>
-                                Submit
-                            </StepButton>
-                        </Step>
-                    </Stepper>
-                    <div style={contentStyle}>
-                        <div><Col>{this.getStepContent(stepIndex)}</Col></div>
-                        <div style={{marginTop: 12, textAlign: 'center'}}>
-                            <FlatButton
-                                label="Back"
-                                disabled={stepIndex === 0}
-                                onClick={this.handlePrev}
-                                style={{marginRight: 12}}
-                            />
-                            <RaisedButton
-                                label={stepIndex === 3 ? "Submit" : "Next"}
-                                disabled={stepIndex === 3 ? (pristine || submitting) : false}
-                                primary={true}
-                                type="submit"
-                                onClick={this.handleNext}
-                            />
-                        </div>
-                    </div>
-                </Form>
-                <Snackbar
-                    open={this.state.snackbar}
-                    message="Your estimate was successfully submitted!"
-                    autoHideDuration={4000}
-                    onRequestClose={this.handleRequestSnackbarClose}
-                />
-            </Row>
-        );
-    }
 
     formSubmit(values) {
         const {dispatch} = this.props;

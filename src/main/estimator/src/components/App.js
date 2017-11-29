@@ -28,7 +28,7 @@ export class App extends React.Component {
                         </IconMenu>
                     }
                 />
-                <div className="container" style={{marginTop: 20}}>
+                <div className="container-fluid">
                     {children}
                 </div>
 
