@@ -79,5 +79,11 @@ public class Part implements Serializable {
 	public void setApplications(List<PartApplication> applications) {
 		this.applications = applications;
 	}
+
+	@Override
+	public String toString() {
+		return "Part [_id=" + _id + ", brand=" + brand + ", partNumber=" + partNumber + ", name=" + name + ", description=" + description + ", price=" + price + ", labor=" + labor + ", image=" + image
+				+ ", applications=" + applications + "]";
+	}
 	
 }

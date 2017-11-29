@@ -60942,7 +60942,6 @@
 	    _createClass(ApiEstimates, null, [{
 	        key: 'addEditEstimate',
 	        value: function addEditEstimate(estimate) {
-	            console.log('Submitting estimate: ' + JSON.stringify(estimate));
 	            return new Promise(function (resolve) {
 	                if (true) {
 	                    _jquery2.default.ajax({
@@ -60952,8 +60951,9 @@
 	                        dataType: 'json',
 	                        contentType: 'application/json; charset=utf-8'
 	                    }).done(function (resp) {
-	                        resolve(resp);
-	                    }).fail(function (xhr) {/* TODO */
+	                        resolve(estimate);
+	                    }).fail(function (xhr) {
+	                        resolve(estimate);
 	                    });
 	                } else {
 	                    setTimeout(function () {
@@ -61030,7 +61030,7 @@
 
 	var _Home2 = _interopRequireDefault(_Home);
 
-	var _PartEdit = __webpack_require__(1233);
+	var _PartEdit = __webpack_require__(1234);
 
 	var _PartEdit2 = _interopRequireDefault(_PartEdit);
 
@@ -72364,6 +72364,10 @@
 
 	var _TextInput2 = _interopRequireDefault(_TextInput);
 
+	var _TextAreaInput = __webpack_require__(1233);
+
+	var _TextAreaInput2 = _interopRequireDefault(_TextAreaInput);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -72881,6 +72885,24 @@
 	                            { sm: 4 },
 	                            _react2.default.createElement(_reduxForm.Field, { component: _TextInput2.default, name: "phone", label: "Phone" })
 	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        _Row2.default,
+	                        null,
+	                        _react2.default.createElement(
+	                            _Col2.default,
+	                            { sm: 12 },
+	                            _react2.default.createElement(_reduxForm.Field, { component: _TextInput2.default, name: "vin", label: "Vehicle Identification Number (VIN)" })
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        _Row2.default,
+	                        null,
+	                        _react2.default.createElement(
+	                            _Col2.default,
+	                            { sm: 12 },
+	                            _react2.default.createElement(_reduxForm.Field, { component: _TextAreaInput2.default, name: "comments", label: "Comments" })
+	                        )
 	                    )
 	                ),
 	                _react2.default.createElement(
@@ -73068,7 +73090,9 @@
 	                        parts: parts,
 	                        name: values.name,
 	                        email: values.email,
-	                        phone: values.phone
+	                        phone: values.phone,
+	                        vin: values.vin,
+	                        comments: values.comments
 	                    },
 	                    callbackError: function callbackError(error) {
 	                        reject(new _reduxForm.SubmissionError({ _error: error }));
@@ -99168,6 +99192,97 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(338);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _TextField = __webpack_require__(1200);
+
+	var _TextField2 = _interopRequireDefault(_TextField);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var TextAreaInput = function (_Component) {
+	    _inherits(TextAreaInput, _Component);
+
+	    function TextAreaInput() {
+	        _classCallCheck(this, TextAreaInput);
+
+	        return _possibleConstructorReturn(this, (TextAreaInput.__proto__ || Object.getPrototypeOf(TextAreaInput)).apply(this, arguments));
+	    }
+
+	    _createClass(TextAreaInput, [{
+	        key: 'render',
+	        value: function render() {
+	            var _props = this.props,
+	                input = _props.input,
+	                label = _props.label,
+	                pattern = _props.pattern,
+	                type = _props.type,
+	                step = _props.step,
+	                placeholder = _props.placeholder,
+	                _props$meta = _props.meta,
+	                touched = _props$meta.touched,
+	                error = _props$meta.error,
+	                disabled = _props.disabled;
+
+
+	            var errorText = touched && error ? error : '';
+
+	            return _react2.default.createElement(_TextField2.default, _extends({ hintText: placeholder,
+	                fullWidth: true,
+	                pattern: pattern,
+	                type: type,
+	                step: step,
+	                disabled: disabled,
+	                errorText: errorText,
+	                floatingLabelText: label,
+	                floatingLabelFixed: true,
+	                multiLine: true,
+	                rows: 2
+	            }, input));
+	        }
+	    }]);
+
+	    return TextAreaInput;
+	}(_react.Component);
+
+	var _default = TextAreaInput;
+	exports.default = _default;
+	;
+
+	var _temp = function () {
+	    if (typeof __REACT_HOT_LOADER__ === 'undefined') {
+	        return;
+	    }
+
+	    __REACT_HOT_LOADER__.register(TextAreaInput, 'TextAreaInput', '/Users/rgronback/git/NewAmdSite/src/main/estimator/src/components/Widgets/FormFields/material/TextAreaInput.js');
+
+	    __REACT_HOT_LOADER__.register(_default, 'default', '/Users/rgronback/git/NewAmdSite/src/main/estimator/src/components/Widgets/FormFields/material/TextAreaInput.js');
+	}();
+
+	;
+
+/***/ }),
+/* 1234 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 	exports.PartEdit = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -99194,7 +99309,7 @@
 
 	var _TextInput2 = _interopRequireDefault(_TextInput);
 
-	var _TextAreaInput = __webpack_require__(1234);
+	var _TextAreaInput = __webpack_require__(1233);
 
 	var _TextAreaInput2 = _interopRequireDefault(_TextAreaInput);
 
@@ -99436,97 +99551,6 @@
 	    __REACT_HOT_LOADER__.register(PartEditForm, 'PartEditForm', '/Users/rgronback/git/NewAmdSite/src/main/estimator/src/components/part/PartEdit.js');
 
 	    __REACT_HOT_LOADER__.register(_default, 'default', '/Users/rgronback/git/NewAmdSite/src/main/estimator/src/components/part/PartEdit.js');
-	}();
-
-	;
-
-/***/ }),
-/* 1234 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(338);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _TextField = __webpack_require__(1200);
-
-	var _TextField2 = _interopRequireDefault(_TextField);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var TextAreaInput = function (_Component) {
-	    _inherits(TextAreaInput, _Component);
-
-	    function TextAreaInput() {
-	        _classCallCheck(this, TextAreaInput);
-
-	        return _possibleConstructorReturn(this, (TextAreaInput.__proto__ || Object.getPrototypeOf(TextAreaInput)).apply(this, arguments));
-	    }
-
-	    _createClass(TextAreaInput, [{
-	        key: 'render',
-	        value: function render() {
-	            var _props = this.props,
-	                input = _props.input,
-	                label = _props.label,
-	                pattern = _props.pattern,
-	                type = _props.type,
-	                step = _props.step,
-	                placeholder = _props.placeholder,
-	                _props$meta = _props.meta,
-	                touched = _props$meta.touched,
-	                error = _props$meta.error,
-	                disabled = _props.disabled;
-
-
-	            var errorText = touched && error ? error : '';
-
-	            return _react2.default.createElement(_TextField2.default, _extends({ hintText: placeholder,
-	                fullWidth: true,
-	                pattern: pattern,
-	                type: type,
-	                step: step,
-	                disabled: disabled,
-	                errorText: errorText,
-	                floatingLabelText: label,
-	                floatingLabelFixed: true,
-	                multiLine: true,
-	                rows: 2
-	            }, input));
-	        }
-	    }]);
-
-	    return TextAreaInput;
-	}(_react.Component);
-
-	var _default = TextAreaInput;
-	exports.default = _default;
-	;
-
-	var _temp = function () {
-	    if (typeof __REACT_HOT_LOADER__ === 'undefined') {
-	        return;
-	    }
-
-	    __REACT_HOT_LOADER__.register(TextAreaInput, 'TextAreaInput', '/Users/rgronback/git/NewAmdSite/src/main/estimator/src/components/Widgets/FormFields/material/TextAreaInput.js');
-
-	    __REACT_HOT_LOADER__.register(_default, 'default', '/Users/rgronback/git/NewAmdSite/src/main/estimator/src/components/Widgets/FormFields/material/TextAreaInput.js');
 	}();
 
 	;

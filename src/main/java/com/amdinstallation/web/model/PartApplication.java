@@ -38,4 +38,9 @@ public class PartApplication implements Serializable {
 	public void setModel(Model model) {
 		this.model = model;
 	}
+	
+	@Override
+	public String toString() {
+		return "PartApplication [from=" + from + ", to=" + to + ", make=" + make + ", model=" + model + "]";
+	}
 }
