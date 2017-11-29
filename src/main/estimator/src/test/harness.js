@@ -1,0 +1,57 @@
+export const DEV_PARTS = [
+  {
+      _id: 0,
+      brand: 'AMD',
+      partNumber: '371-3466',
+      name: 'Lower Cowl Upper Section - 64-67 Chevelle El Camino',
+      price: 129.99,
+      labor: 9.99,
+      description: 'Lower Cowl',
+      image: 'http://www.autometaldirect.com/images/6/371-3466_800.jpg',
+      applications: [
+          {
+              from: 1964,
+              to: 1967,
+              make: 'Chevrolet',
+              model: 'Chevelle'
+          }
+      ]
+  },
+  {
+      _id: 1,
+      brand: 'AMD',
+      partNumber: '400-3468',
+      name: 'Floor Pan w/ Braces - 68-72 Chevelle GTO Cutlass Skylark',
+      price: 599.99,
+      labor: 299.99,
+      description: 'Complete OE style coverage for replacement of entire floor. This one-piece pan has all the shapes, contours and holes as original. Includes floor pan braces, inner rockers and seat belt provisions already welded in place. Loose brackets for rear seat hold down and wiring are also included. This high quality floor is made on AMD tools. If you are looking for true OE style replacement then this pan will be hard to beat.',
+      image: 'http://www.autometaldirect.com/images/6/400-3468_800.jpg',
+      applications: [
+          {
+              from: 1968,
+              to: 1972,
+              make: 'Buick',
+              model: 'Skylark'
+          }
+      ]
+  }
+];
+
+export const BLANK_PART = {
+    _id: undefined,
+    brand: undefined,
+    partNumber: undefined,
+    name: undefined,
+    price: undefined,
+    labor: undefined,
+    description: undefined,
+    image: undefined,
+    applications: [
+        {
+            from: undefined,
+            to: undefined,
+            make: undefined,
+            model: undefined
+        }
+    ]
+};
