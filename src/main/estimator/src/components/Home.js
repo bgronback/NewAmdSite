@@ -298,7 +298,7 @@ export class Home extends React.Component {
             </Col>
             <div>
                 <br/>
-                <p style={{textAlign: 'center'}}>You will receive a confirmation email of this estimate.</p>
+                <p style={{textAlign: 'center'}}>You will receive an email confirmation of this estimate.</p>
             </div>
         </div>
     }

@@ -49996,18 +49996,20 @@
 	            return Object.assign({}, state, { status: 'PART_SAVED' });
 
 	        case 'MAKE_SELECTED':
+	            var m = _models2.default.filter(function (model) {
+	                return model.make === action.make;
+	            });
 	            return Object.assign({}, state, { status: 'MODELS_UPDATED',
-	                models: _models2.default.filter(function (model) {
-	                    return model.make === action.make;
-	                })[0].models,
+	                models: m[0] ? m[0].models : [],
 	                years: []
 	            });
 
 	        case 'MODEL_SELECTED':
+	            var y = _years2.default.filter(function (year) {
+	                return year.model === action.model;
+	            });
 	            return Object.assign({}, state, { status: 'YEARS_UPDATED',
-	                years: _years2.default.filter(function (year) {
-	                    return year.model === action.model;
-	                })[0].years
+	                years: y[0] ? y[0].years : []
 	            });
 
 	        case 'PARTS_FETCHED':
@@ -50045,23 +50047,26 @@
 	});
 	var _default = [{
 	    make: "CHEVROLET",
-	    models: [{ text: "Camaro", value: "CAMARO" }, { text: "Chevelle", value: "CHEVELLE" }, { text: "El Camino", value: "EL_CAMINO" }, { text: "Monte Carlo", value: "MONTE_CARLO" }, { text: "Chevy II, Nova", value: "NOVA" }]
+	    models: [{ text: "Camaro", value: "CAMARO" }, { text: "Chevelle", value: "CHEVELLE" }, { text: "Chevy II", value: "CHEVY_II" }, { text: "El Camino", value: "EL_CAMINO" }, { text: "Monte Carlo", value: "MONTE_CARLO" }, { text: "Nova", value: "NOVA" }]
 	}, {
 	    make: "PONTIAC",
-	    models: [{ text: "LeMans, GTO", value: "LE_MANS" }, { text: "Firebird", value: "FIREBIRD" }]
+	    models: [{ text: "Firebird", value: "FIREBIRD" }, { text: "GTO", value: "GTO" }, { text: "Le Mans", value: "LEMANS" }, { text: "Tempest", value: "TEMPEST" }, { text: "Trans Am", value: "TRANS_AM" }]
 	}, {
 	    make: "BUICK",
-	    models: [{ text: "Skylark", value: "SKYLARK" }]
+	    models: [{ text: "GS", value: "GS" }, { text: "Skylark", value: "SKYLARK" }]
 	}, {
 	    make: "OLDSMOBILE",
-	    models: [{ text: "Cutlass", value: "CUTLASS" }]
+	    models: [{ text: "Cutlass", value: "CUTLASS" }, { text: "442", value: "O442" }]
 	}, {
 	    make: "DODGE",
-	    models: [{ text: "Charger", value: "CHARGER" }, { text: "Challenger", value: "CHALLENGER" }]
+	    models: [{ text: "Charger", value: "CHARGER" }, { text: "Challenger", value: "CHALLENGER" }, { text: "Coronet", value: "CORONET" }, { text: "Dart", value: "DART" }, { text: "Daytona", value: "DAYTONA" }, { text: "Demon", value: "DEMON" }]
 	}, {
 	    make: "PLYMOUTH",
-	    models: [{ text: "Barracuda", value: "BARRACUDA" }, { text: "Road Runner", value: "ROAD_RUNNER" }]
+	    models: [{ text: "Barracuda", value: "BARRACUDA" }, { text: "Belvedere", value: "BELEVEDERE" }, { text: "GTX", value: "GTX" }, { text: "Road Runner", value: "ROAD_RUNNER" }, { text: "Superbird", value: "SUPERBIRD" }, { text: "Satellite", value: "SATELLITE" }]
 	}];
+	/*
+	   , SAFARI
+	 */
 	exports.default = _default;
 	;
 
@@ -50084,7 +50089,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	var _default = [{ text: "Buick", value: "BUICK" }, { text: "Chevrolet", value: "CHEVROLET" }, { text: "Dodge", value: "DODGE" }, { text: "Oldsmobile", value: "PLYMOUTH" }, { text: "Plymouth", value: "PLYMOUTH" }, { text: "Pontiac", value: "PONTIAC" }];
+	var _default = [{ text: "Buick", value: "BUICK" }, { text: "Chevrolet", value: "CHEVROLET" }, { text: "Dodge", value: "DODGE" }, { text: "Oldsmobile", value: "OLDSMOBILE" }, { text: "Plymouth", value: "PLYMOUTH" }, { text: "Pontiac", value: "PONTIAC" }];
 	exports.default = _default;
 	;
 
@@ -50109,11 +50114,14 @@
 	});
 	var GM_A_BODY = [{ text: "1964", value: 1964 }, { text: "1965", value: 1965 }, { text: "1966", value: 1966 }, { text: "1967", value: 1967 }, { text: "1968", value: 1968 }, { text: "1969", value: 1969 }, { text: "1970", value: 1970 }, { text: "1971", value: 1971 }, { text: "1972", value: 1972 }];
 
-	var GM_F_BODY = [{ text: "1967", value: 1967 }, { text: "1968", value: 1968 }, { text: "1969", value: 1969 }];
+	var GM_F_BODY = [{ text: "1967", value: 1967 }, { text: "1968", value: 1968 }, { text: "1969", value: 1969 }, { text: "1970", value: 1970 }, { text: "1971", value: 1971 }, { text: "1972", value: 1972 }];
 
 	var _default = [{
 	    model: "CHEVELLE",
 	    years: GM_A_BODY
+	}, {
+	    model: "MONTE_CARLO",
+	    years: [{ text: "1970", value: 1970 }, { text: "1971", value: 1971 }, { text: "1972", value: 1972 }]
 	}, {
 	    model: "EL_CAMINO",
 	    years: GM_A_BODY
@@ -50127,20 +50135,65 @@
 	    model: "FIREBIRD",
 	    years: GM_F_BODY
 	}, {
+	    model: "TRANS_AM",
+	    years: [{ text: "1969", value: 1969 }, { text: "1970", value: 1970 }, { text: "1971", value: 1971 }, { text: "1972", value: 1972 }]
+	}, {
+	    model: "GTO",
+	    years: GM_A_BODY
+	}, {
 	    model: "LE_MANS",
+	    years: GM_A_BODY
+	}, {
+	    model: "TEMPEST",
 	    years: GM_A_BODY
 	}, {
 	    model: "SKYLARK",
 	    years: GM_A_BODY
 	}, {
+	    model: "GS",
+	    years: GM_A_BODY
+	}, {
+	    model: "GSX",
+	    years: [{ text: "1970", value: 1970 }, { text: "1971", value: 1971 }, { text: "1972", value: 1972 }]
+	}, {
 	    model: "CUTLASS",
 	    years: GM_A_BODY
 	}, {
+	    model: "O442",
+	    years: GM_A_BODY
+	}, {
+	    model: "CHEVY_II",
+	    years: [{ text: "1964", value: 1964 }, { text: "1965", value: 1965 }, { text: "1966", value: 1966 }, { text: "1967", value: 1967 }, { text: "1968", value: 1968 }, { text: "1969", value: 1969 }, { text: "1970", value: 1970 }, { text: "1971", value: 1971 }, { text: "1972", value: 1972 }]
+	}, {
+	    model: "IMPALA",
+	    years: [{ text: "1962", value: 1962 }, { text: "1963", value: 1963 }, { text: "1964", value: 1964 }, { text: "1965", value: 1965 }, { text: "1966", value: 1966 }, { text: "1967", value: 1967 }, { text: "1968", value: 1968 }]
+	}, {
 	    model: "CHARGER",
-	    years: [{ text: "1968", value: 1968 }, { text: "1969", value: 1969 }, { text: "1970", value: 1970 }]
+	    years: [{ text: "1966", value: 1966 }, { text: "1967", value: 1967 }, { text: "1968", value: 1968 }, { text: "1969", value: 1969 }, { text: "1970", value: 1970 }, { text: "1971", value: 1971 }, { text: "1972", value: 1972 }]
+	}, {
+	    model: "DART",
+	    years: [{ text: "1967", value: 1967 }, { text: "1968", value: 1968 }, { text: "1969", value: 1969 }, { text: "1970", value: 1970 }, { text: "1971", value: 1971 }, { text: "1972", value: 1972 }]
+	}, {
+	    model: "DAYTONA",
+	    years: [{ text: "1969", value: 1969 }]
+	}, {
+	    model: "CORONET",
+	    years: [{ text: "1965", value: 1965 }, { text: "1966", value: 1966 }, { text: "1967", value: 1967 }, { text: "1968", value: 1968 }, { text: "1969", value: 1969 }, { text: "1970", value: 1970 }, { text: "1971", value: 1971 }, { text: "1972", value: 1972 }]
+	}, {
+	    model: "CHALLENGER",
+	    years: [{ text: "1970", value: 1970 }, { text: "1971", value: 1971 }, { text: "1972", value: 1972 }]
+	}, {
+	    model: "DEMON",
+	    years: [{ text: "1971", value: 1971 }, { text: "1972", value: 1972 }]
+	}, {
+	    model: "SUPERBIRD",
+	    years: [{ text: "1970", value: 1970 }]
 	}, {
 	    model: "ROAD_RUNNER",
 	    years: [{ text: "1968", value: 1968 }, { text: "1969", value: 1969 }, { text: "1970", value: 1970 }]
+	}, {
+	    model: "BARRACUDA",
+	    years: [{ text: "1968", value: 1968 }, { text: "1969", value: 1969 }, { text: "1970", value: 1970 }, { text: "1971", value: 1971 }, { text: "1972", value: 1972 }]
 	}];
 	exports.default = _default;
 	;

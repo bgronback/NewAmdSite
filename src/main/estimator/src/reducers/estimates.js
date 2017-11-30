@@ -14,15 +14,17 @@ export default function estimate(state = { estimate: undefined, status: undefine
 
 
         case 'MAKE_SELECTED':
+            const m = MODELS.filter(model => { return model.make === action.make });
             return Object.assign({}, state, { status: 'MODELS_UPDATED',
-                models: MODELS.filter(model => { return model.make === action.make })[0].models,
+                models: m[0] ? m[0].models : [],
                 years: []
             }
         );
 
         case 'MODEL_SELECTED':
+            const y = YEARS.filter(year => { return year.model === action.model });
             return Object.assign({}, state, { status: 'YEARS_UPDATED',
-                years: YEARS.filter(year => { return year.model === action.model })[0].years
+                years: y[0] ? y[0].years : []
             }
         );
 
