@@ -16,7 +16,7 @@ export class App extends React.Component {
         return (
             <div>
                 <AppBar className="navbar-static-top"
-                    title="AMD Installation" // onTouchTap={ () => {this.props.dispatch(push('/'))}}
+                    title="AMD Installation" onLeftIconButtonTouchTap={ () => {this.props.dispatch(push('/'))}}
                     iconElementRight={
                     <IconMenu
                             iconButtonElement={

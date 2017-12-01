@@ -1,6 +1,3 @@
-/*
-   , SAFARI
- */
 export default [
     {
         make: "CHEVROLET",
