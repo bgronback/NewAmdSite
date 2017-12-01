@@ -72813,7 +72813,8 @@
 	            }, 0).toFixed(2) : 0.00;
 	            var total = (parseFloat(partsTotal) + parseFloat(laborTotal)).toFixed(2);
 	            var materialTotal = (laborTotal * 0.10).toFixed(2); // TODO make percentage configurable
-	            var grandTotal = (parseFloat(total) + parseFloat(materialTotal)).toFixed(2);
+	            var tax = (partsTotal * 0.04).toFixed(2); // TODO make percentage configurable
+	            var grandTotal = (parseFloat(total) + parseFloat(materialTotal) + parseFloat(tax)).toFixed(2);
 
 	            return _react2.default.createElement(
 	                "div",
@@ -72903,9 +72904,13 @@
 	                        ),
 	                        _react2.default.createElement(
 	                            _Table.TableRow,
-	                            { key: 99997 },
+	                            { key: 99996 },
 	                            _react2.default.createElement(_Table.TableRowColumn, null),
-	                            _react2.default.createElement(_Table.TableRowColumn, null),
+	                            _react2.default.createElement(
+	                                _Table.TableRowColumn,
+	                                { style: { textAlign: 'right' } },
+	                                "Subtotals"
+	                            ),
 	                            _react2.default.createElement(
 	                                _Table.TableRowColumn,
 	                                { style: { textAlign: 'right' } },
@@ -72924,7 +72929,7 @@
 	                        ),
 	                        _react2.default.createElement(
 	                            _Table.TableRow,
-	                            { key: 99998 },
+	                            { key: 99997 },
 	                            _react2.default.createElement(_Table.TableRowColumn, null),
 	                            _react2.default.createElement(_Table.TableRowColumn, null),
 	                            _react2.default.createElement(_Table.TableRowColumn, { style: { textAlign: 'right' } }),
@@ -72937,6 +72942,23 @@
 	                                _Table.TableRowColumn,
 	                                { style: { textAlign: 'right' } },
 	                                materialTotal
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            _Table.TableRow,
+	                            { key: 99998 },
+	                            _react2.default.createElement(_Table.TableRowColumn, null),
+	                            _react2.default.createElement(_Table.TableRowColumn, null),
+	                            _react2.default.createElement(_Table.TableRowColumn, { style: { textAlign: 'right' } }),
+	                            _react2.default.createElement(
+	                                _Table.TableRowColumn,
+	                                { style: { textAlign: 'right' } },
+	                                "Sales Tax"
+	                            ),
+	                            _react2.default.createElement(
+	                                _Table.TableRowColumn,
+	                                { style: { textAlign: 'right' } },
+	                                tax
 	                            )
 	                        ),
 	                        _react2.default.createElement(

@@ -219,7 +219,8 @@ export class Home extends React.Component {
         const laborTotal = parts ? parts.map(p => p.labor).reduce((a, b) => (a + b), 0).toFixed(2) : 0.00;
         const total = (parseFloat(partsTotal) + parseFloat(laborTotal)).toFixed(2);
         const materialTotal = (laborTotal * 0.10).toFixed(2); // TODO make percentage configurable
-        const grandTotal = (parseFloat(total) + parseFloat(materialTotal)).toFixed(2);
+        const tax = (partsTotal * 0.04).toFixed(2); // TODO make percentage configurable
+        const grandTotal = (parseFloat(total) + parseFloat(materialTotal) + parseFloat(tax)).toFixed(2);
 
         return <div className="container-fluid">
                     <h4 style={{textAlign: 'center'}}>Estimate Summary</h4>
@@ -244,19 +245,26 @@ export class Home extends React.Component {
                                 </TableRow>
                             )) : <TableRow key={0}>
                                 <TableRowColumn>No parts selected</TableRowColumn></TableRow>}
-                            <TableRow key={99997}>
+                            <TableRow key={99996}>
                                 <TableRowColumn></TableRowColumn>
-                                <TableRowColumn></TableRowColumn>
+                                <TableRowColumn style={{textAlign: 'right'}}>Subtotals</TableRowColumn>
                                 <TableRowColumn style={{textAlign: 'right'}}>{partsTotal}</TableRowColumn>
                                 <TableRowColumn style={{textAlign: 'right'}}>{laborTotal}</TableRowColumn>
                                 <TableRowColumn style={{textAlign: 'right'}}>{total}</TableRowColumn>
                             </TableRow>
-                            <TableRow key={99998}>
+                            <TableRow key={99997}>
                                 <TableRowColumn></TableRowColumn>
                                 <TableRowColumn></TableRowColumn>
                                 <TableRowColumn style={{textAlign: 'right'}}></TableRowColumn>
                                 <TableRowColumn style={{textAlign: 'right'}}>Materials</TableRowColumn>
                                 <TableRowColumn style={{textAlign: 'right'}}>{materialTotal}</TableRowColumn>
+                            </TableRow>
+                            <TableRow key={99998}>
+                                <TableRowColumn></TableRowColumn>
+                                <TableRowColumn></TableRowColumn>
+                                <TableRowColumn style={{textAlign: 'right'}}></TableRowColumn>
+                                <TableRowColumn style={{textAlign: 'right'}}>Sales Tax</TableRowColumn>
+                                <TableRowColumn style={{textAlign: 'right'}}>{tax}</TableRowColumn>
                             </TableRow>
                             <TableRow key={99999}>
                                 <TableRowColumn></TableRowColumn>
