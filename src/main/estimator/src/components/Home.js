@@ -19,6 +19,7 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import TextInput from "./Widgets/FormFields/material/TextInput"
 import TextAreaInput from "./Widgets/FormFields/material/TextAreaInput"
 
+
 export class Home extends React.Component {
 
     constructor(props) {
@@ -37,14 +38,6 @@ export class Home extends React.Component {
         this.renderSelectParts = this.renderSelectParts.bind(this);
         this.renderSelectCar = this.renderSelectCar.bind(this);
         this.handleRequestSnackbarClose = this.handleRequestSnackbarClose.bind(this);
-    }
-
-    componentWillMount() {
-
-    }
-
-    componentWillUpdate(nextProps, nextState) {
-
     }
 
     handleNext() {
@@ -366,6 +359,7 @@ export class Home extends React.Component {
 
 function mapStateToProps(state, props) {
     return {
+        user: state.user,
         estimate: state.estimate,
         initialValues: undefined
     }
