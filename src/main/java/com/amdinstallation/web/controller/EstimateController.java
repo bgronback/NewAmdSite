@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.mail.internet.MimeMessage;
@@ -65,7 +66,7 @@ public class EstimateController {
 		sb.append("\nphone: ");
 		sb.append(estimate.getPhone() == null ? "" : estimate.getPhone());
 		sb.append("\n\nItems:\n\n");
-		sb.append("Part Num\t\t\tPrice\tLabor\t\t\tName\n");
+		sb.append("Part Number, Price, Labor, Name\n");
 		List<Part> items = estimate.getParts();
 		Collections.sort(items, new Comparator<Part>() {
 
@@ -80,36 +81,28 @@ public class EstimateController {
 
 		for (Part item : items) {
 			sb.append(item.getPartNumber());
-			sb.append("\t");
-			if (item.getPartNumber().length() < 9) {
-				sb.append("\t\t");
-			} else if (item.getPartNumber().length() < 12) {
-				sb.append("\t");
-			}
+			sb.append(", ");
 			partsTotal = partsTotal.add(item.getPrice() == null ? BigDecimal.ZERO : item.getPrice());
 			laborTotal = laborTotal.add(item.getLabor() == null ? BigDecimal.ZERO : item.getLabor());
-			sb.append(NumberFormat.getCurrencyInstance().format(item.getPrice() == null ? BigDecimal.ZERO : item.getPrice()));
-			sb.append("\t");
-			sb.append(NumberFormat.getCurrencyInstance().format(item.getLabor() == null ? BigDecimal.ZERO : item.getLabor()));
-			if (item.getPrice() != null && item.getPrice().compareTo(new BigDecimal(1000)) < 0) {
-				sb.append("\t");
-			}
-			sb.append("\t\t");
+			sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(item.getPrice() == null ? BigDecimal.ZERO : item.getPrice()));
+			sb.append(", ");
+			sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(item.getLabor() == null ? BigDecimal.ZERO : item.getLabor()));
+			sb.append(", ");
 			sb.append(item.getName());
-			sb.append("\n");
+			sb.append(", ");
 		}
 		BigDecimal materials = laborTotal.multiply(new BigDecimal(0.10));
 		BigDecimal tax = partsTotal.multiply(new BigDecimal(0.04));
 		sb.append("\n\nParts: ");
-		sb.append(NumberFormat.getCurrencyInstance().format(partsTotal));
+		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(partsTotal));
 		sb.append("\nLabor: ");
-		sb.append(NumberFormat.getCurrencyInstance().format(laborTotal));
+		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(laborTotal));
 		sb.append("\nMaterials: ");
-		sb.append(NumberFormat.getCurrencyInstance().format(materials));
+		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(materials));
 		sb.append("\nSales Tax: ");
-		sb.append(NumberFormat.getCurrencyInstance().format(tax));
+		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(tax));
 		sb.append("\n\nTotal: ");
-		sb.append(NumberFormat.getCurrencyInstance().format(partsTotal.add(laborTotal).add(materials).add(tax)));
+		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(partsTotal.add(laborTotal).add(materials).add(tax)));
 
 		sb.append("\n\nComments:\n\n");
 		sb.append(estimate.getComments() == null ? "None" : estimate.getComments());
