@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.amdinstallation.web.config.AmdProperties;
 import com.amdinstallation.web.model.Estimate;
 import com.amdinstallation.web.model.Part;
 
@@ -32,6 +33,9 @@ import com.amdinstallation.web.model.Part;
 public class EstimateController {
 	
 	public static Logger LOGGER = LoggerFactory.getLogger(EstimateController.class);
+	
+	@Autowired
+	private AmdProperties properties;
 	
 	@Autowired
 	private JavaMailSender mailSender;
@@ -110,12 +114,11 @@ public class EstimateController {
 		try {
 	    	MimeMessage mail = mailSender.createMimeMessage();
 	        MimeMessageHelper helper = new MimeMessageHelper(mail, true);
-//	        helper.setTo("estimate@amdinstallation.com");
-	        helper.setTo("richard.gronback@gmail.com");
+	        helper.setTo(properties.getEstimateEmail());
 	        helper.setCc(estimate.getEmail());
 	        helper.setBcc("richard.gronback@gmail.com");
-	        helper.setFrom("admin@amdinstallation.com", "AMD Installation Center");
-	        helper.setReplyTo("admin@amdinstallation.com");
+	        helper.setFrom(properties.getAdminEmail(), properties.getAdminEmailName());
+	        helper.setReplyTo(properties.getAdminEmail());
 	        helper.setSubject("Vehicle Estimate");
 	        helper.setText(sb.toString());
 	        mailSender.send(mail);
