@@ -89,7 +89,7 @@ public class EstimateController {
 			sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(item.getLabor() == null ? BigDecimal.ZERO : item.getLabor()));
 			sb.append(", ");
 			sb.append(item.getName());
-			sb.append(", ");
+			sb.append("\n");
 		}
 		BigDecimal materials = laborTotal.multiply(new BigDecimal(0.10));
 		BigDecimal tax = partsTotal.multiply(new BigDecimal(0.04));
