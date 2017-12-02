@@ -37,11 +37,6 @@ export const DEV_PARTS = [
   }
 ];
 
-export const DEV_USER = {
-    username: undefined,
-    password: undefined
-};
-
 export const BLANK_PART = {
     _id: undefined,
     brand: undefined,

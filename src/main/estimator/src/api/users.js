@@ -1,5 +1,4 @@
 import $ from 'jquery'
-import { DEV_USER } from '../test/harness'
 
 export default class ApiUsers {
 

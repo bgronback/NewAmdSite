@@ -178,7 +178,7 @@ export class Home extends React.Component {
                     <TableRow>
                         <TableHeaderColumn>Brand</TableHeaderColumn>
                         <TableHeaderColumn>Part Number</TableHeaderColumn>
-                        <TableHeaderColumn style={{ width: '30%' }}>Name</TableHeaderColumn>
+                        <TableHeaderColumn>Name</TableHeaderColumn>
                         <TableHeaderColumn>Price</TableHeaderColumn>
                         <TableHeaderColumn>Image</TableHeaderColumn>
                     </TableRow>
@@ -194,7 +194,7 @@ export class Home extends React.Component {
                 <TableRow key={index}>
                     <TableRowColumn>{row.brand}</TableRowColumn>
                     <TableRowColumn>{row.partNumber}</TableRowColumn>
-                    <TableRowColumn style={{ width: '30%', whiteSpace: 'normal', wordWrap: 'break-word' }}>{row.name}</TableRowColumn>
+                    <TableRowColumn style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>{row.name}</TableRowColumn>
                     <TableRowColumn>{row.price}</TableRowColumn>
                     <TableRowColumn><img src={row.image} alt={row.name} width="50"/></TableRowColumn>
                 </TableRow>

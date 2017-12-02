@@ -60880,11 +60880,6 @@
 	    }]
 	}];
 
-	var DEV_USER = exports.DEV_USER = {
-	    username: undefined,
-	    password: undefined
-	};
-
 	var BLANK_PART = exports.BLANK_PART = {
 	    _id: undefined,
 	    brand: undefined,
@@ -60904,8 +60899,6 @@
 	    }
 
 	    __REACT_HOT_LOADER__.register(DEV_PARTS, 'DEV_PARTS', '/Users/rgronback/git/NewAmdSite/src/main/estimator/src/test/harness.js');
-
-	    __REACT_HOT_LOADER__.register(DEV_USER, 'DEV_USER', '/Users/rgronback/git/NewAmdSite/src/main/estimator/src/test/harness.js');
 
 	    __REACT_HOT_LOADER__.register(BLANK_PART, 'BLANK_PART', '/Users/rgronback/git/NewAmdSite/src/main/estimator/src/test/harness.js');
 	}();
@@ -61165,8 +61158,6 @@
 	var _jquery = __webpack_require__(848);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var _harness = __webpack_require__(849);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -72889,7 +72880,7 @@
 	                            ),
 	                            _react2.default.createElement(
 	                                _Table.TableHeaderColumn,
-	                                { style: { width: '30%' } },
+	                                null,
 	                                "Name"
 	                            ),
 	                            _react2.default.createElement(
@@ -72930,7 +72921,7 @@
 	                        ),
 	                        _react2.default.createElement(
 	                            _Table.TableRowColumn,
-	                            { style: { width: '30%', whiteSpace: 'normal', wordWrap: 'break-word' } },
+	                            { style: { whiteSpace: 'normal', wordWrap: 'break-word' } },
 	                            row.name
 	                        ),
 	                        _react2.default.createElement(
@@ -101679,7 +101670,7 @@
 	                ),
 	                _react2.default.createElement(
 	                  _Table.TableRowColumn,
-	                  null,
+	                  { style: { whiteSpace: 'normal', wordWrap: 'break-word' } },
 	                  row.name
 	                ),
 	                _react2.default.createElement(
