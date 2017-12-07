@@ -1,11 +1,13 @@
 package com.amdinstallation.web.controller;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.mail.internet.MimeMessage;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.amdinstallation.web.config.AmdProperties;
 import com.amdinstallation.web.model.Estimate;
 import com.amdinstallation.web.model.Part;
 
@@ -30,6 +33,9 @@ import com.amdinstallation.web.model.Part;
 public class EstimateController {
 	
 	public static Logger LOGGER = LoggerFactory.getLogger(EstimateController.class);
+	
+	@Autowired
+	private AmdProperties properties;
 	
 	@Autowired
 	private JavaMailSender mailSender;
@@ -64,7 +70,7 @@ public class EstimateController {
 		sb.append("\nphone: ");
 		sb.append(estimate.getPhone() == null ? "" : estimate.getPhone());
 		sb.append("\n\nItems:\n\n");
-		sb.append("Part Num\t\t\tPrice\tLabor\tName\n");
+		sb.append("Part Number, Price, Labor, Name\n");
 		List<Part> items = estimate.getParts();
 		Collections.sort(items, new Comparator<Part>() {
 
@@ -73,32 +79,34 @@ public class EstimateController {
 				return o1.getPartNumber().compareTo(o2.getPartNumber());
 			}
 		});
+		
+		BigDecimal partsTotal = BigDecimal.ZERO;
+		BigDecimal laborTotal = BigDecimal.ZERO;
 
 		for (Part item : items) {
 			sb.append(item.getPartNumber());
-			sb.append("\t");
-			if (item.getPartNumber().length() < 9) {
-				sb.append("\t\t");
-			} else if (item.getPartNumber().length() < 12) {
-				sb.append("\t");
-			}
-			sb.append(NumberFormat.getCurrencyInstance().format(0.00)); // TODO pass or calculate price
-			sb.append("\t");
-			sb.append(NumberFormat.getCurrencyInstance().format(0.00)); // TODO pass or calculate labor
-			sb.append("\t");
+			sb.append(", ");
+			partsTotal = partsTotal.add(item.getPrice() == null ? BigDecimal.ZERO : item.getPrice());
+			laborTotal = laborTotal.add(item.getLabor() == null ? BigDecimal.ZERO : item.getLabor());
+			sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(item.getPrice() == null ? BigDecimal.ZERO : item.getPrice()));
+			sb.append(", ");
+			sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(item.getLabor() == null ? BigDecimal.ZERO : item.getLabor()));
+			sb.append(", ");
 			sb.append(item.getName());
 			sb.append("\n");
 		}
-		sb.append("\n\nParts Total: ");
-		sb.append(NumberFormat.getCurrencyInstance().format(0.00));
-		sb.append("\nLabor Total: ");
-		sb.append(NumberFormat.getCurrencyInstance().format(0.00));
+		BigDecimal materials = laborTotal.multiply(new BigDecimal(0.10));
+		BigDecimal tax = partsTotal.multiply(new BigDecimal(0.04));
+		sb.append("\n\nParts: ");
+		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(partsTotal));
+		sb.append("\nLabor: ");
+		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(laborTotal));
 		sb.append("\nMaterials: ");
-		sb.append(NumberFormat.getCurrencyInstance().format(0.00));
-		sb.append("\nTax: ");
-		sb.append(NumberFormat.getCurrencyInstance().format(0.00));
+		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(materials));
+		sb.append("\nSales Tax: ");
+		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(tax));
 		sb.append("\n\nTotal: ");
-		sb.append(NumberFormat.getCurrencyInstance().format(0.00 + 0.00 + 0.00 + 0.00));
+		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(partsTotal.add(laborTotal).add(materials).add(tax)));
 
 		sb.append("\n\nComments:\n\n");
 		sb.append(estimate.getComments() == null ? "None" : estimate.getComments());
@@ -106,12 +114,11 @@ public class EstimateController {
 		try {
 	    	MimeMessage mail = mailSender.createMimeMessage();
 	        MimeMessageHelper helper = new MimeMessageHelper(mail, true);
-//	        helper.setTo("estimate@amdinstallation.com");
-	        helper.setTo("richard.gronback@gmail.com");
+	        helper.setTo(properties.getEstimateEmail());
 	        helper.setCc(estimate.getEmail());
 	        helper.setBcc("richard.gronback@gmail.com");
-	        helper.setFrom("admin@amdinstallation.com", "AMD Installation Center");
-	        helper.setReplyTo("admin@amdinstallation.com");
+	        helper.setFrom(properties.getAdminEmail(), properties.getAdminEmailName());
+	        helper.setReplyTo(properties.getAdminEmail());
 	        helper.setSubject("Vehicle Estimate");
 	        helper.setText(sb.toString());
 	        mailSender.send(mail);

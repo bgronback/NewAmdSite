@@ -12,8 +12,8 @@ export const DEV_PARTS = [
           {
               from: 1964,
               to: 1967,
-              make: 'Chevrolet',
-              model: 'Chevelle'
+              make: 'CHEVROLET',
+              model: 'CHEVELLE'
           }
       ]
   },
@@ -30,8 +30,8 @@ export const DEV_PARTS = [
           {
               from: 1968,
               to: 1972,
-              make: 'Buick',
-              model: 'Skylark'
+              make: 'BUICK',
+              model: 'SKYLARK'
           }
       ]
   }
@@ -46,12 +46,5 @@ export const BLANK_PART = {
     labor: undefined,
     description: undefined,
     image: undefined,
-    applications: [
-        {
-            from: undefined,
-            to: undefined,
-            make: undefined,
-            model: undefined
-        }
-    ]
+    applications: []
 };

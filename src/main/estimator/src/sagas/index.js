@@ -2,6 +2,7 @@ import { takeLatest } from "redux-saga"
 import { fork } from "redux-saga/effects"
 import { partFetchList, partAddEdit, partDelete, partFetch } from "./parts"
 import { estimateAddEdit, yearSelected } from "./estimates"
+import { login } from "./users"
 
 export function* sagas() {
     yield [
@@ -10,6 +11,7 @@ export function* sagas() {
         fork(takeLatest, 'PART_DELETE', partDelete),
         fork(takeLatest, 'PART_FETCH', partFetch),
         fork(takeLatest, 'ESTIMATE_SUBMIT', estimateAddEdit),
-        fork(takeLatest, 'YEAR_SELECTED', yearSelected)
+        fork(takeLatest, 'YEAR_SELECTED', yearSelected),
+        fork(takeLatest, 'USER_LOGIN', login)
     ];
 }

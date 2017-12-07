@@ -65,7 +65,7 @@ export default class ApiParts {
 
     static fetchPart(partId) {
         return new Promise(resolve => {
-            if (partId === -1) {
+            if (partId === '-1') {
                 resolve(BLANK_PART);
             } else if (process.env.NODE_ENV === 'production') {
                 $.ajax({url: `/api/v1/parts/${partId}/doc`, type: 'GET'}, {dataType: 'json'})
@@ -76,7 +76,7 @@ export default class ApiParts {
                     });
             } else {
                 setTimeout(() => {
-                    resolve(DEV_PARTS.filter((p) => { return p._id == partId })[0]); // === breaks this
+                    resolve(DEV_PARTS.filter((p) => { return p._id === parseInt(partId) })[0]);
                 }, 500);
             }
         });

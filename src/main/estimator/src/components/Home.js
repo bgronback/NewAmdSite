@@ -19,6 +19,7 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import TextInput from "./Widgets/FormFields/material/TextInput"
 import TextAreaInput from "./Widgets/FormFields/material/TextAreaInput"
 
+
 export class Home extends React.Component {
 
     constructor(props) {
@@ -37,14 +38,6 @@ export class Home extends React.Component {
         this.renderSelectParts = this.renderSelectParts.bind(this);
         this.renderSelectCar = this.renderSelectCar.bind(this);
         this.handleRequestSnackbarClose = this.handleRequestSnackbarClose.bind(this);
-    }
-
-    componentWillMount() {
-
-    }
-
-    componentWillUpdate(nextProps, nextState) {
-
     }
 
     handleNext() {
@@ -185,7 +178,7 @@ export class Home extends React.Component {
                     <TableRow>
                         <TableHeaderColumn>Brand</TableHeaderColumn>
                         <TableHeaderColumn>Part Number</TableHeaderColumn>
-                        <TableHeaderColumn style={{ width: '30%' }}>Name</TableHeaderColumn>
+                        <TableHeaderColumn>Name</TableHeaderColumn>
                         <TableHeaderColumn>Price</TableHeaderColumn>
                         <TableHeaderColumn>Image</TableHeaderColumn>
                     </TableRow>
@@ -201,7 +194,7 @@ export class Home extends React.Component {
                 <TableRow key={index}>
                     <TableRowColumn>{row.brand}</TableRowColumn>
                     <TableRowColumn>{row.partNumber}</TableRowColumn>
-                    <TableRowColumn style={{ width: '30%', whiteSpace: 'normal', wordWrap: 'break-word' }}>{row.name}</TableRowColumn>
+                    <TableRowColumn style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>{row.name}</TableRowColumn>
                     <TableRowColumn>{row.price}</TableRowColumn>
                     <TableRowColumn><img src={row.image} alt={row.name} width="50"/></TableRowColumn>
                 </TableRow>
@@ -219,7 +212,8 @@ export class Home extends React.Component {
         const laborTotal = parts ? parts.map(p => p.labor).reduce((a, b) => (a + b), 0).toFixed(2) : 0.00;
         const total = (parseFloat(partsTotal) + parseFloat(laborTotal)).toFixed(2);
         const materialTotal = (laborTotal * 0.10).toFixed(2); // TODO make percentage configurable
-        const grandTotal = (parseFloat(total) + parseFloat(materialTotal)).toFixed(2);
+        const tax = (partsTotal * 0.04).toFixed(2); // TODO make percentage configurable
+        const grandTotal = (parseFloat(total) + parseFloat(materialTotal) + parseFloat(tax)).toFixed(2);
 
         return <div className="container-fluid">
                     <h4 style={{textAlign: 'center'}}>Estimate Summary</h4>
@@ -244,19 +238,26 @@ export class Home extends React.Component {
                                 </TableRow>
                             )) : <TableRow key={0}>
                                 <TableRowColumn>No parts selected</TableRowColumn></TableRow>}
-                            <TableRow key={99997}>
+                            <TableRow key={99996}>
                                 <TableRowColumn></TableRowColumn>
-                                <TableRowColumn></TableRowColumn>
+                                <TableRowColumn style={{textAlign: 'right'}}>Subtotals</TableRowColumn>
                                 <TableRowColumn style={{textAlign: 'right'}}>{partsTotal}</TableRowColumn>
                                 <TableRowColumn style={{textAlign: 'right'}}>{laborTotal}</TableRowColumn>
                                 <TableRowColumn style={{textAlign: 'right'}}>{total}</TableRowColumn>
                             </TableRow>
-                            <TableRow key={99998}>
+                            <TableRow key={99997}>
                                 <TableRowColumn></TableRowColumn>
                                 <TableRowColumn></TableRowColumn>
                                 <TableRowColumn style={{textAlign: 'right'}}></TableRowColumn>
                                 <TableRowColumn style={{textAlign: 'right'}}>Materials</TableRowColumn>
                                 <TableRowColumn style={{textAlign: 'right'}}>{materialTotal}</TableRowColumn>
+                            </TableRow>
+                            <TableRow key={99998}>
+                                <TableRowColumn></TableRowColumn>
+                                <TableRowColumn></TableRowColumn>
+                                <TableRowColumn style={{textAlign: 'right'}}></TableRowColumn>
+                                <TableRowColumn style={{textAlign: 'right'}}>Sales Tax</TableRowColumn>
+                                <TableRowColumn style={{textAlign: 'right'}}>{tax}</TableRowColumn>
                             </TableRow>
                             <TableRow key={99999}>
                                 <TableRowColumn></TableRowColumn>
@@ -298,7 +299,7 @@ export class Home extends React.Component {
             </Col>
             <div>
                 <br/>
-                <p style={{textAlign: 'center'}}>You will receive a confirmation email of this estimate.</p>
+                <p style={{textAlign: 'center'}}>You will receive an email confirmation of this estimate.</p>
             </div>
         </div>
     }
@@ -358,6 +359,7 @@ export class Home extends React.Component {
 
 function mapStateToProps(state, props) {
     return {
+        user: state.user,
         estimate: state.estimate,
         initialValues: undefined
     }

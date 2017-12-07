@@ -134,7 +134,7 @@ export default class PartList extends Component {
               <TableRow key={index}>
                 <TableRowColumn>{row.brand}</TableRowColumn>
                 <TableRowColumn>{row.partNumber}</TableRowColumn>
-                <TableRowColumn>{row.name}</TableRowColumn>
+                <TableRowColumn style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>{row.name}</TableRowColumn>
                 <TableRowColumn><FlatButton icon={<ImageEdit />}
                                             primary={true}
                                             onTouchTap={() => { this.props.dispatch(push(`/part/` + row._id)) }}/>

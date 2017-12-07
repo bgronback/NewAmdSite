@@ -36,8 +36,6 @@ export function* partDelete(action) {
 export function* partFetch(action) {
     const result = yield call(ApiParts.fetchPart, action.partId);
 
-    console.log('fetched part: ' + JSON.stringify(result));
-
     yield put({
         type: 'PART_FETCH_SUCCESS',
         part: result
