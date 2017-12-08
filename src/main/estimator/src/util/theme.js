@@ -1,7 +1,7 @@
 import {blue500} from 'material-ui/styles/colors'
 import {blue700} from 'material-ui/styles/colors'
 import {grey400} from 'material-ui/styles/colors'
-import {pinkA200} from 'material-ui/styles/colors'
+import {grey900} from 'material-ui/styles/colors'
 import {grey100} from 'material-ui/styles/colors'
 import {grey300} from 'material-ui/styles/colors'
 import {grey500} from 'material-ui/styles/colors'
@@ -23,7 +23,7 @@ export default {
     primary1Color: blue500,
     primary2Color: blue700,
     primary3Color: grey400,
-    accent1Color: pinkA200,
+    accent1Color: grey900,
     accent2Color: grey100,
     accent3Color: grey500,
     textColor: darkBlack,

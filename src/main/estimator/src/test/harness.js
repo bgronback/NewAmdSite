@@ -37,6 +37,33 @@ export const DEV_PARTS = [
   }
 ];
 
+export const DEV_SERVICES = [
+    {
+        _id: 0,
+        serviceNumber: '01-002',
+        name: 'Media blast and epoxy seal',
+        price: 850.00
+    },
+    {
+        _id: 1,
+        serviceNumber: '01-003-L',
+        name: 'Door Re-skin (Left)',
+        price: 275.00
+    },
+    {
+        _id: 2,
+        serviceNumber: '01-003-R',
+        name: 'Door Re-skin (Right)',
+        price: 275.00
+    },
+    {
+        _id: 3,
+        serviceNumber: '01-004',
+        name: 'Door Hinge Rebuild (all)',
+        price: 150.00
+    }
+];
+
 export const BLANK_PART = {
     _id: undefined,
     brand: undefined,

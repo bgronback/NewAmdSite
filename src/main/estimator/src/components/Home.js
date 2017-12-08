@@ -18,7 +18,8 @@ import Snackbar from 'material-ui/Snackbar';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
 import TextInput from "./Widgets/FormFields/material/TextInput"
 import TextAreaInput from "./Widgets/FormFields/material/TextAreaInput"
-
+import {Tabs, Tab} from 'material-ui/Tabs'
+import { DEV_SERVICES } from '../test/harness'
 
 export class Home extends React.Component {
 
@@ -29,7 +30,8 @@ export class Home extends React.Component {
             stepIndex: -1,
             visited: [],
             snackbar: false,
-            selected: []
+            selected: [],
+            services: []
         };
         this.formSubmit = this.formSubmit.bind(this);
         this.handleNext = this.handleNext.bind(this);
@@ -60,6 +62,12 @@ export class Home extends React.Component {
         }
     }
 
+    handleServiceRowSelection(selectedRows) {
+        if (selectedRows.length > 0) {
+            this.setState({services: selectedRows.slice(0), enable_delete: true});
+        }
+    }
+
     getStepContent(stepIndex) {
         // return all steps, hiding those not selected to maintain form fields active
         return <div>
@@ -77,7 +85,7 @@ export class Home extends React.Component {
 
         return (
             <Row>
-                <Form horizontal onSubmit={handleSubmit(this.formSubmit)}>
+                <Form horizontal onSubmit={handleSubmit(this.formSubmit)} style={{ marginLeft: 20, marginRight: 20}}>
                     <Stepper linear={false} activeStep={stepIndex}>
                         <Step>
                             <StepButton onClick={() => this.setState({stepIndex: 0})}>
@@ -172,19 +180,45 @@ export class Home extends React.Component {
     renderSelectParts() {
         var parts = this.props.estimate.parts;
         return <div className="container-fluid">
-                <p style={{textAlign: 'center'}}>Select sheet metal parts you will need.</p>
-            <Table onRowSelection={(selection) => {this.handleRowSelection(selection)}} multiSelectable={true} wrapperStyle={{ maxHeight: '500px' }}>
-                <TableHeader enableSelectAll={false} displaySelectAll={false}>
-                    <TableRow>
-                        <TableHeaderColumn>Brand</TableHeaderColumn>
-                        <TableHeaderColumn>Part Number</TableHeaderColumn>
-                        <TableHeaderColumn>Name</TableHeaderColumn>
-                        <TableHeaderColumn>Price</TableHeaderColumn>
-                        <TableHeaderColumn>Image</TableHeaderColumn>
-                    </TableRow>
-                </TableHeader>
-                {this.renderTable(parts)}
-            </Table>
+            <Tabs>
+                <Tab label="Parts">
+                    <p style={{textAlign: 'center', marginTop: 10}}>Select sheet metal parts you will need</p>
+                    <Table onRowSelection={(selection) => {this.handleRowSelection(selection)}} multiSelectable={true} wrapperStyle={{ maxHeight: '500px' }}>
+                        <TableHeader enableSelectAll={false} displaySelectAll={false}>
+                            <TableRow>
+                                <TableHeaderColumn style={{ whiteSpace: 'nowrap' }}>Brand</TableHeaderColumn>
+                                <TableHeaderColumn style={{ whiteSpace: 'nowrap' }}>Part Number</TableHeaderColumn>
+                                <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: '49%' }}>Name</TableHeaderColumn>
+                                <TableHeaderColumn style={{ whiteSpace: 'nowrap' }}>Price</TableHeaderColumn>
+                                <TableHeaderColumn style={{ whiteSpace: 'nowrap' }}>Image</TableHeaderColumn>
+                            </TableRow>
+                        </TableHeader>
+                        {this.renderTable(parts)}
+                    </Table>
+                </Tab>
+                <Tab label="Services">
+                    <p style={{textAlign: 'center', marginTop: 10}}>Select additional services for your car</p>
+                    <Table onRowSelection={(selection) => {this.handleServiceRowSelection(selection)}} multiSelectable={true} wrapperStyle={{ maxHeight: '500px' }}>
+                        <TableHeader enableSelectAll={false} displaySelectAll={false}>
+                            <TableRow>
+                                <TableHeaderColumn style={{ whiteSpace: 'nowrap' }}>Service</TableHeaderColumn>
+                                <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: '49%' }}>Name</TableHeaderColumn>
+                                <TableHeaderColumn style={{ whiteSpace: 'nowrap' }}>Price</TableHeaderColumn>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody showRowHover={true} deselectOnClickaway={true}>
+                            {DEV_SERVICES ? DEV_SERVICES.map((row, index) => (
+                                <TableRow key={index}>
+                                    <TableRowColumn style={{ whiteSpace: 'nowrap' }}>{row.serviceNumber}</TableRowColumn>
+                                    <TableRowColumn style={{ whiteSpace: 'nowrap', width: '49%' }}>{row.name}</TableRowColumn>
+                                    <TableRowColumn style={{ whiteSpace: 'nowrap' }}>{row.price}</TableRowColumn>
+                                </TableRow>
+                            )) : <TableRow key={0} selectable={false}>
+                                <TableRowColumn>No services found</TableRowColumn></TableRow>}
+                        </TableBody>
+                    </Table>
+                </Tab>
+            </Tabs>
         </div>
     }
 
@@ -192,11 +226,10 @@ export class Home extends React.Component {
         return <TableBody showRowHover={true} deselectOnClickaway={true}>
             {parts ? parts.map((row, index) => (
                 <TableRow key={index}>
-                    <TableRowColumn>{row.brand}</TableRowColumn>
-                    <TableRowColumn>{row.partNumber}</TableRowColumn>
-                    <TableRowColumn style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>{row.name}</TableRowColumn>
-                    <TableRowColumn>{row.price}</TableRowColumn>
-                    <TableRowColumn><img src={row.image} alt={row.name} width="50"/></TableRowColumn>
+                    <TableRowColumn style={{ whiteSpace: 'nowrap' }}>{row.brand}</TableRowColumn>
+                    <TableRowColumn style={{ whiteSpace: 'nowrap' }}>{row.partNumber}</TableRowColumn>
+                    <TableRowColumn style={{ whiteSpace: 'nowrap', width: '49%' }}>{row.name}</TableRowColumn>
+                    <TableRowColumn style={{ whiteSpace: 'nowrap' }}>{row.price}</TableRowColumn>
                 </TableRow>
             )) : <TableRow key={0} selectable={false}>
                 <TableRowColumn>No records found</TableRowColumn></TableRow>}
@@ -207,10 +240,13 @@ export class Home extends React.Component {
         const {handleSubmit, error, invalid, pristine, submitting} = this.props;
         const parts = [];
         this.state.selected.forEach((selection) => { parts.push(this.props.estimate.parts[selection])});
+        const services = [];
+        this.state.services.forEach((selection) => { services.push(DEV_SERVICES[selection])});
 
         const partsTotal = parts ? parts.map(p => p.price).reduce((a, b) => (a + b), 0).toFixed(2) : 0.00;
+        const servicesTotal = services ? services.map(p => p.price).reduce((a, b) => (a + b), 0).toFixed(2) : 0.00;
         const laborTotal = parts ? parts.map(p => p.labor).reduce((a, b) => (a + b), 0).toFixed(2) : 0.00;
-        const total = (parseFloat(partsTotal) + parseFloat(laborTotal)).toFixed(2);
+        const total = (parseFloat(partsTotal) + parseFloat(servicesTotal) + parseFloat(laborTotal)).toFixed(2);
         const materialTotal = (laborTotal * 0.10).toFixed(2); // TODO make percentage configurable
         const tax = (partsTotal * 0.04).toFixed(2); // TODO make percentage configurable
         const grandTotal = (parseFloat(total) + parseFloat(materialTotal) + parseFloat(tax)).toFixed(2);
@@ -220,7 +256,7 @@ export class Home extends React.Component {
                     <Table selectable={false}>
                         <TableHeader adjustForCheckbox={false} enableSelectAll={false} displaySelectAll={false}>
                             <TableRow>
-                                <TableHeaderColumn>Part</TableHeaderColumn>
+                                <TableHeaderColumn>Part/Service</TableHeaderColumn>
                                 <TableHeaderColumn style={{ width: '30%' }}>Name</TableHeaderColumn>
                                 <TableHeaderColumn style={{textAlign: 'right'}}>Price</TableHeaderColumn>
                                 <TableHeaderColumn style={{textAlign: 'right'}}>Labor</TableHeaderColumn>
@@ -238,6 +274,16 @@ export class Home extends React.Component {
                                 </TableRow>
                             )) : <TableRow key={0}>
                                 <TableRowColumn>No parts selected</TableRowColumn></TableRow>}
+                            {services ? services.map((row, index) => (
+                                <TableRow key={index}>
+                                    <TableRowColumn>{row.serviceNumber}</TableRowColumn>
+                                    <TableRowColumn style={{ width: '30%', whiteSpace: 'normal', wordWrap: 'break-word' }}>{row.name}</TableRowColumn>
+                                    <TableRowColumn style={{textAlign: 'right'}}>{row.price}</TableRowColumn>
+                                    <TableRowColumn style={{textAlign: 'right'}}>0</TableRowColumn>
+                                    <TableRowColumn style={{textAlign: 'right'}}>{(row.price).toFixed(2)}</TableRowColumn>
+                                </TableRow>
+                            )) : <TableRow key={0}>
+                                <TableRowColumn>No services selected</TableRowColumn></TableRow>}
                             <TableRow key={99996}>
                                 <TableRowColumn></TableRowColumn>
                                 <TableRowColumn style={{textAlign: 'right'}}>Subtotals</TableRowColumn>
@@ -309,7 +355,7 @@ export class Home extends React.Component {
             <h2 style={{textAlign: 'center'}}>Save Money!</h2>
             <p>Want to save money on all of those extra parts needed to finish your car?
                 In addition to the sheet metal required for our step in your restoration project,
-                you can order parts from the <a href="http://www.autometaldirect.com/" target="_blank">AMD catalog</a> and save on the shipping. For additional parts at a discount, please call our parts sales division at 844-275-9254.</p>
+                you can order parts from the <a href="http://www.autometaldirect.com/" target="_blank">AMD catalog</a> and save on the shipping. For additional parts at a discount, please call our parts sales division at (844) 275-9254.</p>
             <br/>
             <p style={{textAlign: 'center'}}><em>Now, let's begin your estimate...</em></p>
             <br/>
@@ -327,6 +373,8 @@ export class Home extends React.Component {
         // gather part numbers
         const parts = [];
         this.state.selected.forEach((selection) => { parts.push(this.props.estimate.parts[selection])});
+        const services = [];
+        this.state.services.forEach((selection) => { services.push(DEV_SERVICES[selection])});
 
         return new Promise((resolve, reject) => {
             dispatch({
@@ -336,6 +384,7 @@ export class Home extends React.Component {
                     model: values.model,
                     year: values.year,
                     parts: parts,
+                    services: services,
                     name: values.name,
                     email: values.email,
                     phone: values.phone,

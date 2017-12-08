@@ -16,7 +16,7 @@ import {MuiThemeProvider} from "material-ui";
 const getTheme = () => {
     let overwrites = {
         "appBar": {
-            "color": Colors.pink700
+            "color": Colors.grey900
         }
     };
     return getMuiTheme(baseTheme, overwrites);

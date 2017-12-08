@@ -2,7 +2,7 @@ import MODELS from '../util/models'
 import MAKES from '../util/makes'
 import YEARS from '../util/years'
 
-export default function estimate(state = { estimate: undefined, status: undefined, makes: MAKES, models: [], years: [], parts: undefined }, action) {
+export default function estimate(state = { estimate: undefined, status: undefined, makes: MAKES, models: [], years: [], parts: undefined, services: [] }, action) {
 
     switch (action.type) {
         case 'PART_ADD_SUCCESS':

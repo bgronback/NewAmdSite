@@ -8931,7 +8931,7 @@
 	var getTheme = function getTheme() {
 	    var overwrites = {
 	        "appBar": {
-	            "color": Colors.pink700
+	            "color": Colors.grey900
 	        }
 	    };
 	    return (0, _getMuiTheme2.default)(_lightBaseTheme2.default, overwrites);
@@ -49989,7 +49989,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function estimate() {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { estimate: undefined, status: undefined, makes: _makes2.default, models: [], years: [], parts: undefined };
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { estimate: undefined, status: undefined, makes: _makes2.default, models: [], years: [], parts: undefined, services: [] };
 	    var action = arguments[1];
 
 
@@ -60880,6 +60880,28 @@
 	    }]
 	}];
 
+	var DEV_SERVICES = exports.DEV_SERVICES = [{
+	    _id: 0,
+	    serviceNumber: '01-002',
+	    name: 'Media blast and epoxy seal',
+	    price: 850.00
+	}, {
+	    _id: 1,
+	    serviceNumber: '01-003-L',
+	    name: 'Door Re-skin (Left)',
+	    price: 275.00
+	}, {
+	    _id: 2,
+	    serviceNumber: '01-003-R',
+	    name: 'Door Re-skin (Right)',
+	    price: 275.00
+	}, {
+	    _id: 3,
+	    serviceNumber: '01-004',
+	    name: 'Door Hinge Rebuild (all)',
+	    price: 150.00
+	}];
+
 	var BLANK_PART = exports.BLANK_PART = {
 	    _id: undefined,
 	    brand: undefined,
@@ -60899,6 +60921,8 @@
 	    }
 
 	    __REACT_HOT_LOADER__.register(DEV_PARTS, 'DEV_PARTS', '/Users/rgronback/git/NewAmdSite/src/main/estimator/src/test/harness.js');
+
+	    __REACT_HOT_LOADER__.register(DEV_SERVICES, 'DEV_SERVICES', '/Users/rgronback/git/NewAmdSite/src/main/estimator/src/test/harness.js');
 
 	    __REACT_HOT_LOADER__.register(BLANK_PART, 'BLANK_PART', '/Users/rgronback/git/NewAmdSite/src/main/estimator/src/test/harness.js');
 	}();
@@ -61239,7 +61263,7 @@
 
 	var _Home2 = _interopRequireDefault(_Home);
 
-	var _PartEdit = __webpack_require__(1237);
+	var _PartEdit = __webpack_require__(1242);
 
 	var _PartEdit2 = _interopRequireDefault(_PartEdit);
 
@@ -72579,6 +72603,10 @@
 
 	var _TextAreaInput2 = _interopRequireDefault(_TextAreaInput);
 
+	var _Tabs = __webpack_require__(1237);
+
+	var _harness = __webpack_require__(849);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -72599,7 +72627,8 @@
 	            stepIndex: -1,
 	            visited: [],
 	            snackbar: false,
-	            selected: []
+	            selected: [],
+	            services: []
 	        };
 	        _this.formSubmit = _this.formSubmit.bind(_this);
 	        _this.handleNext = _this.handleNext.bind(_this);
@@ -72634,6 +72663,13 @@
 	        value: function handleRowSelection(selectedRows) {
 	            if (selectedRows.length > 0) {
 	                this.setState({ selected: selectedRows.slice(0), enable_delete: true });
+	            }
+	        }
+	    }, {
+	        key: "handleServiceRowSelection",
+	        value: function handleServiceRowSelection(selectedRows) {
+	            if (selectedRows.length > 0) {
+	                this.setState({ services: selectedRows.slice(0), enable_delete: true });
 	            }
 	        }
 	    }, {
@@ -72689,7 +72725,7 @@
 	                null,
 	                _react2.default.createElement(
 	                    _reactBootstrap.Form,
-	                    { horizontal: true, onSubmit: handleSubmit(this.formSubmit) },
+	                    { horizontal: true, onSubmit: handleSubmit(this.formSubmit), style: { marginLeft: 20, marginRight: 20 } },
 	                    _react2.default.createElement(
 	                        _Stepper.Stepper,
 	                        { linear: false, activeStep: stepIndex },
@@ -72853,49 +72889,128 @@
 	                "div",
 	                { className: "container-fluid" },
 	                _react2.default.createElement(
-	                    "p",
-	                    { style: { textAlign: 'center' } },
-	                    "Select sheet metal parts you will need."
-	                ),
-	                _react2.default.createElement(
-	                    _Table.Table,
-	                    { onRowSelection: function onRowSelection(selection) {
-	                            _this4.handleRowSelection(selection);
-	                        }, multiSelectable: true, wrapperStyle: { maxHeight: '500px' } },
+	                    _Tabs.Tabs,
+	                    null,
 	                    _react2.default.createElement(
-	                        _Table.TableHeader,
-	                        { enableSelectAll: false, displaySelectAll: false },
+	                        _Tabs.Tab,
+	                        { label: "Parts" },
 	                        _react2.default.createElement(
-	                            _Table.TableRow,
-	                            null,
+	                            "p",
+	                            { style: { textAlign: 'center', marginTop: 10 } },
+	                            "Select sheet metal parts you will need"
+	                        ),
+	                        _react2.default.createElement(
+	                            _Table.Table,
+	                            { onRowSelection: function onRowSelection(selection) {
+	                                    _this4.handleRowSelection(selection);
+	                                }, multiSelectable: true, wrapperStyle: { maxHeight: '500px' } },
 	                            _react2.default.createElement(
-	                                _Table.TableHeaderColumn,
-	                                null,
-	                                "Brand"
+	                                _Table.TableHeader,
+	                                { enableSelectAll: false, displaySelectAll: false },
+	                                _react2.default.createElement(
+	                                    _Table.TableRow,
+	                                    null,
+	                                    _react2.default.createElement(
+	                                        _Table.TableHeaderColumn,
+	                                        { style: { whiteSpace: 'nowrap' } },
+	                                        "Brand"
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        _Table.TableHeaderColumn,
+	                                        { style: { whiteSpace: 'nowrap' } },
+	                                        "Part Number"
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        _Table.TableHeaderColumn,
+	                                        { style: { whiteSpace: 'nowrap', width: '49%' } },
+	                                        "Name"
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        _Table.TableHeaderColumn,
+	                                        { style: { whiteSpace: 'nowrap' } },
+	                                        "Price"
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        _Table.TableHeaderColumn,
+	                                        { style: { whiteSpace: 'nowrap' } },
+	                                        "Image"
+	                                    )
+	                                )
 	                            ),
-	                            _react2.default.createElement(
-	                                _Table.TableHeaderColumn,
-	                                null,
-	                                "Part Number"
-	                            ),
-	                            _react2.default.createElement(
-	                                _Table.TableHeaderColumn,
-	                                null,
-	                                "Name"
-	                            ),
-	                            _react2.default.createElement(
-	                                _Table.TableHeaderColumn,
-	                                null,
-	                                "Price"
-	                            ),
-	                            _react2.default.createElement(
-	                                _Table.TableHeaderColumn,
-	                                null,
-	                                "Image"
-	                            )
+	                            this.renderTable(parts)
 	                        )
 	                    ),
-	                    this.renderTable(parts)
+	                    _react2.default.createElement(
+	                        _Tabs.Tab,
+	                        { label: "Services" },
+	                        _react2.default.createElement(
+	                            "p",
+	                            { style: { textAlign: 'center', marginTop: 10 } },
+	                            "Select additional services for your car"
+	                        ),
+	                        _react2.default.createElement(
+	                            _Table.Table,
+	                            { onRowSelection: function onRowSelection(selection) {
+	                                    _this4.handleServiceRowSelection(selection);
+	                                }, multiSelectable: true, wrapperStyle: { maxHeight: '500px' } },
+	                            _react2.default.createElement(
+	                                _Table.TableHeader,
+	                                { enableSelectAll: false, displaySelectAll: false },
+	                                _react2.default.createElement(
+	                                    _Table.TableRow,
+	                                    null,
+	                                    _react2.default.createElement(
+	                                        _Table.TableHeaderColumn,
+	                                        { style: { whiteSpace: 'nowrap' } },
+	                                        "Service"
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        _Table.TableHeaderColumn,
+	                                        { style: { whiteSpace: 'nowrap', width: '49%' } },
+	                                        "Name"
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        _Table.TableHeaderColumn,
+	                                        { style: { whiteSpace: 'nowrap' } },
+	                                        "Price"
+	                                    )
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                _Table.TableBody,
+	                                { showRowHover: true, deselectOnClickaway: true },
+	                                _harness.DEV_SERVICES ? _harness.DEV_SERVICES.map(function (row, index) {
+	                                    return _react2.default.createElement(
+	                                        _Table.TableRow,
+	                                        { key: index },
+	                                        _react2.default.createElement(
+	                                            _Table.TableRowColumn,
+	                                            { style: { whiteSpace: 'nowrap' } },
+	                                            row.serviceNumber
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            _Table.TableRowColumn,
+	                                            { style: { whiteSpace: 'nowrap', width: '49%' } },
+	                                            row.name
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            _Table.TableRowColumn,
+	                                            { style: { whiteSpace: 'nowrap' } },
+	                                            row.price
+	                                        )
+	                                    );
+	                                }) : _react2.default.createElement(
+	                                    _Table.TableRow,
+	                                    { key: 0, selectable: false },
+	                                    _react2.default.createElement(
+	                                        _Table.TableRowColumn,
+	                                        null,
+	                                        "No services found"
+	                                    )
+	                                )
+	                            )
+	                        )
+	                    )
 	                )
 	            );
 	        }
@@ -72911,28 +73026,23 @@
 	                        { key: index },
 	                        _react2.default.createElement(
 	                            _Table.TableRowColumn,
-	                            null,
+	                            { style: { whiteSpace: 'nowrap' } },
 	                            row.brand
 	                        ),
 	                        _react2.default.createElement(
 	                            _Table.TableRowColumn,
-	                            null,
+	                            { style: { whiteSpace: 'nowrap' } },
 	                            row.partNumber
 	                        ),
 	                        _react2.default.createElement(
 	                            _Table.TableRowColumn,
-	                            { style: { whiteSpace: 'normal', wordWrap: 'break-word' } },
+	                            { style: { whiteSpace: 'nowrap', width: '49%' } },
 	                            row.name
 	                        ),
 	                        _react2.default.createElement(
 	                            _Table.TableRowColumn,
-	                            null,
+	                            { style: { whiteSpace: 'nowrap' } },
 	                            row.price
-	                        ),
-	                        _react2.default.createElement(
-	                            _Table.TableRowColumn,
-	                            null,
-	                            _react2.default.createElement("img", { src: row.image, alt: row.name, width: "50" })
 	                        )
 	                    );
 	                }) : _react2.default.createElement(
@@ -72962,8 +73072,17 @@
 	            this.state.selected.forEach(function (selection) {
 	                parts.push(_this5.props.estimate.parts[selection]);
 	            });
+	            var services = [];
+	            this.state.services.forEach(function (selection) {
+	                services.push(_harness.DEV_SERVICES[selection]);
+	            });
 
 	            var partsTotal = parts ? parts.map(function (p) {
+	                return p.price;
+	            }).reduce(function (a, b) {
+	                return a + b;
+	            }, 0).toFixed(2) : 0.00;
+	            var servicesTotal = services ? services.map(function (p) {
 	                return p.price;
 	            }).reduce(function (a, b) {
 	                return a + b;
@@ -72973,7 +73092,7 @@
 	            }).reduce(function (a, b) {
 	                return a + b;
 	            }, 0).toFixed(2) : 0.00;
-	            var total = (parseFloat(partsTotal) + parseFloat(laborTotal)).toFixed(2);
+	            var total = (parseFloat(partsTotal) + parseFloat(servicesTotal) + parseFloat(laborTotal)).toFixed(2);
 	            var materialTotal = (laborTotal * 0.10).toFixed(2); // TODO make percentage configurable
 	            var tax = (partsTotal * 0.04).toFixed(2); // TODO make percentage configurable
 	            var grandTotal = (parseFloat(total) + parseFloat(materialTotal) + parseFloat(tax)).toFixed(2);
@@ -72998,7 +73117,7 @@
 	                            _react2.default.createElement(
 	                                _Table.TableHeaderColumn,
 	                                null,
-	                                "Part"
+	                                "Part/Service"
 	                            ),
 	                            _react2.default.createElement(
 	                                _Table.TableHeaderColumn,
@@ -73062,6 +73181,45 @@
 	                                _Table.TableRowColumn,
 	                                null,
 	                                "No parts selected"
+	                            )
+	                        ),
+	                        services ? services.map(function (row, index) {
+	                            return _react2.default.createElement(
+	                                _Table.TableRow,
+	                                { key: index },
+	                                _react2.default.createElement(
+	                                    _Table.TableRowColumn,
+	                                    null,
+	                                    row.serviceNumber
+	                                ),
+	                                _react2.default.createElement(
+	                                    _Table.TableRowColumn,
+	                                    { style: { width: '30%', whiteSpace: 'normal', wordWrap: 'break-word' } },
+	                                    row.name
+	                                ),
+	                                _react2.default.createElement(
+	                                    _Table.TableRowColumn,
+	                                    { style: { textAlign: 'right' } },
+	                                    row.price
+	                                ),
+	                                _react2.default.createElement(
+	                                    _Table.TableRowColumn,
+	                                    { style: { textAlign: 'right' } },
+	                                    "0"
+	                                ),
+	                                _react2.default.createElement(
+	                                    _Table.TableRowColumn,
+	                                    { style: { textAlign: 'right' } },
+	                                    row.price.toFixed(2)
+	                                )
+	                            );
+	                        }) : _react2.default.createElement(
+	                            _Table.TableRow,
+	                            { key: 0 },
+	                            _react2.default.createElement(
+	                                _Table.TableRowColumn,
+	                                null,
+	                                "No services selected"
 	                            )
 	                        ),
 	                        _react2.default.createElement(
@@ -73240,7 +73398,7 @@
 	                        { href: "http://www.autometaldirect.com/", target: "_blank" },
 	                        "AMD catalog"
 	                    ),
-	                    " and save on the shipping. For additional parts at a discount, please call our parts sales division at 844-275-9254."
+	                    " and save on the shipping. For additional parts at a discount, please call our parts sales division at (844) 275-9254."
 	                ),
 	                _react2.default.createElement("br", null),
 	                _react2.default.createElement(
@@ -73274,6 +73432,10 @@
 	            this.state.selected.forEach(function (selection) {
 	                parts.push(_this6.props.estimate.parts[selection]);
 	            });
+	            var services = [];
+	            this.state.services.forEach(function (selection) {
+	                services.push(_harness.DEV_SERVICES[selection]);
+	            });
 
 	            return new Promise(function (resolve, reject) {
 	                dispatch({
@@ -73283,6 +73445,7 @@
 	                        model: values.model,
 	                        year: values.year,
 	                        parts: parts,
+	                        services: services,
 	                        name: values.name,
 	                        email: values.email,
 	                        phone: values.phone,
@@ -99472,6 +99635,718 @@
 /* 1237 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = exports.Tabs = exports.Tab = undefined;
+
+	var _Tab2 = __webpack_require__(1238);
+
+	var _Tab3 = _interopRequireDefault(_Tab2);
+
+	var _Tabs2 = __webpack_require__(1239);
+
+	var _Tabs3 = _interopRequireDefault(_Tabs2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.Tab = _Tab3.default;
+	exports.Tabs = _Tabs3.default;
+	exports.default = _Tabs3.default;
+
+/***/ }),
+/* 1238 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends2 = __webpack_require__(858);
+
+	var _extends3 = _interopRequireDefault(_extends2);
+
+	var _objectWithoutProperties2 = __webpack_require__(900);
+
+	var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
+	var _getPrototypeOf = __webpack_require__(901);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(905);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(906);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(910);
+
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+	var _inherits2 = __webpack_require__(944);
+
+	var _inherits3 = _interopRequireDefault(_inherits2);
+
+	var _simpleAssign = __webpack_require__(952);
+
+	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
+
+	var _react = __webpack_require__(338);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _EnhancedButton = __webpack_require__(957);
+
+	var _EnhancedButton2 = _interopRequireDefault(_EnhancedButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function getStyles(props, context) {
+	  var tabs = context.muiTheme.tabs;
+
+
+	  return {
+	    root: {
+	      color: props.selected ? tabs.selectedTextColor : tabs.textColor,
+	      fontWeight: 500,
+	      fontSize: 14,
+	      width: props.width,
+	      textTransform: 'uppercase',
+	      padding: 0
+	    },
+	    button: {
+	      display: 'flex',
+	      flexDirection: 'column',
+	      alignItems: 'center',
+	      justifyContent: 'center',
+	      height: props.label && props.icon ? 72 : 48
+	    }
+	  };
+	}
+
+	var Tab = function (_Component) {
+	  (0, _inherits3.default)(Tab, _Component);
+
+	  function Tab() {
+	    var _ref;
+
+	    var _temp, _this, _ret;
+
+	    (0, _classCallCheck3.default)(this, Tab);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = Tab.__proto__ || (0, _getPrototypeOf2.default)(Tab)).call.apply(_ref, [this].concat(args))), _this), _this.handleTouchTap = function (event) {
+	      if (_this.props.onTouchTap) {
+	        _this.props.onTouchTap(_this.props.value, event, _this);
+	      }
+	    }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+	  }
+
+	  (0, _createClass3.default)(Tab, [{
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props,
+	          icon = _props.icon,
+	          index = _props.index,
+	          onActive = _props.onActive,
+	          onTouchTap = _props.onTouchTap,
+	          selected = _props.selected,
+	          label = _props.label,
+	          buttonStyle = _props.buttonStyle,
+	          style = _props.style,
+	          value = _props.value,
+	          width = _props.width,
+	          other = (0, _objectWithoutProperties3.default)(_props, ['icon', 'index', 'onActive', 'onTouchTap', 'selected', 'label', 'buttonStyle', 'style', 'value', 'width']);
+
+
+	      var styles = getStyles(this.props, this.context);
+
+	      var iconElement = void 0;
+	      if (icon && _react2.default.isValidElement(icon)) {
+	        var iconProps = {
+	          style: {
+	            fontSize: 24,
+	            color: styles.root.color,
+	            marginBottom: label ? 5 : 0
+	          }
+	        };
+	        // If it's svg icon set color via props
+	        if (icon.type.muiName !== 'FontIcon') {
+	          iconProps.color = styles.root.color;
+	        }
+	        iconElement = _react2.default.cloneElement(icon, iconProps);
+	      }
+
+	      var rippleOpacity = 0.3;
+	      var rippleColor = this.context.muiTheme.tabs.selectedTextColor;
+
+	      return _react2.default.createElement(
+	        _EnhancedButton2.default,
+	        (0, _extends3.default)({}, other, {
+	          style: (0, _simpleAssign2.default)(styles.root, style),
+	          focusRippleColor: rippleColor,
+	          touchRippleColor: rippleColor,
+	          focusRippleOpacity: rippleOpacity,
+	          touchRippleOpacity: rippleOpacity,
+	          onTouchTap: this.handleTouchTap
+	        }),
+	        _react2.default.createElement(
+	          'div',
+	          { style: (0, _simpleAssign2.default)(styles.button, buttonStyle) },
+	          iconElement,
+	          label
+	        )
+	      );
+	    }
+	  }]);
+	  return Tab;
+	}(_react.Component);
+
+	Tab.muiName = 'Tab';
+	Tab.contextTypes = {
+	  muiTheme: _react.PropTypes.object.isRequired
+	};
+	 false ? Tab.propTypes = {
+	  /**
+	   * Override the inline-styles of the button element.
+	   */
+	  buttonStyle: _react.PropTypes.object,
+	  /**
+	   * The css class name of the root element.
+	   */
+	  className: _react.PropTypes.string,
+	  /**
+	   * Sets the icon of the tab, you can pass `FontIcon` or `SvgIcon` elements.
+	   */
+	  icon: _react.PropTypes.node,
+	  /**
+	   * @ignore
+	   */
+	  index: _react.PropTypes.any,
+	  /**
+	   * Sets the text value of the tab item to the string specified.
+	   */
+	  label: _react.PropTypes.node,
+	  /**
+	   * Fired when the active tab changes by touch or tap.
+	   * Use this event to specify any functionality when an active tab changes.
+	   * For example - we are using this to route to home when the third tab becomes active.
+	   * This function will always recieve the active tab as it\'s first argument.
+	   */
+	  onActive: _react.PropTypes.func,
+	  /**
+	   * @ignore
+	   * This property is overriden by the Tabs component.
+	   */
+	  onTouchTap: _react.PropTypes.func,
+	  /**
+	   * @ignore
+	   * Defines if the current tab is selected or not.
+	   * The Tabs component is responsible for setting this property.
+	   */
+	  selected: _react.PropTypes.bool,
+	  /**
+	   * Override the inline-styles of the root element.
+	   */
+	  style: _react.PropTypes.object,
+	  /**
+	   * If value prop passed to Tabs component, this value prop is also required.
+	   * It assigns a value to the tab so that it can be selected by the Tabs.
+	   */
+	  value: _react.PropTypes.any,
+	  /**
+	   * @ignore
+	   * This property is overriden by the Tabs component.
+	   */
+	  width: _react.PropTypes.string
+	} : void 0;
+	exports.default = Tab;
+
+/***/ }),
+/* 1239 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends2 = __webpack_require__(858);
+
+	var _extends3 = _interopRequireDefault(_extends2);
+
+	var _objectWithoutProperties2 = __webpack_require__(900);
+
+	var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
+	var _getPrototypeOf = __webpack_require__(901);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(905);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(906);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(910);
+
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+	var _inherits2 = __webpack_require__(944);
+
+	var _inherits3 = _interopRequireDefault(_inherits2);
+
+	var _simpleAssign = __webpack_require__(952);
+
+	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
+
+	var _react = __webpack_require__(338);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _warning = __webpack_require__(548);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	var _TabTemplate = __webpack_require__(1240);
+
+	var _TabTemplate2 = _interopRequireDefault(_TabTemplate);
+
+	var _InkBar = __webpack_require__(1241);
+
+	var _InkBar2 = _interopRequireDefault(_InkBar);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function getStyles(props, context) {
+	  var tabs = context.muiTheme.tabs;
+
+
+	  return {
+	    tabItemContainer: {
+	      width: '100%',
+	      backgroundColor: tabs.backgroundColor,
+	      whiteSpace: 'nowrap',
+	      display: 'flex'
+	    }
+	  };
+	}
+
+	var Tabs = function (_Component) {
+	  (0, _inherits3.default)(Tabs, _Component);
+
+	  function Tabs() {
+	    var _ref;
+
+	    var _temp, _this, _ret;
+
+	    (0, _classCallCheck3.default)(this, Tabs);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = Tabs.__proto__ || (0, _getPrototypeOf2.default)(Tabs)).call.apply(_ref, [this].concat(args))), _this), _this.state = { selectedIndex: 0 }, _this.handleTabTouchTap = function (value, event, tab) {
+	      var valueLink = _this.getValueLink(_this.props);
+	      var index = tab.props.index;
+
+	      if (valueLink.value && valueLink.value !== value || _this.state.selectedIndex !== index) {
+	        valueLink.requestChange(value, event, tab);
+	      }
+
+	      _this.setState({ selectedIndex: index });
+
+	      if (tab.props.onActive) {
+	        tab.props.onActive(tab);
+	      }
+	    }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+	  }
+
+	  (0, _createClass3.default)(Tabs, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var valueLink = this.getValueLink(this.props);
+	      var initialIndex = this.props.initialSelectedIndex;
+
+	      this.setState({
+	        selectedIndex: valueLink.value !== undefined ? this.getSelectedIndex(this.props) : initialIndex < this.getTabCount() ? initialIndex : 0
+	      });
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(newProps, nextContext) {
+	      var valueLink = this.getValueLink(newProps);
+	      var newState = {
+	        muiTheme: nextContext.muiTheme || this.context.muiTheme
+	      };
+
+	      if (valueLink.value !== undefined) {
+	        newState.selectedIndex = this.getSelectedIndex(newProps);
+	      }
+
+	      this.setState(newState);
+	    }
+	  }, {
+	    key: 'getTabs',
+	    value: function getTabs() {
+	      var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.props;
+
+	      var tabs = [];
+
+	      _react.Children.forEach(props.children, function (tab) {
+	        if ((0, _react.isValidElement)(tab)) {
+	          tabs.push(tab);
+	        }
+	      });
+
+	      return tabs;
+	    }
+	  }, {
+	    key: 'getTabCount',
+	    value: function getTabCount() {
+	      return this.getTabs().length;
+	    }
+
+	    // Do not use outside of this component, it will be removed once valueLink is deprecated
+
+	  }, {
+	    key: 'getValueLink',
+	    value: function getValueLink(props) {
+	      return props.valueLink || {
+	        value: props.value,
+	        requestChange: props.onChange
+	      };
+	    }
+	  }, {
+	    key: 'getSelectedIndex',
+	    value: function getSelectedIndex(props) {
+	      var valueLink = this.getValueLink(props);
+	      var selectedIndex = -1;
+
+	      this.getTabs(props).forEach(function (tab, index) {
+	        if (valueLink.value === tab.props.value) {
+	          selectedIndex = index;
+	        }
+	      });
+
+	      return selectedIndex;
+	    }
+	  }, {
+	    key: 'getSelected',
+	    value: function getSelected(tab, index) {
+	      var valueLink = this.getValueLink(this.props);
+	      return valueLink.value ? valueLink.value === tab.props.value : this.state.selectedIndex === index;
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      var _props = this.props,
+	          contentContainerClassName = _props.contentContainerClassName,
+	          contentContainerStyle = _props.contentContainerStyle,
+	          initialSelectedIndex = _props.initialSelectedIndex,
+	          inkBarStyle = _props.inkBarStyle,
+	          onChange = _props.onChange,
+	          style = _props.style,
+	          tabItemContainerStyle = _props.tabItemContainerStyle,
+	          tabTemplate = _props.tabTemplate,
+	          tabTemplateStyle = _props.tabTemplateStyle,
+	          other = (0, _objectWithoutProperties3.default)(_props, ['contentContainerClassName', 'contentContainerStyle', 'initialSelectedIndex', 'inkBarStyle', 'onChange', 'style', 'tabItemContainerStyle', 'tabTemplate', 'tabTemplateStyle']);
+	      var prepareStyles = this.context.muiTheme.prepareStyles;
+
+	      var styles = getStyles(this.props, this.context);
+	      var valueLink = this.getValueLink(this.props);
+	      var tabValue = valueLink.value;
+	      var tabContent = [];
+	      var width = 100 / this.getTabCount();
+
+	      var tabs = this.getTabs().map(function (tab, index) {
+	         false ? (0, _warning2.default)(tab.type && tab.type.muiName === 'Tab', 'Material-UI: Tabs only accepts Tab Components as children.\n        Found ' + (tab.type.muiName || tab.type) + ' as child number ' + (index + 1) + ' of Tabs') : void 0;
+
+	         false ? (0, _warning2.default)(!tabValue || tab.props.value !== undefined, 'Material-UI: Tabs value prop has been passed, but Tab ' + index + '\n        does not have a value prop. Needs value if Tabs is going\n        to be a controlled component.') : void 0;
+
+	        tabContent.push(tab.props.children ? (0, _react.createElement)(tabTemplate || _TabTemplate2.default, {
+	          key: index,
+	          selected: _this2.getSelected(tab, index),
+	          style: tabTemplateStyle
+	        }, tab.props.children) : undefined);
+
+	        return (0, _react.cloneElement)(tab, {
+	          key: index,
+	          index: index,
+	          selected: _this2.getSelected(tab, index),
+	          width: width + '%',
+	          onTouchTap: _this2.handleTabTouchTap
+	        });
+	      });
+
+	      var inkBar = this.state.selectedIndex !== -1 ? _react2.default.createElement(_InkBar2.default, {
+	        left: width * this.state.selectedIndex + '%',
+	        width: width + '%',
+	        style: inkBarStyle
+	      }) : null;
+
+	      var inkBarContainerWidth = tabItemContainerStyle ? tabItemContainerStyle.width : '100%';
+
+	      return _react2.default.createElement(
+	        'div',
+	        (0, _extends3.default)({ style: prepareStyles((0, _simpleAssign2.default)({}, style)) }, other),
+	        _react2.default.createElement(
+	          'div',
+	          { style: prepareStyles((0, _simpleAssign2.default)(styles.tabItemContainer, tabItemContainerStyle)) },
+	          tabs
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { style: { width: inkBarContainerWidth } },
+	          inkBar
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          {
+	            style: prepareStyles((0, _simpleAssign2.default)({}, contentContainerStyle)),
+	            className: contentContainerClassName
+	          },
+	          tabContent
+	        )
+	      );
+	    }
+	  }]);
+	  return Tabs;
+	}(_react.Component);
+
+	Tabs.defaultProps = {
+	  initialSelectedIndex: 0,
+	  onChange: function onChange() {}
+	};
+	Tabs.contextTypes = {
+	  muiTheme: _react.PropTypes.object.isRequired
+	};
+	 false ? Tabs.propTypes = {
+	  /**
+	   * Should be used to pass `Tab` components.
+	   */
+	  children: _react.PropTypes.node,
+	  /**
+	   * The css class name of the root element.
+	   */
+	  className: _react.PropTypes.string,
+	  /**
+	   * The css class name of the content's container.
+	   */
+	  contentContainerClassName: _react.PropTypes.string,
+	  /**
+	   * Override the inline-styles of the content's container.
+	   */
+	  contentContainerStyle: _react.PropTypes.object,
+	  /**
+	   * Specify initial visible tab index.
+	   * If `initialSelectedIndex` is set but larger than the total amount of specified tabs,
+	   * `initialSelectedIndex` will revert back to default.
+	   * If `initialSelectedIndex` is set to any negative value, no tab will be selected intially.
+	   */
+	  initialSelectedIndex: _react.PropTypes.number,
+	  /**
+	   * Override the inline-styles of the InkBar.
+	   */
+	  inkBarStyle: _react.PropTypes.object,
+	  /**
+	   * Called when the selected value change.
+	   */
+	  onChange: _react.PropTypes.func,
+	  /**
+	   * Override the inline-styles of the root element.
+	   */
+	  style: _react.PropTypes.object,
+	  /**
+	   * Override the inline-styles of the tab-labels container.
+	   */
+	  tabItemContainerStyle: _react.PropTypes.object,
+	  /**
+	   * Override the default tab template used to wrap the content of each tab element.
+	   */
+	  tabTemplate: _react.PropTypes.func,
+	  /**
+	   * Override the inline-styles of the tab template.
+	   */
+	  tabTemplateStyle: _react.PropTypes.object,
+	  /**
+	   * Makes Tabs controllable and selects the tab whose value prop matches this prop.
+	   */
+	  value: _react.PropTypes.any
+	} : void 0;
+	exports.default = Tabs;
+
+/***/ }),
+/* 1240 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _simpleAssign = __webpack_require__(952);
+
+	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
+
+	var _react = __webpack_require__(338);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var styles = {
+	  width: '100%',
+	  position: 'relative',
+	  textAlign: 'initial'
+	};
+
+	var TabTemplate = function TabTemplate(_ref) {
+	  var children = _ref.children,
+	      selected = _ref.selected,
+	      style = _ref.style;
+
+	  var templateStyle = (0, _simpleAssign2.default)({}, styles, style);
+	  if (!selected) {
+	    templateStyle.height = 0;
+	    templateStyle.overflow = 'hidden';
+	  }
+
+	  return _react2.default.createElement(
+	    'div',
+	    { style: templateStyle },
+	    children
+	  );
+	};
+
+	 false ? TabTemplate.propTypes = {
+	  children: _react.PropTypes.node,
+	  selected: _react.PropTypes.bool,
+	  style: _react.PropTypes.object
+	} : void 0;
+
+	exports.default = TabTemplate;
+
+/***/ }),
+/* 1241 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _getPrototypeOf = __webpack_require__(901);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(905);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(906);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(910);
+
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+	var _inherits2 = __webpack_require__(944);
+
+	var _inherits3 = _interopRequireDefault(_inherits2);
+
+	var _simpleAssign = __webpack_require__(952);
+
+	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
+
+	var _react = __webpack_require__(338);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _transitions = __webpack_require__(955);
+
+	var _transitions2 = _interopRequireDefault(_transitions);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function getStyles(props, context) {
+	  var inkBar = context.muiTheme.inkBar;
+
+
+	  return {
+	    root: {
+	      left: props.left,
+	      width: props.width,
+	      bottom: 0,
+	      display: 'block',
+	      backgroundColor: props.color || inkBar.backgroundColor,
+	      height: 2,
+	      marginTop: -2,
+	      position: 'relative',
+	      transition: _transitions2.default.easeOut('1s', 'left')
+	    }
+	  };
+	}
+
+	var InkBar = function (_Component) {
+	  (0, _inherits3.default)(InkBar, _Component);
+
+	  function InkBar() {
+	    (0, _classCallCheck3.default)(this, InkBar);
+	    return (0, _possibleConstructorReturn3.default)(this, (InkBar.__proto__ || (0, _getPrototypeOf2.default)(InkBar)).apply(this, arguments));
+	  }
+
+	  (0, _createClass3.default)(InkBar, [{
+	    key: 'render',
+	    value: function render() {
+	      var style = this.props.style;
+	      var prepareStyles = this.context.muiTheme.prepareStyles;
+
+	      var styles = getStyles(this.props, this.context);
+
+	      return _react2.default.createElement('div', { style: prepareStyles((0, _simpleAssign2.default)(styles.root, style)) });
+	    }
+	  }]);
+	  return InkBar;
+	}(_react.Component);
+
+	InkBar.contextTypes = {
+	  muiTheme: _react.PropTypes.object.isRequired
+	};
+	 false ? InkBar.propTypes = {
+	  color: _react.PropTypes.string,
+	  left: _react.PropTypes.string.isRequired,
+	  /**
+	   * Override the inline-styles of the root element.
+	   */
+	  style: _react.PropTypes.object,
+	  width: _react.PropTypes.string.isRequired
+	} : void 0;
+	exports.default = InkBar;
+
+/***/ }),
+/* 1242 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
@@ -99505,11 +100380,11 @@
 
 	var _TextAreaInput2 = _interopRequireDefault(_TextAreaInput);
 
-	var _NumberInput = __webpack_require__(1238);
+	var _NumberInput = __webpack_require__(1243);
 
 	var _NumberInput2 = _interopRequireDefault(_NumberInput);
 
-	var _reactKeybindingComponent = __webpack_require__(1239);
+	var _reactKeybindingComponent = __webpack_require__(1244);
 
 	var _reactKeybindingComponent2 = _interopRequireDefault(_reactKeybindingComponent);
 
@@ -99517,21 +100392,21 @@
 
 	var _Snackbar2 = _interopRequireDefault(_Snackbar);
 
-	var _FormSubmit = __webpack_require__(1240);
+	var _FormSubmit = __webpack_require__(1245);
 
 	var _FormSubmit2 = _interopRequireDefault(_FormSubmit);
 
-	var _validatePart = __webpack_require__(1241);
+	var _validatePart = __webpack_require__(1246);
 
 	var _validatePart2 = _interopRequireDefault(_validatePart);
 
 	var _reduxForm = __webpack_require__(614);
 
-	var _LinearProgress = __webpack_require__(1242);
+	var _LinearProgress = __webpack_require__(1247);
 
 	var _LinearProgress2 = _interopRequireDefault(_LinearProgress);
 
-	var _Tabs = __webpack_require__(1244);
+	var _Tabs = __webpack_require__(1237);
 
 	var _SelectInput = __webpack_require__(1200);
 
@@ -99926,7 +100801,7 @@
 	;
 
 /***/ }),
-/* 1238 */
+/* 1243 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -100015,7 +100890,7 @@
 	;
 
 /***/ }),
-/* 1239 */
+/* 1244 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -100102,7 +100977,7 @@
 	exports.default = KeybindingComponent;
 
 /***/ }),
-/* 1240 */
+/* 1245 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -100207,7 +101082,7 @@
 	;
 
 /***/ }),
-/* 1241 */
+/* 1246 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -100237,7 +101112,7 @@
 	;
 
 /***/ }),
-/* 1242 */
+/* 1247 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -100247,7 +101122,7 @@
 	});
 	exports.default = undefined;
 
-	var _LinearProgress = __webpack_require__(1243);
+	var _LinearProgress = __webpack_require__(1248);
 
 	var _LinearProgress2 = _interopRequireDefault(_LinearProgress);
 
@@ -100256,7 +101131,7 @@
 	exports.default = _LinearProgress2.default;
 
 /***/ }),
-/* 1243 */
+/* 1248 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -100484,718 +101359,6 @@
 	  value: _react.PropTypes.number
 	} : void 0;
 	exports.default = LinearProgress;
-
-/***/ }),
-/* 1244 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = exports.Tabs = exports.Tab = undefined;
-
-	var _Tab2 = __webpack_require__(1245);
-
-	var _Tab3 = _interopRequireDefault(_Tab2);
-
-	var _Tabs2 = __webpack_require__(1246);
-
-	var _Tabs3 = _interopRequireDefault(_Tabs2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.Tab = _Tab3.default;
-	exports.Tabs = _Tabs3.default;
-	exports.default = _Tabs3.default;
-
-/***/ }),
-/* 1245 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _extends2 = __webpack_require__(858);
-
-	var _extends3 = _interopRequireDefault(_extends2);
-
-	var _objectWithoutProperties2 = __webpack_require__(900);
-
-	var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
-
-	var _getPrototypeOf = __webpack_require__(901);
-
-	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-	var _classCallCheck2 = __webpack_require__(905);
-
-	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-	var _createClass2 = __webpack_require__(906);
-
-	var _createClass3 = _interopRequireDefault(_createClass2);
-
-	var _possibleConstructorReturn2 = __webpack_require__(910);
-
-	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-	var _inherits2 = __webpack_require__(944);
-
-	var _inherits3 = _interopRequireDefault(_inherits2);
-
-	var _simpleAssign = __webpack_require__(952);
-
-	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
-
-	var _react = __webpack_require__(338);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _EnhancedButton = __webpack_require__(957);
-
-	var _EnhancedButton2 = _interopRequireDefault(_EnhancedButton);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function getStyles(props, context) {
-	  var tabs = context.muiTheme.tabs;
-
-
-	  return {
-	    root: {
-	      color: props.selected ? tabs.selectedTextColor : tabs.textColor,
-	      fontWeight: 500,
-	      fontSize: 14,
-	      width: props.width,
-	      textTransform: 'uppercase',
-	      padding: 0
-	    },
-	    button: {
-	      display: 'flex',
-	      flexDirection: 'column',
-	      alignItems: 'center',
-	      justifyContent: 'center',
-	      height: props.label && props.icon ? 72 : 48
-	    }
-	  };
-	}
-
-	var Tab = function (_Component) {
-	  (0, _inherits3.default)(Tab, _Component);
-
-	  function Tab() {
-	    var _ref;
-
-	    var _temp, _this, _ret;
-
-	    (0, _classCallCheck3.default)(this, Tab);
-
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
-
-	    return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = Tab.__proto__ || (0, _getPrototypeOf2.default)(Tab)).call.apply(_ref, [this].concat(args))), _this), _this.handleTouchTap = function (event) {
-	      if (_this.props.onTouchTap) {
-	        _this.props.onTouchTap(_this.props.value, event, _this);
-	      }
-	    }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
-	  }
-
-	  (0, _createClass3.default)(Tab, [{
-	    key: 'render',
-	    value: function render() {
-	      var _props = this.props,
-	          icon = _props.icon,
-	          index = _props.index,
-	          onActive = _props.onActive,
-	          onTouchTap = _props.onTouchTap,
-	          selected = _props.selected,
-	          label = _props.label,
-	          buttonStyle = _props.buttonStyle,
-	          style = _props.style,
-	          value = _props.value,
-	          width = _props.width,
-	          other = (0, _objectWithoutProperties3.default)(_props, ['icon', 'index', 'onActive', 'onTouchTap', 'selected', 'label', 'buttonStyle', 'style', 'value', 'width']);
-
-
-	      var styles = getStyles(this.props, this.context);
-
-	      var iconElement = void 0;
-	      if (icon && _react2.default.isValidElement(icon)) {
-	        var iconProps = {
-	          style: {
-	            fontSize: 24,
-	            color: styles.root.color,
-	            marginBottom: label ? 5 : 0
-	          }
-	        };
-	        // If it's svg icon set color via props
-	        if (icon.type.muiName !== 'FontIcon') {
-	          iconProps.color = styles.root.color;
-	        }
-	        iconElement = _react2.default.cloneElement(icon, iconProps);
-	      }
-
-	      var rippleOpacity = 0.3;
-	      var rippleColor = this.context.muiTheme.tabs.selectedTextColor;
-
-	      return _react2.default.createElement(
-	        _EnhancedButton2.default,
-	        (0, _extends3.default)({}, other, {
-	          style: (0, _simpleAssign2.default)(styles.root, style),
-	          focusRippleColor: rippleColor,
-	          touchRippleColor: rippleColor,
-	          focusRippleOpacity: rippleOpacity,
-	          touchRippleOpacity: rippleOpacity,
-	          onTouchTap: this.handleTouchTap
-	        }),
-	        _react2.default.createElement(
-	          'div',
-	          { style: (0, _simpleAssign2.default)(styles.button, buttonStyle) },
-	          iconElement,
-	          label
-	        )
-	      );
-	    }
-	  }]);
-	  return Tab;
-	}(_react.Component);
-
-	Tab.muiName = 'Tab';
-	Tab.contextTypes = {
-	  muiTheme: _react.PropTypes.object.isRequired
-	};
-	 false ? Tab.propTypes = {
-	  /**
-	   * Override the inline-styles of the button element.
-	   */
-	  buttonStyle: _react.PropTypes.object,
-	  /**
-	   * The css class name of the root element.
-	   */
-	  className: _react.PropTypes.string,
-	  /**
-	   * Sets the icon of the tab, you can pass `FontIcon` or `SvgIcon` elements.
-	   */
-	  icon: _react.PropTypes.node,
-	  /**
-	   * @ignore
-	   */
-	  index: _react.PropTypes.any,
-	  /**
-	   * Sets the text value of the tab item to the string specified.
-	   */
-	  label: _react.PropTypes.node,
-	  /**
-	   * Fired when the active tab changes by touch or tap.
-	   * Use this event to specify any functionality when an active tab changes.
-	   * For example - we are using this to route to home when the third tab becomes active.
-	   * This function will always recieve the active tab as it\'s first argument.
-	   */
-	  onActive: _react.PropTypes.func,
-	  /**
-	   * @ignore
-	   * This property is overriden by the Tabs component.
-	   */
-	  onTouchTap: _react.PropTypes.func,
-	  /**
-	   * @ignore
-	   * Defines if the current tab is selected or not.
-	   * The Tabs component is responsible for setting this property.
-	   */
-	  selected: _react.PropTypes.bool,
-	  /**
-	   * Override the inline-styles of the root element.
-	   */
-	  style: _react.PropTypes.object,
-	  /**
-	   * If value prop passed to Tabs component, this value prop is also required.
-	   * It assigns a value to the tab so that it can be selected by the Tabs.
-	   */
-	  value: _react.PropTypes.any,
-	  /**
-	   * @ignore
-	   * This property is overriden by the Tabs component.
-	   */
-	  width: _react.PropTypes.string
-	} : void 0;
-	exports.default = Tab;
-
-/***/ }),
-/* 1246 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _extends2 = __webpack_require__(858);
-
-	var _extends3 = _interopRequireDefault(_extends2);
-
-	var _objectWithoutProperties2 = __webpack_require__(900);
-
-	var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
-
-	var _getPrototypeOf = __webpack_require__(901);
-
-	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-	var _classCallCheck2 = __webpack_require__(905);
-
-	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-	var _createClass2 = __webpack_require__(906);
-
-	var _createClass3 = _interopRequireDefault(_createClass2);
-
-	var _possibleConstructorReturn2 = __webpack_require__(910);
-
-	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-	var _inherits2 = __webpack_require__(944);
-
-	var _inherits3 = _interopRequireDefault(_inherits2);
-
-	var _simpleAssign = __webpack_require__(952);
-
-	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
-
-	var _react = __webpack_require__(338);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _warning = __webpack_require__(548);
-
-	var _warning2 = _interopRequireDefault(_warning);
-
-	var _TabTemplate = __webpack_require__(1247);
-
-	var _TabTemplate2 = _interopRequireDefault(_TabTemplate);
-
-	var _InkBar = __webpack_require__(1248);
-
-	var _InkBar2 = _interopRequireDefault(_InkBar);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function getStyles(props, context) {
-	  var tabs = context.muiTheme.tabs;
-
-
-	  return {
-	    tabItemContainer: {
-	      width: '100%',
-	      backgroundColor: tabs.backgroundColor,
-	      whiteSpace: 'nowrap',
-	      display: 'flex'
-	    }
-	  };
-	}
-
-	var Tabs = function (_Component) {
-	  (0, _inherits3.default)(Tabs, _Component);
-
-	  function Tabs() {
-	    var _ref;
-
-	    var _temp, _this, _ret;
-
-	    (0, _classCallCheck3.default)(this, Tabs);
-
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
-
-	    return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = Tabs.__proto__ || (0, _getPrototypeOf2.default)(Tabs)).call.apply(_ref, [this].concat(args))), _this), _this.state = { selectedIndex: 0 }, _this.handleTabTouchTap = function (value, event, tab) {
-	      var valueLink = _this.getValueLink(_this.props);
-	      var index = tab.props.index;
-
-	      if (valueLink.value && valueLink.value !== value || _this.state.selectedIndex !== index) {
-	        valueLink.requestChange(value, event, tab);
-	      }
-
-	      _this.setState({ selectedIndex: index });
-
-	      if (tab.props.onActive) {
-	        tab.props.onActive(tab);
-	      }
-	    }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
-	  }
-
-	  (0, _createClass3.default)(Tabs, [{
-	    key: 'componentWillMount',
-	    value: function componentWillMount() {
-	      var valueLink = this.getValueLink(this.props);
-	      var initialIndex = this.props.initialSelectedIndex;
-
-	      this.setState({
-	        selectedIndex: valueLink.value !== undefined ? this.getSelectedIndex(this.props) : initialIndex < this.getTabCount() ? initialIndex : 0
-	      });
-	    }
-	  }, {
-	    key: 'componentWillReceiveProps',
-	    value: function componentWillReceiveProps(newProps, nextContext) {
-	      var valueLink = this.getValueLink(newProps);
-	      var newState = {
-	        muiTheme: nextContext.muiTheme || this.context.muiTheme
-	      };
-
-	      if (valueLink.value !== undefined) {
-	        newState.selectedIndex = this.getSelectedIndex(newProps);
-	      }
-
-	      this.setState(newState);
-	    }
-	  }, {
-	    key: 'getTabs',
-	    value: function getTabs() {
-	      var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.props;
-
-	      var tabs = [];
-
-	      _react.Children.forEach(props.children, function (tab) {
-	        if ((0, _react.isValidElement)(tab)) {
-	          tabs.push(tab);
-	        }
-	      });
-
-	      return tabs;
-	    }
-	  }, {
-	    key: 'getTabCount',
-	    value: function getTabCount() {
-	      return this.getTabs().length;
-	    }
-
-	    // Do not use outside of this component, it will be removed once valueLink is deprecated
-
-	  }, {
-	    key: 'getValueLink',
-	    value: function getValueLink(props) {
-	      return props.valueLink || {
-	        value: props.value,
-	        requestChange: props.onChange
-	      };
-	    }
-	  }, {
-	    key: 'getSelectedIndex',
-	    value: function getSelectedIndex(props) {
-	      var valueLink = this.getValueLink(props);
-	      var selectedIndex = -1;
-
-	      this.getTabs(props).forEach(function (tab, index) {
-	        if (valueLink.value === tab.props.value) {
-	          selectedIndex = index;
-	        }
-	      });
-
-	      return selectedIndex;
-	    }
-	  }, {
-	    key: 'getSelected',
-	    value: function getSelected(tab, index) {
-	      var valueLink = this.getValueLink(this.props);
-	      return valueLink.value ? valueLink.value === tab.props.value : this.state.selectedIndex === index;
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this2 = this;
-
-	      var _props = this.props,
-	          contentContainerClassName = _props.contentContainerClassName,
-	          contentContainerStyle = _props.contentContainerStyle,
-	          initialSelectedIndex = _props.initialSelectedIndex,
-	          inkBarStyle = _props.inkBarStyle,
-	          onChange = _props.onChange,
-	          style = _props.style,
-	          tabItemContainerStyle = _props.tabItemContainerStyle,
-	          tabTemplate = _props.tabTemplate,
-	          tabTemplateStyle = _props.tabTemplateStyle,
-	          other = (0, _objectWithoutProperties3.default)(_props, ['contentContainerClassName', 'contentContainerStyle', 'initialSelectedIndex', 'inkBarStyle', 'onChange', 'style', 'tabItemContainerStyle', 'tabTemplate', 'tabTemplateStyle']);
-	      var prepareStyles = this.context.muiTheme.prepareStyles;
-
-	      var styles = getStyles(this.props, this.context);
-	      var valueLink = this.getValueLink(this.props);
-	      var tabValue = valueLink.value;
-	      var tabContent = [];
-	      var width = 100 / this.getTabCount();
-
-	      var tabs = this.getTabs().map(function (tab, index) {
-	         false ? (0, _warning2.default)(tab.type && tab.type.muiName === 'Tab', 'Material-UI: Tabs only accepts Tab Components as children.\n        Found ' + (tab.type.muiName || tab.type) + ' as child number ' + (index + 1) + ' of Tabs') : void 0;
-
-	         false ? (0, _warning2.default)(!tabValue || tab.props.value !== undefined, 'Material-UI: Tabs value prop has been passed, but Tab ' + index + '\n        does not have a value prop. Needs value if Tabs is going\n        to be a controlled component.') : void 0;
-
-	        tabContent.push(tab.props.children ? (0, _react.createElement)(tabTemplate || _TabTemplate2.default, {
-	          key: index,
-	          selected: _this2.getSelected(tab, index),
-	          style: tabTemplateStyle
-	        }, tab.props.children) : undefined);
-
-	        return (0, _react.cloneElement)(tab, {
-	          key: index,
-	          index: index,
-	          selected: _this2.getSelected(tab, index),
-	          width: width + '%',
-	          onTouchTap: _this2.handleTabTouchTap
-	        });
-	      });
-
-	      var inkBar = this.state.selectedIndex !== -1 ? _react2.default.createElement(_InkBar2.default, {
-	        left: width * this.state.selectedIndex + '%',
-	        width: width + '%',
-	        style: inkBarStyle
-	      }) : null;
-
-	      var inkBarContainerWidth = tabItemContainerStyle ? tabItemContainerStyle.width : '100%';
-
-	      return _react2.default.createElement(
-	        'div',
-	        (0, _extends3.default)({ style: prepareStyles((0, _simpleAssign2.default)({}, style)) }, other),
-	        _react2.default.createElement(
-	          'div',
-	          { style: prepareStyles((0, _simpleAssign2.default)(styles.tabItemContainer, tabItemContainerStyle)) },
-	          tabs
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { style: { width: inkBarContainerWidth } },
-	          inkBar
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          {
-	            style: prepareStyles((0, _simpleAssign2.default)({}, contentContainerStyle)),
-	            className: contentContainerClassName
-	          },
-	          tabContent
-	        )
-	      );
-	    }
-	  }]);
-	  return Tabs;
-	}(_react.Component);
-
-	Tabs.defaultProps = {
-	  initialSelectedIndex: 0,
-	  onChange: function onChange() {}
-	};
-	Tabs.contextTypes = {
-	  muiTheme: _react.PropTypes.object.isRequired
-	};
-	 false ? Tabs.propTypes = {
-	  /**
-	   * Should be used to pass `Tab` components.
-	   */
-	  children: _react.PropTypes.node,
-	  /**
-	   * The css class name of the root element.
-	   */
-	  className: _react.PropTypes.string,
-	  /**
-	   * The css class name of the content's container.
-	   */
-	  contentContainerClassName: _react.PropTypes.string,
-	  /**
-	   * Override the inline-styles of the content's container.
-	   */
-	  contentContainerStyle: _react.PropTypes.object,
-	  /**
-	   * Specify initial visible tab index.
-	   * If `initialSelectedIndex` is set but larger than the total amount of specified tabs,
-	   * `initialSelectedIndex` will revert back to default.
-	   * If `initialSelectedIndex` is set to any negative value, no tab will be selected intially.
-	   */
-	  initialSelectedIndex: _react.PropTypes.number,
-	  /**
-	   * Override the inline-styles of the InkBar.
-	   */
-	  inkBarStyle: _react.PropTypes.object,
-	  /**
-	   * Called when the selected value change.
-	   */
-	  onChange: _react.PropTypes.func,
-	  /**
-	   * Override the inline-styles of the root element.
-	   */
-	  style: _react.PropTypes.object,
-	  /**
-	   * Override the inline-styles of the tab-labels container.
-	   */
-	  tabItemContainerStyle: _react.PropTypes.object,
-	  /**
-	   * Override the default tab template used to wrap the content of each tab element.
-	   */
-	  tabTemplate: _react.PropTypes.func,
-	  /**
-	   * Override the inline-styles of the tab template.
-	   */
-	  tabTemplateStyle: _react.PropTypes.object,
-	  /**
-	   * Makes Tabs controllable and selects the tab whose value prop matches this prop.
-	   */
-	  value: _react.PropTypes.any
-	} : void 0;
-	exports.default = Tabs;
-
-/***/ }),
-/* 1247 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _simpleAssign = __webpack_require__(952);
-
-	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
-
-	var _react = __webpack_require__(338);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var styles = {
-	  width: '100%',
-	  position: 'relative',
-	  textAlign: 'initial'
-	};
-
-	var TabTemplate = function TabTemplate(_ref) {
-	  var children = _ref.children,
-	      selected = _ref.selected,
-	      style = _ref.style;
-
-	  var templateStyle = (0, _simpleAssign2.default)({}, styles, style);
-	  if (!selected) {
-	    templateStyle.height = 0;
-	    templateStyle.overflow = 'hidden';
-	  }
-
-	  return _react2.default.createElement(
-	    'div',
-	    { style: templateStyle },
-	    children
-	  );
-	};
-
-	 false ? TabTemplate.propTypes = {
-	  children: _react.PropTypes.node,
-	  selected: _react.PropTypes.bool,
-	  style: _react.PropTypes.object
-	} : void 0;
-
-	exports.default = TabTemplate;
-
-/***/ }),
-/* 1248 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _getPrototypeOf = __webpack_require__(901);
-
-	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-	var _classCallCheck2 = __webpack_require__(905);
-
-	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-	var _createClass2 = __webpack_require__(906);
-
-	var _createClass3 = _interopRequireDefault(_createClass2);
-
-	var _possibleConstructorReturn2 = __webpack_require__(910);
-
-	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-	var _inherits2 = __webpack_require__(944);
-
-	var _inherits3 = _interopRequireDefault(_inherits2);
-
-	var _simpleAssign = __webpack_require__(952);
-
-	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
-
-	var _react = __webpack_require__(338);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _transitions = __webpack_require__(955);
-
-	var _transitions2 = _interopRequireDefault(_transitions);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function getStyles(props, context) {
-	  var inkBar = context.muiTheme.inkBar;
-
-
-	  return {
-	    root: {
-	      left: props.left,
-	      width: props.width,
-	      bottom: 0,
-	      display: 'block',
-	      backgroundColor: props.color || inkBar.backgroundColor,
-	      height: 2,
-	      marginTop: -2,
-	      position: 'relative',
-	      transition: _transitions2.default.easeOut('1s', 'left')
-	    }
-	  };
-	}
-
-	var InkBar = function (_Component) {
-	  (0, _inherits3.default)(InkBar, _Component);
-
-	  function InkBar() {
-	    (0, _classCallCheck3.default)(this, InkBar);
-	    return (0, _possibleConstructorReturn3.default)(this, (InkBar.__proto__ || (0, _getPrototypeOf2.default)(InkBar)).apply(this, arguments));
-	  }
-
-	  (0, _createClass3.default)(InkBar, [{
-	    key: 'render',
-	    value: function render() {
-	      var style = this.props.style;
-	      var prepareStyles = this.context.muiTheme.prepareStyles;
-
-	      var styles = getStyles(this.props, this.context);
-
-	      return _react2.default.createElement('div', { style: prepareStyles((0, _simpleAssign2.default)(styles.root, style)) });
-	    }
-	  }]);
-	  return InkBar;
-	}(_react.Component);
-
-	InkBar.contextTypes = {
-	  muiTheme: _react.PropTypes.object.isRequired
-	};
-	 false ? InkBar.propTypes = {
-	  color: _react.PropTypes.string,
-	  left: _react.PropTypes.string.isRequired,
-	  /**
-	   * Override the inline-styles of the root element.
-	   */
-	  style: _react.PropTypes.object,
-	  width: _react.PropTypes.string.isRequired
-	} : void 0;
-	exports.default = InkBar;
 
 /***/ }),
 /* 1249 */
@@ -110001,7 +110164,7 @@
 
 	var _IconMenu3 = _interopRequireDefault(_IconMenu2);
 
-	var _LinearProgress2 = __webpack_require__(1242);
+	var _LinearProgress2 = __webpack_require__(1247);
 
 	var _LinearProgress3 = _interopRequireDefault(_LinearProgress2);
 
@@ -110093,11 +110256,11 @@
 
 	var _Snackbar3 = _interopRequireDefault(_Snackbar2);
 
-	var _Tabs2 = __webpack_require__(1244);
+	var _Tabs2 = __webpack_require__(1237);
 
 	var _Tabs3 = _interopRequireDefault(_Tabs2);
 
-	var _Tab2 = __webpack_require__(1245);
+	var _Tab2 = __webpack_require__(1238);
 
 	var _Tab3 = _interopRequireDefault(_Tab2);
 
