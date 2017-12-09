@@ -133,7 +133,7 @@ public class PricingTransformer {
 				BigDecimal laborPrice = BigDecimal.ZERO;
 				if (labor != null) {
 					// add 3%
-					laborPrice = new BigDecimal(labor.getNumericCellValue() * 1.03);
+//					laborPrice = new BigDecimal(labor.getNumericCellValue() * 1.03);
 				}
 				laborPrice = laborPrice.setScale(2, BigDecimal.ROUND_UP);
 				result.put(part.getStringCellValue(), laborPrice);

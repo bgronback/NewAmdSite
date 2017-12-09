@@ -13,6 +13,7 @@ public class Estimate {
 	private String comments;
 	private Integer year;
 	private List<Part> parts;
+	private List<Service> services;
 	
 	public Estimate() {
 		
@@ -81,6 +82,14 @@ public class Estimate {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	public List<Service> getServices() {
+		return services;
+	}
+
+	public void setServices(List<Service> services) {
+		this.services = services;
 	}
 
 	@Override

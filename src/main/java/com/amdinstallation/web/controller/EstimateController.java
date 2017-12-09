@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.amdinstallation.web.config.AmdProperties;
 import com.amdinstallation.web.model.Estimate;
 import com.amdinstallation.web.model.Part;
+import com.amdinstallation.web.model.Service;
 
 @RestController
 @RequestMapping("/api/v1/estimates")
@@ -103,10 +104,25 @@ public class EstimateController {
 		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(laborTotal));
 		sb.append("\nMaterials: ");
 		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(materials));
+		
+		BigDecimal servicesTotal = BigDecimal.ZERO;
+
+		for (Service item : estimate.getServices()) {
+			sb.append(item.getServiceNumber());
+			sb.append(", ");
+			servicesTotal = servicesTotal.add(item.getPrice() == null ? BigDecimal.ZERO : item.getPrice());
+			sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(item.getPrice() == null ? BigDecimal.ZERO : item.getPrice()));
+			sb.append(", ");
+			sb.append(item.getName());
+			sb.append("\n");
+		}
+		sb.append("\n\nServices: ");
+		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(servicesTotal));
+		
 		sb.append("\nSales Tax: ");
 		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(tax));
 		sb.append("\n\nTotal: ");
-		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(partsTotal.add(laborTotal).add(materials).add(tax)));
+		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(partsTotal.add(laborTotal).add(materials).add(servicesTotal).add(tax)));
 
 		sb.append("\n\nComments:\n\n");
 		sb.append(estimate.getComments() == null ? "None" : estimate.getComments());

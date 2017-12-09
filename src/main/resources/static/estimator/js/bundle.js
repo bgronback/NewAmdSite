@@ -60882,22 +60882,22 @@
 
 	var DEV_SERVICES = exports.DEV_SERVICES = [{
 	    _id: 0,
-	    serviceNumber: '01-002',
+	    serviceNumber: 'MB-001',
 	    name: 'Media blast and epoxy seal',
 	    price: 850.00
 	}, {
 	    _id: 1,
-	    serviceNumber: '01-003-L',
+	    serviceNumber: 'DR-001-L',
 	    name: 'Door Re-skin (Left)',
 	    price: 275.00
 	}, {
 	    _id: 2,
-	    serviceNumber: '01-003-R',
+	    serviceNumber: 'DR-001-R',
 	    name: 'Door Re-skin (Right)',
 	    price: 275.00
 	}, {
 	    _id: 3,
-	    serviceNumber: '01-004',
+	    serviceNumber: 'HR-001',
 	    name: 'Door Hinge Rebuild (all)',
 	    price: 150.00
 	}];
@@ -72725,7 +72725,7 @@
 	                null,
 	                _react2.default.createElement(
 	                    _reactBootstrap.Form,
-	                    { horizontal: true, onSubmit: handleSubmit(this.formSubmit), style: { marginLeft: 20, marginRight: 20 } },
+	                    { horizontal: true, onSubmit: handleSubmit(this.formSubmit) },
 	                    _react2.default.createElement(
 	                        _Stepper.Stepper,
 	                        { linear: false, activeStep: stepIndex },
@@ -72737,7 +72737,7 @@
 	                                { onClick: function onClick() {
 	                                        return _this2.setState({ stepIndex: 0 });
 	                                    } },
-	                                "Vehicle"
+	                                "Car"
 	                            )
 	                        ),
 	                        _react2.default.createElement(
@@ -72903,7 +72903,7 @@
 	                            _Table.Table,
 	                            { onRowSelection: function onRowSelection(selection) {
 	                                    _this4.handleRowSelection(selection);
-	                                }, multiSelectable: true, wrapperStyle: { maxHeight: '500px' } },
+	                                }, multiSelectable: true, wrapperStyle: { maxHeight: '400px' } },
 	                            _react2.default.createElement(
 	                                _Table.TableHeader,
 	                                { enableSelectAll: false, displaySelectAll: false },
@@ -72912,28 +72912,28 @@
 	                                    null,
 	                                    _react2.default.createElement(
 	                                        _Table.TableHeaderColumn,
-	                                        { style: { whiteSpace: 'nowrap' } },
+	                                        { style: { whiteSpace: 'nowrap', width: 50 } },
+	                                        "Image"
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        _Table.TableHeaderColumn,
+	                                        { style: { whiteSpace: 'nowrap', width: 100 } },
 	                                        "Brand"
 	                                    ),
 	                                    _react2.default.createElement(
 	                                        _Table.TableHeaderColumn,
-	                                        { style: { whiteSpace: 'nowrap' } },
+	                                        { style: { whiteSpace: 'nowrap', width: 150 } },
 	                                        "Part Number"
 	                                    ),
 	                                    _react2.default.createElement(
 	                                        _Table.TableHeaderColumn,
-	                                        { style: { whiteSpace: 'nowrap', width: '49%' } },
-	                                        "Name"
-	                                    ),
-	                                    _react2.default.createElement(
-	                                        _Table.TableHeaderColumn,
-	                                        { style: { whiteSpace: 'nowrap' } },
+	                                        { style: { whiteSpace: 'nowrap', width: 100 } },
 	                                        "Price"
 	                                    ),
 	                                    _react2.default.createElement(
 	                                        _Table.TableHeaderColumn,
-	                                        { style: { whiteSpace: 'nowrap' } },
-	                                        "Image"
+	                                        { style: { whiteSpace: 'nowrap', width: '99%' } },
+	                                        "Name"
 	                                    )
 	                                )
 	                            ),
@@ -72952,7 +72952,7 @@
 	                            _Table.Table,
 	                            { onRowSelection: function onRowSelection(selection) {
 	                                    _this4.handleServiceRowSelection(selection);
-	                                }, multiSelectable: true, wrapperStyle: { maxHeight: '500px' } },
+	                                }, multiSelectable: true, wrapperStyle: { maxHeight: '400px' } },
 	                            _react2.default.createElement(
 	                                _Table.TableHeader,
 	                                { enableSelectAll: false, displaySelectAll: false },
@@ -72961,42 +72961,42 @@
 	                                    null,
 	                                    _react2.default.createElement(
 	                                        _Table.TableHeaderColumn,
-	                                        { style: { whiteSpace: 'nowrap' } },
+	                                        { style: { whiteSpace: 'nowrap', width: 100 } },
 	                                        "Service"
 	                                    ),
 	                                    _react2.default.createElement(
 	                                        _Table.TableHeaderColumn,
-	                                        { style: { whiteSpace: 'nowrap', width: '49%' } },
-	                                        "Name"
+	                                        { style: { whiteSpace: 'nowrap', width: 100 } },
+	                                        "Price"
 	                                    ),
 	                                    _react2.default.createElement(
 	                                        _Table.TableHeaderColumn,
-	                                        { style: { whiteSpace: 'nowrap' } },
-	                                        "Price"
+	                                        { style: { whiteSpace: 'nowrap', width: '99%' } },
+	                                        "Name"
 	                                    )
 	                                )
 	                            ),
 	                            _react2.default.createElement(
 	                                _Table.TableBody,
-	                                { showRowHover: true, deselectOnClickaway: true },
+	                                { showRowHover: true, deselectOnClickaway: false },
 	                                _harness.DEV_SERVICES ? _harness.DEV_SERVICES.map(function (row, index) {
 	                                    return _react2.default.createElement(
 	                                        _Table.TableRow,
-	                                        { key: index },
+	                                        { key: index, selected: _this4.state.services.includes(index) },
 	                                        _react2.default.createElement(
 	                                            _Table.TableRowColumn,
-	                                            { style: { whiteSpace: 'nowrap' } },
+	                                            { style: { whiteSpace: 'nowrap', width: 100 } },
 	                                            row.serviceNumber
 	                                        ),
 	                                        _react2.default.createElement(
 	                                            _Table.TableRowColumn,
-	                                            { style: { whiteSpace: 'nowrap', width: '49%' } },
-	                                            row.name
+	                                            { style: { whiteSpace: 'nowrap', width: 100 } },
+	                                            row.price.toFixed(2)
 	                                        ),
 	                                        _react2.default.createElement(
 	                                            _Table.TableRowColumn,
-	                                            { style: { whiteSpace: 'nowrap' } },
-	                                            row.price
+	                                            { style: { whiteSpace: 'nowrap', width: '99%' } },
+	                                            row.name
 	                                        )
 	                                    );
 	                                }) : _react2.default.createElement(
@@ -73017,32 +73017,39 @@
 	    }, {
 	        key: "renderTable",
 	        value: function renderTable(parts) {
+	            var _this5 = this;
+
 	            return _react2.default.createElement(
 	                _Table.TableBody,
-	                { showRowHover: true, deselectOnClickaway: true },
+	                { showRowHover: true, deselectOnClickaway: false },
 	                parts ? parts.map(function (row, index) {
 	                    return _react2.default.createElement(
 	                        _Table.TableRow,
-	                        { key: index },
+	                        { key: index, selected: _this5.state.services.includes(index) },
 	                        _react2.default.createElement(
 	                            _Table.TableRowColumn,
-	                            { style: { whiteSpace: 'nowrap' } },
+	                            { style: { whiteSpace: 'nowrap', width: 50 } },
+	                            _react2.default.createElement("img", { src: row.image, alt: row.name, width: "50" })
+	                        ),
+	                        _react2.default.createElement(
+	                            _Table.TableRowColumn,
+	                            { style: { whiteSpace: 'nowrap', width: 100 } },
 	                            row.brand
 	                        ),
 	                        _react2.default.createElement(
 	                            _Table.TableRowColumn,
-	                            { style: { whiteSpace: 'nowrap' } },
+	                            { style: { whiteSpace: 'nowrap', width: 150 } },
 	                            row.partNumber
 	                        ),
 	                        _react2.default.createElement(
 	                            _Table.TableRowColumn,
-	                            { style: { whiteSpace: 'nowrap', width: '49%' } },
-	                            row.name
+	                            { style: { whiteSpace: 'nowrap', width: 100 } },
+	                            row.price.toFixed(2)
 	                        ),
 	                        _react2.default.createElement(
 	                            _Table.TableRowColumn,
-	                            { style: { whiteSpace: 'nowrap' } },
-	                            row.price
+	                            { style: { whiteSpace: 'nowrap', width: '99%' } },
+	                            row.name
 	                        )
 	                    );
 	                }) : _react2.default.createElement(
@@ -73059,7 +73066,7 @@
 	    }, {
 	        key: "renderReview",
 	        value: function renderReview() {
-	            var _this5 = this;
+	            var _this6 = this;
 
 	            var _props2 = this.props,
 	                handleSubmit = _props2.handleSubmit,
@@ -73070,7 +73077,7 @@
 
 	            var parts = [];
 	            this.state.selected.forEach(function (selection) {
-	                parts.push(_this5.props.estimate.parts[selection]);
+	                parts.push(_this6.props.estimate.parts[selection]);
 	            });
 	            var services = [];
 	            this.state.services.forEach(function (selection) {
@@ -73121,22 +73128,22 @@
 	                            ),
 	                            _react2.default.createElement(
 	                                _Table.TableHeaderColumn,
-	                                { style: { width: '30%' } },
+	                                { style: { width: '90%' } },
 	                                "Name"
 	                            ),
 	                            _react2.default.createElement(
 	                                _Table.TableHeaderColumn,
-	                                { style: { textAlign: 'right' } },
+	                                { style: { textAlign: 'right', width: 100 } },
 	                                "Price"
 	                            ),
 	                            _react2.default.createElement(
 	                                _Table.TableHeaderColumn,
-	                                { style: { textAlign: 'right' } },
+	                                { style: { textAlign: 'right', width: 100 } },
 	                                "Labor"
 	                            ),
 	                            _react2.default.createElement(
 	                                _Table.TableHeaderColumn,
-	                                { style: { textAlign: 'right' } },
+	                                { style: { textAlign: 'right', width: 100 } },
 	                                "Total"
 	                            )
 	                        )
@@ -73155,22 +73162,22 @@
 	                                ),
 	                                _react2.default.createElement(
 	                                    _Table.TableRowColumn,
-	                                    { style: { width: '30%', whiteSpace: 'normal', wordWrap: 'break-word' } },
+	                                    { style: { width: '90%' } },
 	                                    row.name
 	                                ),
 	                                _react2.default.createElement(
 	                                    _Table.TableRowColumn,
-	                                    { style: { textAlign: 'right' } },
-	                                    row.price
+	                                    { style: { textAlign: 'right', width: 100 } },
+	                                    row.price.toFixed(2)
 	                                ),
 	                                _react2.default.createElement(
 	                                    _Table.TableRowColumn,
-	                                    { style: { textAlign: 'right' } },
-	                                    row.labor ? row.labor : 0
+	                                    { style: { textAlign: 'right', width: 100 } },
+	                                    row.labor ? row.labor.toFixed(2) : 0
 	                                ),
 	                                _react2.default.createElement(
 	                                    _Table.TableRowColumn,
-	                                    { style: { textAlign: 'right' } },
+	                                    { style: { textAlign: 'right', width: 100 } },
 	                                    (row.price + row.labor).toFixed(2)
 	                                )
 	                            );
@@ -73194,22 +73201,22 @@
 	                                ),
 	                                _react2.default.createElement(
 	                                    _Table.TableRowColumn,
-	                                    { style: { width: '30%', whiteSpace: 'normal', wordWrap: 'break-word' } },
+	                                    { style: { width: '90%' } },
 	                                    row.name
 	                                ),
 	                                _react2.default.createElement(
 	                                    _Table.TableRowColumn,
-	                                    { style: { textAlign: 'right' } },
-	                                    row.price
+	                                    { style: { textAlign: 'right', width: 100 } },
+	                                    row.price.toFixed(2)
 	                                ),
 	                                _react2.default.createElement(
 	                                    _Table.TableRowColumn,
-	                                    { style: { textAlign: 'right' } },
+	                                    { style: { textAlign: 'right', width: 100 } },
 	                                    "0"
 	                                ),
 	                                _react2.default.createElement(
 	                                    _Table.TableRowColumn,
-	                                    { style: { textAlign: 'right' } },
+	                                    { style: { textAlign: 'right', width: 100 } },
 	                                    row.price.toFixed(2)
 	                                )
 	                            );
@@ -73310,7 +73317,7 @@
 	                ),
 	                _react2.default.createElement(
 	                    "p",
-	                    null,
+	                    { style: { textAlign: 'justify' } },
 	                    _react2.default.createElement(
 	                        "em",
 	                        null,
@@ -73383,15 +73390,15 @@
 	        value: function renderDefault() {
 	            return _react2.default.createElement(
 	                "div",
-	                { style: { width: '100%', maxWidth: 700, margin: 'auto' } },
+	                { className: "container-fluid", style: { width: '100%', maxWidth: 700, textAlign: 'center' } },
 	                _react2.default.createElement(
 	                    "h2",
-	                    { style: { textAlign: 'center' } },
+	                    null,
 	                    "Save Money!"
 	                ),
 	                _react2.default.createElement(
 	                    "p",
-	                    null,
+	                    { style: { textAlign: 'justify' } },
 	                    "Want to save money on all of those extra parts needed to finish your car? In addition to the sheet metal required for our step in your restoration project, you can order parts from the ",
 	                    _react2.default.createElement(
 	                        "a",
@@ -73403,7 +73410,7 @@
 	                _react2.default.createElement("br", null),
 	                _react2.default.createElement(
 	                    "p",
-	                    { style: { textAlign: 'center' } },
+	                    null,
 	                    _react2.default.createElement(
 	                        "em",
 	                        null,
@@ -73423,14 +73430,14 @@
 	    }, {
 	        key: "formSubmit",
 	        value: function formSubmit(values) {
-	            var _this6 = this;
+	            var _this7 = this;
 
 	            var dispatch = this.props.dispatch;
 	            // gather part numbers
 
 	            var parts = [];
 	            this.state.selected.forEach(function (selection) {
-	                parts.push(_this6.props.estimate.parts[selection]);
+	                parts.push(_this7.props.estimate.parts[selection]);
 	            });
 	            var services = [];
 	            this.state.services.forEach(function (selection) {
@@ -73457,7 +73464,7 @@
 	                    },
 	                    callbackSuccess: function callbackSuccess() {
 	                        resolve();
-	                        _this6.setState({
+	                        _this7.setState({
 	                            snackbar: true
 	                        });
 	                    }
