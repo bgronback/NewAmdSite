@@ -50025,6 +50025,9 @@
 	        case 'ESTIMATE_SUBMIT':
 	            return state;
 
+	        case 'ESTIMATE_SUBMITTED':
+	            return Object.assign({}, state, { status: 'submitted' });
+
 	        default:
 	            return state;
 	    }
@@ -72720,7 +72723,21 @@
 	            var stepIndex = this.state.stepIndex;
 
 
-	            return _react2.default.createElement(
+	            return this.props.estimate.status === 'submitted' ? _react2.default.createElement(
+	                "div",
+	                null,
+	                _react2.default.createElement(
+	                    "h2",
+	                    { style: { textAlign: 'center', marginTop: 100 } },
+	                    "Thank You!"
+	                ),
+	                _react2.default.createElement(_Snackbar2.default, {
+	                    open: this.state.snackbar,
+	                    message: "Your estimate was successfully submitted!",
+	                    autoHideDuration: 4000,
+	                    onRequestClose: this.handleRequestSnackbarClose
+	                })
+	            ) : _react2.default.createElement(
 	                _Row2.default,
 	                null,
 	                _react2.default.createElement(
@@ -72800,13 +72817,7 @@
 	                            })
 	                        )
 	                    )
-	                ),
-	                _react2.default.createElement(_Snackbar2.default, {
-	                    open: this.state.snackbar,
-	                    message: "Your estimate was successfully submitted!",
-	                    autoHideDuration: 4000,
-	                    onRequestClose: this.handleRequestSnackbarClose
-	                })
+	                )
 	            );
 	        }
 	    }, {
@@ -72961,7 +72972,7 @@
 	                                    null,
 	                                    _react2.default.createElement(
 	                                        _Table.TableHeaderColumn,
-	                                        { style: { whiteSpace: 'nowrap', width: 100 } },
+	                                        { style: { whiteSpace: 'nowrap', width: 150 } },
 	                                        "Service"
 	                                    ),
 	                                    _react2.default.createElement(
@@ -72985,7 +72996,7 @@
 	                                        { key: index, selected: _this4.state.services.includes(index) },
 	                                        _react2.default.createElement(
 	                                            _Table.TableRowColumn,
-	                                            { style: { whiteSpace: 'nowrap', width: 100 } },
+	                                            { style: { whiteSpace: 'nowrap', width: 150 } },
 	                                            row.serviceNumber
 	                                        ),
 	                                        _react2.default.createElement(
@@ -73123,7 +73134,7 @@
 	                            null,
 	                            _react2.default.createElement(
 	                                _Table.TableHeaderColumn,
-	                                null,
+	                                { style: { width: 150 } },
 	                                "Part/Service"
 	                            ),
 	                            _react2.default.createElement(
@@ -73138,7 +73149,7 @@
 	                            ),
 	                            _react2.default.createElement(
 	                                _Table.TableHeaderColumn,
-	                                { style: { textAlign: 'right', width: 100 } },
+	                                { style: { textAlign: 'right', width: 120 } },
 	                                "Labor"
 	                            ),
 	                            _react2.default.createElement(
@@ -73157,7 +73168,7 @@
 	                                { key: index },
 	                                _react2.default.createElement(
 	                                    _Table.TableRowColumn,
-	                                    null,
+	                                    { style: { width: 150 } },
 	                                    row.partNumber
 	                                ),
 	                                _react2.default.createElement(
@@ -73172,8 +73183,8 @@
 	                                ),
 	                                _react2.default.createElement(
 	                                    _Table.TableRowColumn,
-	                                    { style: { textAlign: 'right', width: 100 } },
-	                                    row.labor ? row.labor.toFixed(2) : 0
+	                                    { style: { textAlign: 'right', width: 120 } },
+	                                    row.labor ? row.labor.toFixed(2) : 0.00.toFixed(2)
 	                                ),
 	                                _react2.default.createElement(
 	                                    _Table.TableRowColumn,
@@ -73196,7 +73207,7 @@
 	                                { key: index },
 	                                _react2.default.createElement(
 	                                    _Table.TableRowColumn,
-	                                    null,
+	                                    { style: { width: 150 } },
 	                                    row.serviceNumber
 	                                ),
 	                                _react2.default.createElement(
@@ -73211,8 +73222,8 @@
 	                                ),
 	                                _react2.default.createElement(
 	                                    _Table.TableRowColumn,
-	                                    { style: { textAlign: 'right', width: 100 } },
-	                                    "0"
+	                                    { style: { textAlign: 'right', width: 120 } },
+	                                    0.00.toFixed(2)
 	                                ),
 	                                _react2.default.createElement(
 	                                    _Table.TableRowColumn,
@@ -73300,7 +73311,7 @@
 	                                _react2.default.createElement(
 	                                    "b",
 	                                    null,
-	                                    "Estimate Total"
+	                                    "Total"
 	                                )
 	                            ),
 	                            _react2.default.createElement(

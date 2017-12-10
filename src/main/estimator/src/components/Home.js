@@ -83,7 +83,15 @@ export class Home extends React.Component {
         const { handleSubmit, error, invalid, pristine, submitting } = this.props;
         const { stepIndex } = this.state;
 
-        return (
+        return this.props.estimate.status === 'submitted' ? (<div>
+                <h2 style={{textAlign: 'center', marginTop: 100}}>Thank You!</h2>
+                <Snackbar
+                    open={this.state.snackbar}
+                    message="Your estimate was successfully submitted!"
+                    autoHideDuration={4000}
+                    onRequestClose={this.handleRequestSnackbarClose}
+                />
+            </div>) : (
             <Row>
                 <Form horizontal onSubmit={handleSubmit(this.formSubmit)}>
                     <Stepper linear={false} activeStep={stepIndex}>
@@ -127,12 +135,6 @@ export class Home extends React.Component {
                         </div>
                     </div>
                 </Form>
-                <Snackbar
-                    open={this.state.snackbar}
-                    message="Your estimate was successfully submitted!"
-                    autoHideDuration={4000}
-                    onRequestClose={this.handleRequestSnackbarClose}
-                />
             </Row>
         );
     }
@@ -201,7 +203,7 @@ export class Home extends React.Component {
                     <Table onRowSelection={(selection) => {this.handleServiceRowSelection(selection)}} multiSelectable={true} wrapperStyle={{ maxHeight: '400px' }}>
                         <TableHeader enableSelectAll={false} displaySelectAll={false}>
                             <TableRow>
-                                <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 100 }}>Service</TableHeaderColumn>
+                                <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 150 }}>Service</TableHeaderColumn>
                                 <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 100 }}>Price</TableHeaderColumn>
                                 <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: '99%' }}>Name</TableHeaderColumn>
                             </TableRow>
@@ -209,7 +211,7 @@ export class Home extends React.Component {
                         <TableBody showRowHover={true} deselectOnClickaway={false}>
                             {DEV_SERVICES ? DEV_SERVICES.map((row, index) => (
                                 <TableRow key={index} selected={this.state.services.includes(index)}>
-                                    <TableRowColumn style={{ whiteSpace: 'nowrap', width: 100 }}>{row.serviceNumber}</TableRowColumn>
+                                    <TableRowColumn style={{ whiteSpace: 'nowrap', width: 150 }}>{row.serviceNumber}</TableRowColumn>
                                     <TableRowColumn style={{ whiteSpace: 'nowrap', width: 100 }}>{row.price.toFixed(2)}</TableRowColumn>
                                     <TableRowColumn style={{ whiteSpace: 'nowrap', width: '99%' }}>{row.name}</TableRowColumn>
                                 </TableRow>
@@ -257,30 +259,30 @@ export class Home extends React.Component {
                     <Table selectable={false}>
                         <TableHeader adjustForCheckbox={false} enableSelectAll={false} displaySelectAll={false}>
                             <TableRow>
-                                <TableHeaderColumn>Part/Service</TableHeaderColumn>
+                                <TableHeaderColumn style={{ width: 150}}>Part/Service</TableHeaderColumn>
                                 <TableHeaderColumn style={{ width: '90%' }}>Name</TableHeaderColumn>
                                 <TableHeaderColumn style={{textAlign: 'right', width: 100}}>Price</TableHeaderColumn>
-                                <TableHeaderColumn style={{textAlign: 'right', width: 100}}>Labor</TableHeaderColumn>
+                                <TableHeaderColumn style={{textAlign: 'right', width: 120}}>Labor</TableHeaderColumn>
                                 <TableHeaderColumn style={{textAlign: 'right', width: 100}}>Total</TableHeaderColumn>
                             </TableRow>
                         </TableHeader>
                         <TableBody showRowHover={true} displayRowCheckbox={false}>
                             {parts ? parts.map((row, index) => (
                                 <TableRow key={index}>
-                                    <TableRowColumn>{row.partNumber}</TableRowColumn>
+                                    <TableRowColumn style={{ width: 150}}>{row.partNumber}</TableRowColumn>
                                     <TableRowColumn style={{ width: '90%' }}>{row.name}</TableRowColumn>
                                     <TableRowColumn style={{textAlign: 'right', width: 100}}>{row.price.toFixed(2)}</TableRowColumn>
-                                    <TableRowColumn style={{textAlign: 'right', width: 100}}>{row.labor ? row.labor.toFixed(2) : 0}</TableRowColumn>
+                                    <TableRowColumn style={{textAlign: 'right', width: 120}}>{row.labor ? row.labor.toFixed(2) : 0.00.toFixed(2)}</TableRowColumn>
                                     <TableRowColumn style={{textAlign: 'right', width: 100}}>{(row.price + row.labor).toFixed(2)}</TableRowColumn>
                                 </TableRow>
                             )) : <TableRow key={0}>
                                 <TableRowColumn>No parts selected</TableRowColumn></TableRow>}
                             {services ? services.map((row, index) => (
                                 <TableRow key={index}>
-                                    <TableRowColumn>{row.serviceNumber}</TableRowColumn>
+                                    <TableRowColumn style={{ width: 150}}>{row.serviceNumber}</TableRowColumn>
                                     <TableRowColumn style={{ width: '90%' }}>{row.name}</TableRowColumn>
                                     <TableRowColumn style={{textAlign: 'right', width: 100}}>{row.price.toFixed(2)}</TableRowColumn>
-                                    <TableRowColumn style={{textAlign: 'right', width: 100}}>0</TableRowColumn>
+                                    <TableRowColumn style={{textAlign: 'right', width: 120}}>{0.00.toFixed(2)}</TableRowColumn>
                                     <TableRowColumn style={{textAlign: 'right', width: 100}}>{(row.price).toFixed(2)}</TableRowColumn>
                                 </TableRow>
                             )) : <TableRow key={0}>
@@ -310,7 +312,7 @@ export class Home extends React.Component {
                                 <TableRowColumn></TableRowColumn>
                                 <TableRowColumn></TableRowColumn>
                                 <TableRowColumn style={{textAlign: 'right'}}></TableRowColumn>
-                                <TableRowColumn style={{textAlign: 'right'}}><b>Estimate Total</b></TableRowColumn>
+                                <TableRowColumn style={{textAlign: 'right'}}><b>Total</b></TableRowColumn>
                                 <TableRowColumn style={{textAlign: 'right'}}><b>{grandTotal}</b></TableRowColumn>
                             </TableRow>
                         </TableBody>

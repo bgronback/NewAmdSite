@@ -37,6 +37,9 @@ export default function estimate(state = { estimate: undefined, status: undefine
         case 'ESTIMATE_SUBMIT':
             return state;
 
+        case 'ESTIMATE_SUBMITTED':
+            return Object.assign({}, state, { status: 'submitted' });
+
         default:
             return state;
   }
