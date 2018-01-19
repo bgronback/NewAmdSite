@@ -18,8 +18,8 @@ import Snackbar from 'material-ui/Snackbar';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
 import TextInput from "./Widgets/FormFields/material/TextInput"
 import TextAreaInput from "./Widgets/FormFields/material/TextAreaInput"
-import {Tabs, Tab} from 'material-ui/Tabs'
 import { DEV_SERVICES } from '../test/harness'
+import normalizePhone from '../util/normalizePhone'
 
 export class Home extends React.Component {
 
@@ -36,9 +36,10 @@ export class Home extends React.Component {
         this.formSubmit = this.formSubmit.bind(this);
         this.handleNext = this.handleNext.bind(this);
         this.handlePrev = this.handlePrev.bind(this);
+        this.renderDefault = this.renderDefault.bind(this);
         this.handleRowSelection = this.handleRowSelection.bind(this);
         this.renderSelectParts = this.renderSelectParts.bind(this);
-        this.renderSelectCar = this.renderSelectCar.bind(this);
+        this.renderSelectServices = this.renderSelectServices.bind(this);
         this.handleRequestSnackbarClose = this.handleRequestSnackbarClose.bind(this);
     }
 
@@ -72,8 +73,8 @@ export class Home extends React.Component {
         // return all steps, hiding those not selected to maintain form fields active
         return <div>
             <div style={stepIndex === -1 ? {} : { display: 'none' }}>{this.renderDefault()}</div>
-            <div style={stepIndex === 0 ? {} : { display: 'none' }}>{this.renderSelectCar()}</div>
-            <div style={stepIndex === 1 ? {} : { display: 'none' }}>{this.renderSelectParts()}</div>
+            <div style={stepIndex === 0 ? {} : { display: 'none' }}>{this.renderSelectParts()}</div>
+            <div style={stepIndex === 1 ? {} : { display: 'none' }}>{this.renderSelectServices()}</div>
             <div style={stepIndex === 2 ? {} : { display: 'none' }}>{this.renderReview()}</div>
             <div style={stepIndex === 3 ? {} : { display: 'none' }}>{this.renderSubmit()}</div>
         </div>
@@ -97,12 +98,12 @@ export class Home extends React.Component {
                     <Stepper linear={false} activeStep={stepIndex}>
                         <Step>
                             <StepButton onClick={() => this.setState({stepIndex: 0})}>
-                                Car
+                                Parts
                             </StepButton>
                         </Step>
                         <Step>
                             <StepButton onClick={() => this.setState({stepIndex: 1})}>
-                                Parts
+                                Services
                             </StepButton>
                         </Step>
                         <Step>
@@ -127,7 +128,7 @@ export class Home extends React.Component {
                             />
                             <RaisedButton
                                 label={stepIndex === 3 ? "Submit" : "Next"}
-                                disabled={stepIndex === 3 ? (pristine || submitting) : false}
+                                disabled={this.props.estimate.parts === undefined || (stepIndex === 3 ? (pristine || submitting) : false)}
                                 primary={true}
                                 type="submit"
                                 onClick={this.handleNext}
@@ -139,88 +140,47 @@ export class Home extends React.Component {
         );
     }
 
-    renderSelectCar() {
-        const { estimate } = this.props;
-
-        const makeSelected = (value) => {
-            this.props.dispatch({ type: 'MAKE_SELECTED', make: value });
-            return value;
-        };
-
-        const modelSelected = (value) => {
-            this.props.dispatch({ type: 'MODEL_SELECTED', model: value });
-            return value;
-        };
-
-        const yearSelected = (value, previousValue, allValues) => {
-            this.props.dispatch({ type: 'YEAR_SELECTED', selection: allValues });
-            return value;
-        };
-
-        return <div className="container-fluid">
-            <p style={{textAlign: 'center'}}>Select your car make, model, and year</p>
-                <Row>
-                    <Col sm={4}>
-                        <Field component={SelectInput} label="Make" name="make" disabled={!estimate.makes.length} normalize={makeSelected}>
-                            {estimate.makes.map((type, index) => {return <MenuItem key={index} value={type.value} primaryText={type.text}/>})}
-                        </Field>
-                    </Col>
-                    <Col sm={4}>
-                        <Field component={SelectInput} label="Model" name="model" disabled={!estimate.models.length} normalize={modelSelected}>
-                            {estimate.models.map((type, index) => {return <MenuItem key={index} value={type.value} primaryText={type.text}/>})}
-                        </Field>
-                    </Col>
-                    <Col sm={4}>
-                        <Field component={SelectInput} label="Year" name="year" disabled={!estimate.years.length} normalize={yearSelected}>
-                            {estimate.years.map((type, index) => {return <MenuItem key={index} value={type.value} primaryText={type.text}/>})}
-                        </Field>
-                    </Col>
-                </Row>
-            </div>
-    }
-
     renderSelectParts() {
         var parts = this.props.estimate.parts;
         return <div className="container-fluid">
-            <Tabs>
-                <Tab label="Parts">
-                    <p style={{textAlign: 'center', marginTop: 10}}>Select sheet metal parts you will need</p>
-                    <Table onRowSelection={(selection) => {this.handleRowSelection(selection)}} multiSelectable={true} wrapperStyle={{ maxHeight: '400px' }}>
-                        <TableHeader enableSelectAll={false} displaySelectAll={false}>
-                            <TableRow>
-                                <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 50 }}>Image</TableHeaderColumn>
-                                <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 100 }}>Brand</TableHeaderColumn>
-                                <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 150 }}>Part Number</TableHeaderColumn>
-                                <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 100 }}>Price</TableHeaderColumn>
-                                <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: '99%' }}>Name</TableHeaderColumn>
-                            </TableRow>
-                        </TableHeader>
-                        {this.renderTable(parts)}
-                    </Table>
-                </Tab>
-                <Tab label="Services">
-                    <p style={{textAlign: 'center', marginTop: 10}}>Select additional services for your car</p>
-                    <Table onRowSelection={(selection) => {this.handleServiceRowSelection(selection)}} multiSelectable={true} wrapperStyle={{ maxHeight: '400px' }}>
-                        <TableHeader enableSelectAll={false} displaySelectAll={false}>
-                            <TableRow>
-                                <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 150 }}>Service</TableHeaderColumn>
-                                <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 100 }}>Price</TableHeaderColumn>
-                                <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: '99%' }}>Name</TableHeaderColumn>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody showRowHover={true} deselectOnClickaway={false}>
-                            {DEV_SERVICES ? DEV_SERVICES.map((row, index) => (
-                                <TableRow key={index} selected={this.state.services.includes(index)}>
-                                    <TableRowColumn style={{ whiteSpace: 'nowrap', width: 150 }}>{row.serviceNumber}</TableRowColumn>
-                                    <TableRowColumn style={{ whiteSpace: 'nowrap', width: 100 }}>{row.price.toFixed(2)}</TableRowColumn>
-                                    <TableRowColumn style={{ whiteSpace: 'nowrap', width: '99%' }}>{row.name}</TableRowColumn>
-                                </TableRow>
-                            )) : <TableRow key={0} selectable={false}>
-                                <TableRowColumn>No services found</TableRowColumn></TableRow>}
-                        </TableBody>
-                    </Table>
-                </Tab>
-            </Tabs>
+            <h4 style={{textAlign: 'center', marginTop: 10}}>Select sheet metal parts you will need</h4>
+            <Table onRowSelection={(selection) => {this.handleRowSelection(selection)}} multiSelectable={true} wrapperStyle={{ maxHeight: '400px' }}>
+                <TableHeader enableSelectAll={false} displaySelectAll={false}>
+                    <TableRow>
+                        <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 50 }}>Image</TableHeaderColumn>
+                        <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 100 }}>Brand</TableHeaderColumn>
+                        <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 150 }}>Part Number</TableHeaderColumn>
+                        <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 100 }}>Price</TableHeaderColumn>
+                        <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: '99%' }}>Name</TableHeaderColumn>
+                    </TableRow>
+                </TableHeader>
+                {this.renderTable(parts)}
+            </Table>
+        </div>
+    }
+
+    renderSelectServices() {
+        return <div className="container-fluid">
+            <h4 style={{textAlign: 'center', marginTop: 10}}>Select additional services for your car</h4>
+            <Table onRowSelection={(selection) => {this.handleServiceRowSelection(selection)}} multiSelectable={true} wrapperStyle={{ maxHeight: '400px' }}>
+                <TableHeader enableSelectAll={false} displaySelectAll={false}>
+                    <TableRow>
+                        <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 150 }}>Service</TableHeaderColumn>
+                        <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 100 }}>Price</TableHeaderColumn>
+                        <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: '99%' }}>Name</TableHeaderColumn>
+                    </TableRow>
+                </TableHeader>
+                <TableBody showRowHover={true} deselectOnClickaway={false}>
+                    {DEV_SERVICES ? DEV_SERVICES.map((row, index) => (
+                        <TableRow key={index} selected={this.state.services.includes(index)}>
+                            <TableRowColumn style={{ whiteSpace: 'nowrap', width: 150 }}>{row.serviceNumber}</TableRowColumn>
+                            <TableRowColumn style={{ whiteSpace: 'nowrap', width: 100 }}>{row.price.toFixed(2)}</TableRowColumn>
+                            <TableRowColumn style={{ whiteSpace: 'nowrap', width: '99%' }}>{row.name}</TableRowColumn>
+                        </TableRow>
+                    )) : <TableRow key={0} selectable={false}>
+                        <TableRowColumn>No services found</TableRowColumn></TableRow>}
+                </TableBody>
+            </Table>
         </div>
     }
 
@@ -317,11 +277,12 @@ export class Home extends React.Component {
                             </TableRow>
                         </TableBody>
                     </Table>
-                    <p style={{textAlign: 'justify'}}><em>Please note that the labor prices are based on reductions for certain panel overlaps and are subject to increase if no adjacent panels are being replaced. Also note that some operations cannot be performed independently; for example, a complete one piece trunk floor cannot be installed without removing the quarter panels.</em></p>
+                    <p style={{textAlign: 'justify', margin: 30}}><em>Please note that the labor prices are based on reductions for certain panel overlaps and are subject to increase if no adjacent panels are being replaced. Also note that some operations cannot be performed independently; for example, a complete one piece trunk floor cannot be installed without removing the quarter panels.</em></p>
                 </div>
     }
 
     renderSubmit() {
+        const lower = value => value && value.toLowerCase();
         return <div className="container-fluid">
             <Col>
                 <Row>
@@ -329,12 +290,12 @@ export class Home extends React.Component {
                         <Field component={TextInput} name="name" label="Name"/>
                     </Col>
                     <Col sm={6}>
-                        <Field component={TextInput} name="email" label="Email"/>
+                        <Field component={TextInput} name="email" label="Email" normalize={lower}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col sm={6}>
-                        <Field component={TextInput} name="phone" label="Phone"/>
+                        <Field component={TextInput} name="phone" label="Phone" normalize={normalizePhone}/>
                     </Col>
                     <Col sm={6}>
                         <Field component={TextInput} name="vin" label="Vehicle Identification Number (VIN)"/>
@@ -354,14 +315,46 @@ export class Home extends React.Component {
     }
 
     renderDefault() {
+        const { estimate } = this.props;
+
+        const makeSelected = (value) => {
+            this.props.dispatch({ type: 'MAKE_SELECTED', make: value });
+            return value;
+        };
+
+        const modelSelected = (value) => {
+            this.props.dispatch({ type: 'MODEL_SELECTED', model: value });
+            return value;
+        };
+
+        const yearSelected = (value, previousValue, allValues) => {
+            this.props.dispatch({ type: 'YEAR_SELECTED', selection: allValues });
+            return value;
+        };
+
         return <div className="container-fluid" style={{width: '100%', maxWidth: 700, textAlign: 'center'}}>
-            <h2>Save Money!</h2>
-            <p style={{textAlign: 'justify'}}>Want to save money on all of those extra parts needed to finish your car?
-                In addition to the sheet metal required for our step in your restoration project,
-                you can order parts from the <a href="http://www.autometaldirect.com/" target="_blank">AMD catalog</a> and save on the shipping. For additional parts at a discount, please call our parts sales division at (844) 275-9254.</p>
+            <h3>AMD Installation Center Estimator</h3>
+            <p style={{textAlign: 'justify'}}>Want to save money on all of those extra parts needed to finish your car? In addition to the sheet metal required for our step in your restoration project, you can order parts from the <a href="http://www.autometaldirect.com/" target="_blank">Auto Metal Direct</a> catalog and save on the shipping. For additional parts at a discount, please call our parts sales division at <a href="tel:+18442759254">(844) 275-9254</a>.</p>
+            <p style={{textAlign: 'justify'}}>If you decide to use another facility to complete the repairs on your car or fix it yourself, please contact our parts division for technical support and a <span style={{color: 'red'}}>SUBSTANTIAL</span> discount on parts from <a href="http://www.autometaldirect.com/" target="_blank">Auto Metal Direct</a>, <a href="https://www.goodmarkindustries.com/" target="_blank">Goodmark</a>, <a href="http://www.dynacorn.com/" target="_blank">Dynacorn</a> and <a href="http://www.goldenstarauto.com/" target="_blank">Golden Star</a> at <a href="tel:+18442759254">(844) 275-9254</a>.</p>
             <br/>
-            <p><em>Now, let's begin your estimate...</em></p>
-            <br/>
+            <h4>Begin by selecting your car make, model, and year:</h4>
+            <Row>
+                <Col sm={4}>
+                    <Field component={SelectInput} label="Make" name="make" disabled={!estimate.makes.length} normalize={makeSelected} placeholder="Select make">
+                        {estimate.makes.map((type, index) => {return <MenuItem key={index} value={type.value} primaryText={type.text}/>})}
+                    </Field>
+                </Col>
+                <Col sm={4}>
+                    <Field component={SelectInput} label="Model" name="model" disabled={!estimate.models.length} normalize={modelSelected} placeholder="Select model">
+                        {estimate.models.map((type, index) => {return <MenuItem key={index} value={type.value} primaryText={type.text}/>})}
+                    </Field>
+                </Col>
+                <Col sm={4}>
+                    <Field component={SelectInput} label="Year" name="year" disabled={!estimate.years.length} normalize={yearSelected} placeholder="Select year">
+                        {estimate.years.map((type, index) => {return <MenuItem key={index} value={type.value} primaryText={type.text}/>})}
+                    </Field>
+                </Col>
+            </Row>
         </div>
     }
 
