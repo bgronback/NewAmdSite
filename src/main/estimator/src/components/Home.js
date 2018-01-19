@@ -122,7 +122,7 @@ export class Home extends React.Component {
                         <div style={{textAlign: 'center', marginTop: 20}}>
                             <FlatButton
                                 label="Back"
-                                disabled={stepIndex === 0}
+                                disabled={stepIndex == -1}
                                 onClick={this.handlePrev}
                                 style={{marginRight: 12}}
                             />
