@@ -18,9 +18,12 @@ import javax.mail.util.ByteArrayDataSource;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +58,18 @@ public class EstimateController {
 	static {
 		sdf.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 	}
-
+	
+	private static final int PART_COUNT_COL = 0;
+	private static final int CUST_INFO_COL = 1;
+	private static final int PART_NO_COL = 1;
+	private static final int PART_NAME_COL = 3;
+	private static final int PART_COST_COL = 7;
+	private static final int CUST_DATA_COL = 3;
+	private static final int AMD_INFO_COL = 5;
+	private static final int LABOR_COST_COL = 9;
+	private static final int CAR_INFO_COL = 7;
+	private static final int CAR_DATA_COL = 9;
+	
 	@PostMapping
 	public @ResponseStatus(HttpStatus.OK) String submit(@RequestBody Estimate estimate) {
 		LOGGER.debug("Received estimate: " + estimate);
@@ -168,55 +182,151 @@ public class EstimateController {
 		Sheet sheet = wb.createSheet("AMD Installation");
 		
 		CellStyle dateStyle = wb.createCellStyle();
-		dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("m/d/yy h:mm"));
+		dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("mm/dd/yyyy hh:mm"));
+		dateStyle.setAlignment(HorizontalAlignment.LEFT);
+		
+		CellStyle left = wb.createCellStyle();
+		left.setAlignment(HorizontalAlignment.LEFT);
+		
+		CellStyle right = wb.createCellStyle();
+		right.setAlignment(HorizontalAlignment.RIGHT);
+		
+		CellStyle center = wb.createCellStyle();
+		center.setAlignment(HorizontalAlignment.CENTER);
+		
+		Font font = wb.createFont();
+		font.setBold(true);
+		font.setFontHeightInPoints((short)16);
+		
+		CellStyle titleStyle = wb.createCellStyle();
+		titleStyle.setAlignment(HorizontalAlignment.CENTER);
+		titleStyle.setFont(font);
 		
 		Row row = sheet.createRow(0);
-		row.createCell(0).setCellValue("Name");
-		row.createCell(1).setCellValue(estimate.getName());
-		row.createCell(3).setCellValue("AMD Installation");
-		row.createCell(5).setCellValue("Date");
-		Cell dateCell = row.createCell(6);
+		row.createCell(CUST_INFO_COL).setCellValue("Name");
+		row.createCell(CUST_DATA_COL).setCellValue(estimate.getName());
+		Cell titleCell = row.createCell(AMD_INFO_COL);
+		titleCell.setCellValue("AMD Installation");
+		titleCell.setCellStyle(titleStyle);
+		row.createCell(CAR_INFO_COL).setCellValue("Date");
+		Cell dateCell = row.createCell(CAR_DATA_COL);
 		dateCell.setCellValue(Calendar.getInstance());
 		dateCell.setCellStyle(dateStyle);
 		
 		row = sheet.createRow(1);
-		row.createCell(0).setCellValue("Address");
-		row.createCell(3).setCellValue("7314 Highway 115 East");
-		row.createCell(5).setCellValue("Prepared By");
-		row.createCell(6).setCellValue("Online");
+		row.createCell(CUST_INFO_COL).setCellValue("Address");
+		Cell amdAddress = row.createCell(AMD_INFO_COL);
+		amdAddress.setCellStyle(center);
+		amdAddress.setCellValue("7314 Highway 115 East");
+		row.createCell(CAR_INFO_COL).setCellValue("Prepared By");
+		row.createCell(CAR_DATA_COL).setCellValue("Online");
 		
 		row = sheet.createRow(2);
-		row.createCell(0).setCellValue("City/State");
-		row.createCell(3).setCellValue("Cleveland, GA 30528");
-		row.createCell(5).setCellValue("Year");
-		row.createCell(6).setCellValue(estimate.getYear());
+		row.createCell(CUST_INFO_COL).setCellValue("City/State");
+		Cell amdCityState = row.createCell(AMD_INFO_COL);
+		amdCityState.setCellStyle(center);
+		amdCityState.setCellValue("Cleveland, GA 30528");
+		row.createCell(CAR_INFO_COL).setCellValue("Year");
+		Cell yearCell = row.createCell(CAR_DATA_COL);
+		yearCell.setCellStyle(left);
+		yearCell.setCellValue(estimate.getYear());
 		
 		row = sheet.createRow(3);
-		row.createCell(0).setCellValue("Phone");
-		row.createCell(1).setCellValue(estimate.getPhone());
-		row.createCell(3).setCellValue("706-348-6653");
-		row.createCell(5).setCellValue("Make");
-		row.createCell(6).setCellValue(estimate.getMake().name());
+		row.createCell(CUST_INFO_COL).setCellValue("Phone");
+		row.createCell(CUST_DATA_COL).setCellValue(estimate.getPhone());
+		Cell amdPhone = row.createCell(AMD_INFO_COL);
+		amdPhone.setCellStyle(center);
+		amdPhone.setCellValue("706-348-6653");
+		row.createCell(CAR_INFO_COL).setCellValue("Make");
+		row.createCell(CAR_DATA_COL).setCellValue(estimate.getMake().name());
 		
 		row = sheet.createRow(4);
-		row.createCell(0).setCellValue("Email");
-		row.createCell(1).setCellValue(estimate.getEmail());
-		row.createCell(3).setCellValue("amdinstallation.com");
-		row.createCell(5).setCellValue("Model");
-		row.createCell(6).setCellValue(estimate.getModel().name());
+		row.createCell(CUST_INFO_COL).setCellValue("Email");
+		row.createCell(CUST_DATA_COL).setCellValue(estimate.getEmail());
+		Cell amdLink = row.createCell(AMD_INFO_COL);
+		amdLink.setCellStyle(center);
+		amdLink.setCellValue("amdinstallation.com");
+		row.createCell(CAR_INFO_COL).setCellValue("Model");
+		row.createCell(CAR_DATA_COL).setCellValue(estimate.getModel().name());
 		
 		row = sheet.createRow(5);
-		row.createCell(5).setCellValue("VIN");
-		row.createCell(6).setCellValue(estimate.getVin());
+		row.createCell(CAR_INFO_COL).setCellValue("VIN");
+		row.createCell(CAR_DATA_COL).setCellValue(estimate.getVin());
 		
-		sheet.setColumnWidth(0, 10 * 256);
-		sheet.setColumnWidth(1, 30 * 256);
-		sheet.setColumnWidth(2, 2 * 256);
-		sheet.setColumnWidth(3, 40 * 256);
-		sheet.setColumnWidth(4, 2 * 256);
-		sheet.setColumnWidth(5, 10 * 256);
-		sheet.setColumnWidth(6, 30 * 256);
-
+		row = sheet.createRow(7);
+		row.createCell(PART_NO_COL).setCellValue("CATALOG NO");
+		row.createCell(PART_NAME_COL).setCellValue("DESCRIPTION");
+		Cell partCostCell = row.createCell(PART_COST_COL);
+		partCostCell.setCellStyle(right);
+		partCostCell.setCellValue("PART COST");
+		row.createCell(CAR_DATA_COL).setCellValue("LABOR COST");
+		
+		int partRow = 8;
+		int partCount = 1;
+		for (Part item : estimate.getParts()) {
+			row = sheet.createRow(partRow++);
+			row.createCell(PART_COUNT_COL).setCellValue(partCount++);
+			row.createCell(PART_NO_COL).setCellValue(item.getPartNumber());
+			row.createCell(PART_NAME_COL).setCellValue(item.getName());
+			row.createCell(PART_COST_COL).setCellValue(item.getPrice() == null ? 0d : item.getPrice().doubleValue());
+			row.createCell(LABOR_COST_COL).setCellValue(item.getLabor() == null ? 0d : item.getLabor().doubleValue());
+		}
+		
+		row = sheet.createRow(partRow);
+		row.createCell(PART_COST_COL).setCellFormula("SUM(H9:H" + partRow + ")");
+		row.createCell(LABOR_COST_COL).setCellFormula("SUM(J9:J" + partRow + ")");
+		
+		row = sheet.createRow(partRow + 2);
+		Cell tax = row.createCell(PART_COST_COL);
+		tax.setCellStyle(right);
+		tax.setCellValue("Tax");
+		Cell laborCost = row.createCell(LABOR_COST_COL);
+		laborCost.setCellFormula("H" + (partRow + 1) + "*0.07"); // FIXME obtain tax rate
+		
+		row = sheet.createRow(partRow + 3);
+		Cell total = row.createCell(PART_COST_COL);
+		total.setCellStyle(right);
+		total.setCellValue("Total");
+		row.createCell(LABOR_COST_COL).setCellFormula("SUM(H" + (partRow + 1) + ":J" + (partRow + 1) + ")");
+		
+		// set column widths last
+		sheet.setColumnWidth(PART_COUNT_COL, 5 * 256);
+		sheet.setColumnWidth(CUST_INFO_COL, 20 * 256);
+		sheet.setColumnWidth(2, 1 * 256);
+		sheet.setColumnWidth(CUST_DATA_COL, 40 * 256);
+		sheet.setColumnWidth(4, 1 * 256);
+		sheet.setColumnWidth(PART_COST_COL, 30 * 256);
+		sheet.setColumnWidth(6, 1 * 256);
+		sheet.setColumnWidth(AMD_INFO_COL, 30 * 256);
+		sheet.setColumnWidth(8, 1 * 256);
+		sheet.setColumnWidth(CAR_INFO_COL, 20 * 256);
+		sheet.setColumnWidth(10, 1 * 256);
+		sheet.setColumnWidth(CAR_DATA_COL, 40 * 256);
+		
+		// empty line above part list
+		sheet.addMergedRegion(new CellRangeAddress(
+	            6, //first row (0-based)
+	            6, //last row  (0-based)
+	            0, //first column (0-based)
+	            9  //last column  (0-based)
+	    ));
+		
+		// description field
+		sheet.addMergedRegion(new CellRangeAddress(
+	            7, //first row (0-based)
+	            7, //last row  (0-based)
+	            3, //first column (0-based)
+	            5  //last column  (0-based)
+	    ));
+		
+		// empty line below part list
+		sheet.addMergedRegion(new CellRangeAddress(
+				partRow, //first row (0-based)
+				partRow + 3, //last row  (0-based)
+	            0, //first column (0-based)
+	            5  //last column  (0-based)
+		));
+		
 		return wb;
 	}
 
