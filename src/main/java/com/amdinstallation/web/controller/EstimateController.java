@@ -271,6 +271,13 @@ public class EstimateController {
 			row.createCell(PART_COST_COL).setCellValue(item.getPrice() == null ? 0d : item.getPrice().doubleValue());
 			row.createCell(LABOR_COST_COL).setCellValue(item.getLabor() == null ? 0d : item.getLabor().doubleValue());
 		}
+		for (Service item : estimate.getServices()) {
+			row = sheet.createRow(partRow++);
+			row.createCell(PART_COUNT_COL).setCellValue(partCount++);
+			row.createCell(PART_NO_COL).setCellValue(item.getServiceNumber());
+			row.createCell(PART_NAME_COL).setCellValue(item.getName());
+			row.createCell(LABOR_COST_COL).setCellValue(item.getPrice() == null ? 0d : item.getPrice().doubleValue());
+		}
 		
 		row = sheet.createRow(partRow);
 		row.createCell(PART_COST_COL).setCellFormula("SUM(H9:H" + partRow + ")");
