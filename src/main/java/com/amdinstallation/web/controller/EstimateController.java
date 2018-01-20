@@ -15,6 +15,7 @@ import java.util.TimeZone;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -180,6 +181,7 @@ public class EstimateController {
 		Workbook wb = new XSSFWorkbook();
 		CreationHelper createHelper = wb.getCreationHelper();
 		Sheet sheet = wb.createSheet("AMD Installation");
+		sheet.setZoom(120);
 		
 		CellStyle dateStyle = wb.createCellStyle();
 		dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("mm/dd/yyyy hh:mm"));
@@ -193,6 +195,14 @@ public class EstimateController {
 		
 		CellStyle center = wb.createCellStyle();
 		center.setAlignment(HorizontalAlignment.CENTER);
+		
+		CellStyle totals = wb.createCellStyle();
+		totals.setAlignment(HorizontalAlignment.RIGHT);
+		totals.setBorderTop(BorderStyle.HAIR);
+		totals.setDataFormat((short)8); //8 = "($#,##0.00_);[Red]($#,##0.00)"
+		
+		CellStyle currency = wb.createCellStyle();
+		currency.setDataFormat((short)8); //8 = "($#,##0.00_);[Red]($#,##0.00)"
 		
 		Font font = wb.createFont();
 		font.setBold(true);
@@ -254,6 +264,9 @@ public class EstimateController {
 		row.createCell(CAR_DATA_COL).setCellValue(estimate.getVin());
 		
 		row = sheet.createRow(7);
+		Cell numCell = row.createCell(PART_COUNT_COL);
+		numCell.setCellStyle(right);
+		numCell.setCellValue("#");
 		row.createCell(PART_NO_COL).setCellValue("CATALOG NO");
 		row.createCell(PART_NAME_COL).setCellValue("DESCRIPTION");
 		Cell partCostCell = row.createCell(PART_COST_COL);
@@ -268,20 +281,33 @@ public class EstimateController {
 			row.createCell(PART_COUNT_COL).setCellValue(partCount++);
 			row.createCell(PART_NO_COL).setCellValue(item.getPartNumber());
 			row.createCell(PART_NAME_COL).setCellValue(item.getName());
-			row.createCell(PART_COST_COL).setCellValue(item.getPrice() == null ? 0d : item.getPrice().doubleValue());
-			row.createCell(LABOR_COST_COL).setCellValue(item.getLabor() == null ? 0d : item.getLabor().doubleValue());
+			Cell price = row.createCell(PART_COST_COL);
+			price.setCellStyle(currency);
+			price.setCellValue(item.getPrice() == null ? 0d : item.getPrice().doubleValue());
+			Cell labor = row.createCell(LABOR_COST_COL);
+			labor.setCellStyle(currency);
+			labor.setCellValue(item.getLabor() == null ? 0d : item.getLabor().doubleValue());
 		}
 		for (Service item : estimate.getServices()) {
 			row = sheet.createRow(partRow++);
 			row.createCell(PART_COUNT_COL).setCellValue(partCount++);
 			row.createCell(PART_NO_COL).setCellValue(item.getServiceNumber());
 			row.createCell(PART_NAME_COL).setCellValue(item.getName());
-			row.createCell(LABOR_COST_COL).setCellValue(item.getPrice() == null ? 0d : item.getPrice().doubleValue());
+			Cell price = row.createCell(LABOR_COST_COL);
+			price.setCellStyle(currency);
+			price.setCellValue(item.getPrice() == null ? 0d : item.getPrice().doubleValue());
 		}
 		
 		row = sheet.createRow(partRow);
-		row.createCell(PART_COST_COL).setCellFormula("SUM(H9:H" + partRow + ")");
-		row.createCell(LABOR_COST_COL).setCellFormula("SUM(J9:J" + partRow + ")");
+		Cell subTotals = row.createCell(AMD_INFO_COL);
+		subTotals.setCellValue("Subtotal");
+		subTotals.setCellStyle(right);
+		Cell partTotal = row.createCell(PART_COST_COL);
+		partTotal.setCellStyle(totals);
+		partTotal.setCellFormula("SUM(H9:H" + partRow + ")");
+		Cell laborTotal = row.createCell(LABOR_COST_COL);
+		laborTotal.setCellStyle(totals);
+		laborTotal.setCellFormula("SUM(J9:J" + partRow + ")");
 		
 		row = sheet.createRow(partRow + 2);
 		Cell tax = row.createCell(PART_COST_COL);
@@ -289,18 +315,21 @@ public class EstimateController {
 		tax.setCellValue("Tax");
 		Cell laborCost = row.createCell(LABOR_COST_COL);
 		laborCost.setCellFormula("H" + (partRow + 1) + "*0.07"); // FIXME obtain tax rate
+		laborCost.setCellStyle(currency);
 		
 		row = sheet.createRow(partRow + 3);
 		Cell total = row.createCell(PART_COST_COL);
 		total.setCellStyle(right);
 		total.setCellValue("Total");
-		row.createCell(LABOR_COST_COL).setCellFormula("SUM(H" + (partRow + 1) + ":J" + (partRow + 1) + ")");
+		Cell totalCost = row.createCell(LABOR_COST_COL);
+		totalCost.setCellStyle(currency);
+		totalCost.setCellFormula("SUM(H" + (partRow + 1) + ":J" + (partRow + 1) + ")");
 		
 		// set column widths last
 		sheet.setColumnWidth(PART_COUNT_COL, 5 * 256);
 		sheet.setColumnWidth(CUST_INFO_COL, 20 * 256);
 		sheet.setColumnWidth(2, 1 * 256);
-		sheet.setColumnWidth(CUST_DATA_COL, 40 * 256);
+		sheet.setColumnWidth(CUST_DATA_COL, 30 * 256);
 		sheet.setColumnWidth(4, 1 * 256);
 		sheet.setColumnWidth(PART_COST_COL, 30 * 256);
 		sheet.setColumnWidth(6, 1 * 256);
@@ -308,7 +337,7 @@ public class EstimateController {
 		sheet.setColumnWidth(8, 1 * 256);
 		sheet.setColumnWidth(CAR_INFO_COL, 20 * 256);
 		sheet.setColumnWidth(10, 1 * 256);
-		sheet.setColumnWidth(CAR_DATA_COL, 40 * 256);
+		sheet.setColumnWidth(CAR_DATA_COL, 30 * 256);
 		
 		// empty line above part list
 		sheet.addMergedRegion(new CellRangeAddress(
@@ -318,21 +347,16 @@ public class EstimateController {
 	            9  //last column  (0-based)
 	    ));
 		
-		// description field
-		sheet.addMergedRegion(new CellRangeAddress(
-	            7, //first row (0-based)
-	            7, //last row  (0-based)
-	            3, //first column (0-based)
-	            5  //last column  (0-based)
-	    ));
-		
-		// empty line below part list
-		sheet.addMergedRegion(new CellRangeAddress(
-				partRow, //first row (0-based)
-				partRow + 3, //last row  (0-based)
-	            0, //first column (0-based)
-	            5  //last column  (0-based)
-		));
+		// description fields
+		int limit = 8 + estimate.getParts().size() + estimate.getServices().size();
+		for (int i = 8; i < limit; i ++) {
+			sheet.addMergedRegion(new CellRangeAddress(
+		            i, //first row (0-based)
+		            i, //last row  (0-based)
+		            CUST_DATA_COL, //first column (0-based)
+		            AMD_INFO_COL  //last column  (0-based)
+		    ));
+		}
 		
 		return wb;
 	}
