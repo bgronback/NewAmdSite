@@ -182,35 +182,48 @@ public class EstimateController {
 		CreationHelper createHelper = wb.getCreationHelper();
 		Sheet sheet = wb.createSheet("AMD Installation");
 		sheet.setZoom(120);
+		sheet.getPrintSetup().setLandscape(true);
+		
+		Font font = wb.createFont();
+		font.setFontHeightInPoints((short)10);
+		
+		CellStyle style = wb.createCellStyle();
+	    style.setFont(font);
 		
 		CellStyle dateStyle = wb.createCellStyle();
 		dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("mm/dd/yyyy hh:mm"));
 		dateStyle.setAlignment(HorizontalAlignment.LEFT);
+		dateStyle.setFont(font);
 		
 		CellStyle left = wb.createCellStyle();
 		left.setAlignment(HorizontalAlignment.LEFT);
+		left.setFont(font);
 		
 		CellStyle right = wb.createCellStyle();
 		right.setAlignment(HorizontalAlignment.RIGHT);
+		right.setFont(font);
 		
 		CellStyle center = wb.createCellStyle();
 		center.setAlignment(HorizontalAlignment.CENTER);
+		center.setFont(font);
 		
 		CellStyle totals = wb.createCellStyle();
 		totals.setAlignment(HorizontalAlignment.RIGHT);
 		totals.setBorderTop(BorderStyle.HAIR);
 		totals.setDataFormat((short)8); //8 = "($#,##0.00_);[Red]($#,##0.00)"
+		totals.setFont(font);
 		
 		CellStyle currency = wb.createCellStyle();
 		currency.setDataFormat((short)8); //8 = "($#,##0.00_);[Red]($#,##0.00)"
+		currency.setFont(font);
 		
-		Font font = wb.createFont();
-		font.setBold(true);
-		font.setFontHeightInPoints((short)16);
+		Font amdFont = wb.createFont();
+		amdFont.setBold(true);
+		amdFont.setFontHeightInPoints((short)16);
 		
 		CellStyle titleStyle = wb.createCellStyle();
 		titleStyle.setAlignment(HorizontalAlignment.CENTER);
-		titleStyle.setFont(font);
+		titleStyle.setFont(amdFont);
 		
 		Row row = sheet.createRow(0);
 		row.createCell(CUST_INFO_COL).setCellValue("Name");
@@ -272,7 +285,9 @@ public class EstimateController {
 		Cell partCostCell = row.createCell(PART_COST_COL);
 		partCostCell.setCellStyle(right);
 		partCostCell.setCellValue("PART COST");
-		row.createCell(CAR_DATA_COL).setCellValue("LABOR COST");
+		Cell laborCostCell = row.createCell(CAR_DATA_COL);
+		laborCostCell.setCellStyle(right);
+		laborCostCell.setCellValue("LABOR COST");
 		
 		int partRow = 8;
 		int partCount = 1;
@@ -327,17 +342,17 @@ public class EstimateController {
 		
 		// set column widths last
 		sheet.setColumnWidth(PART_COUNT_COL, 5 * 256);
-		sheet.setColumnWidth(CUST_INFO_COL, 20 * 256);
+		sheet.setColumnWidth(CUST_INFO_COL, 15 * 256);
 		sheet.setColumnWidth(2, 1 * 256);
-		sheet.setColumnWidth(CUST_DATA_COL, 30 * 256);
+		sheet.setColumnWidth(CUST_DATA_COL, 20 * 256);
 		sheet.setColumnWidth(4, 1 * 256);
-		sheet.setColumnWidth(PART_COST_COL, 30 * 256);
+		sheet.setColumnWidth(PART_COST_COL, 25 * 256);
 		sheet.setColumnWidth(6, 1 * 256);
 		sheet.setColumnWidth(AMD_INFO_COL, 30 * 256);
 		sheet.setColumnWidth(8, 1 * 256);
-		sheet.setColumnWidth(CAR_INFO_COL, 20 * 256);
+		sheet.setColumnWidth(CAR_INFO_COL, 15 * 256);
 		sheet.setColumnWidth(10, 1 * 256);
-		sheet.setColumnWidth(CAR_DATA_COL, 30 * 256);
+		sheet.setColumnWidth(CAR_DATA_COL, 20 * 256);
 		
 		// empty line above part list
 		sheet.addMergedRegion(new CellRangeAddress(
@@ -357,6 +372,18 @@ public class EstimateController {
 		            AMD_INFO_COL  //last column  (0-based)
 		    ));
 		}
+		
+		for (int j = 1; j < sheet.getPhysicalNumberOfRows(); j++) {
+	        Row r = sheet.getRow(j);
+	        if (r != null) {
+	            for (int i = 0; i < r.getPhysicalNumberOfCells(); i++) {
+	                Cell cell = r.getCell(i);
+	                if (cell != null) {
+	                	cell.getCellStyle().setFont(font);
+	                }
+	            }
+	        }
+	    }
 		
 		return wb;
 	}
