@@ -152,6 +152,8 @@ public class EstimateController {
 		sb.append("\n\nComments:\n\n");
 		sb.append(estimate.getComments() == null ? "None" : estimate.getComments());
 		sb.append("\n\n\n");
+		
+		String fileName = "estimate_" + estimate.getModel() + "_" + String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS", new Date());
 
 		try {
 			Workbook wb = createWorkbook(estimate);
@@ -168,7 +170,7 @@ public class EstimateController {
 			helper.setReplyTo(properties.getAdminEmail());
 			helper.setSubject("Vehicle Estimate");
 			helper.setText(sb.toString());
-			helper.addAttachment("estimate.xlsx", new ByteArrayDataSource(bos.toByteArray(), "application/vnd.ms-excel"));
+			helper.addAttachment(fileName, new ByteArrayDataSource(bos.toByteArray(), "application/vnd.ms-excel"));
 			mailSender.send(mail);
 		} catch (Exception e) {
 			LOGGER.error("Failed to send estimate email", e);
