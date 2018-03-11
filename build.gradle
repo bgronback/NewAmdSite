@@ -55,6 +55,12 @@ def config = System.getProperty('config', 'application.properties')
 group = 'amd'
 project.version = '1.0.0' + timestamp
 
+task deploy(type: Copy) {
+    from "/root/videos"
+    into "./src/main/resources/static/videos"
+    include "*.mp4"
+}
+
 task stage(type: Copy, dependsOn: ['bootRepackage']) {
     from ("./build/libs/com.amdinstallation.service.web-${project.version}.jar")
     from (sourceSets.main.resources.srcDirs) {
@@ -64,7 +70,7 @@ task stage(type: Copy, dependsOn: ['bootRepackage']) {
     into "./build/docker"
 }
 
-task stageDocker(type: Dockerfile) {
+task stageDocker(type: Dockerfile, dependsOn: ['deploy']) {
     dependsOn 'stage'
     destFile = project.file("build/docker/Dockerfile")
     from "java:8"
