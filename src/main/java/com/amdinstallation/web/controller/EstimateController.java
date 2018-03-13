@@ -153,7 +153,7 @@ public class EstimateController {
 		sb.append(estimate.getComments() == null ? "None" : estimate.getComments());
 		sb.append("\n\n\n");
 		
-		String fileName = "estimate_" + estimate.getModel() + "_" + String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS", new Date());
+		String fileName = "estimate_" + estimate.getModel() + "_" + String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS", new Date()) + ".xlsx";
 
 		try {
 			Workbook wb = createWorkbook(estimate);
