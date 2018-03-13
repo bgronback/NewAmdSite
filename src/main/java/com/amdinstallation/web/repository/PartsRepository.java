@@ -12,4 +12,6 @@ public interface PartsRepository extends MongoRepository<Part, String> {
 	List<Part> findByApplicationsMakeAndApplicationsModelOrderByName(Make make, Model model);
 
 	List<Part> findByNameContainingIgnoreCase(String name);
+
+	Part findByPartNumber(String partNumber);
 }

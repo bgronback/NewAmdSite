@@ -47,7 +47,7 @@ public class PricingTransformer {
 				Part part = new Part();
 				Row row = iterator.next();
 				part.setBrand(row.getCell(0).getStringCellValue());
-				part.setPartNumber(row.getCell(1).getStringCellValue());
+				part.setPartNumber(row.getCell(1).getStringCellValue().trim());
 				part.setLabor(labor.get(part.getPartNumber()));
 				part.setName(row.getCell(2).getStringCellValue());
 				part.setPrice(new BigDecimal(row.getCell(3).getNumericCellValue()).setScale(2, BigDecimal.ROUND_UP));
@@ -133,10 +133,10 @@ public class PricingTransformer {
 				BigDecimal laborPrice = BigDecimal.ZERO;
 				if (labor != null) {
 					// add 3%
-//					laborPrice = new BigDecimal(labor.getNumericCellValue() * 1.03);
+					laborPrice = new BigDecimal(labor.getNumericCellValue()/* * 1.03*/);
 				}
 				laborPrice = laborPrice.setScale(2, BigDecimal.ROUND_UP);
-				result.put(part.getStringCellValue(), laborPrice);
+				result.put(part.getStringCellValue().trim(), laborPrice);
 			}
 			workbook.close();
 		} catch (FileNotFoundException e) {

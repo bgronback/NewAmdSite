@@ -69,7 +69,29 @@ public class PartsController {
 	@PostMapping("/list")
 	public @ResponseStatus(HttpStatus.OK) String loadParts(@RequestBody List<Part> parts) {
 		LOGGER.debug("Received parts list: " + parts.size());
-		repository.save(parts);
-		return "Loaded";
+		if (repository.count() == 0) {
+			// simply save all
+			repository.save(parts);
+			return "Loaded all new parts";
+		} else {
+			for (Part part : parts) {
+				Part existing = repository.findByPartNumber(part.getPartNumber());
+				if (existing == null) {
+					repository.save(part);
+					LOGGER.debug("Saved new part: " + part.getPartNumber());
+				} else {
+					existing.setApplications(part.getApplications());
+					existing.setBrand(part.getBrand());
+					existing.setDescription(part.getDescription());
+					existing.setImage(part.getImage());
+					existing.setLabor(part.getLabor());
+					existing.setName(part.getName());
+					existing.setPartNumber(part.getPartNumber());
+					existing.setPrice(part.getPrice());
+					LOGGER.debug("Updated part: " + part.getPartNumber());
+				}
+			}
+			return "Updated all parts";
+		}
 	}
 }
