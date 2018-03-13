@@ -88,6 +88,7 @@ public class PartsController {
 					existing.setName(part.getName());
 					existing.setPartNumber(part.getPartNumber());
 					existing.setPrice(part.getPrice());
+					repository.save(existing);
 					LOGGER.debug("Updated part: " + part.getPartNumber());
 				}
 			}
