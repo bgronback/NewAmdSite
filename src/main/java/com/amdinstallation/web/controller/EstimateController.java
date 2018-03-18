@@ -1,15 +1,9 @@
 package com.amdinstallation.web.controller;
 
 import java.io.ByteArrayOutputStream;
-import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.mail.internet.MimeMessage;
@@ -95,66 +89,28 @@ public class EstimateController {
 		sb.append(estimate.getEmail());
 		sb.append("\nphone: ");
 		sb.append(estimate.getPhone() == null ? "" : estimate.getPhone());
-		sb.append("\n\nItems:\n\n");
-		sb.append("Part Number, Price, Labor, Name\n");
-		List<Part> items = estimate.getParts();
-		Collections.sort(items, new Comparator<Part>() {
-
-			@Override
-			public int compare(Part o1, Part o2) {
-				return o1.getPartNumber().compareTo(o2.getPartNumber());
-			}
-		});
-
-		BigDecimal partsTotal = BigDecimal.ZERO;
-		BigDecimal laborTotal = BigDecimal.ZERO;
-
-		for (Part item : items) {
-			sb.append(item.getPartNumber());
-			sb.append(", ");
-			partsTotal = partsTotal.add(item.getPrice() == null ? BigDecimal.ZERO : item.getPrice());
-			laborTotal = laborTotal.add(item.getLabor() == null ? BigDecimal.ZERO : item.getLabor());
-			sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(item.getPrice() == null ? BigDecimal.ZERO : item.getPrice()));
-			sb.append(", ");
-			sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(item.getLabor() == null ? BigDecimal.ZERO : item.getLabor()));
-			sb.append(", ");
-			sb.append(item.getName());
-			sb.append("\n");
-		}
-		BigDecimal materials = laborTotal.multiply(new BigDecimal(0.10));
-		BigDecimal tax = partsTotal.multiply(new BigDecimal(0.04));
-		sb.append("\n\nParts: ");
-		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(partsTotal));
-		sb.append("\nLabor: ");
-		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(laborTotal));
-		sb.append("\nMaterials: ");
-		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(materials));
-
-		BigDecimal servicesTotal = BigDecimal.ZERO;
-
-		for (Service item : estimate.getServices()) {
-			sb.append(item.getServiceNumber());
-			sb.append(", ");
-			servicesTotal = servicesTotal.add(item.getPrice() == null ? BigDecimal.ZERO : item.getPrice());
-			sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(item.getPrice() == null ? BigDecimal.ZERO : item.getPrice()));
-			sb.append(", ");
-			sb.append(item.getName());
-			sb.append("\n");
-		}
-		sb.append("\n\nServices: ");
-		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(servicesTotal));
-
-		sb.append("\nSales Tax: ");
-		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(tax));
-		sb.append("\n\nTotal: ");
-		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(partsTotal.add(laborTotal).add(materials).add(servicesTotal).add(tax)));
-
 		sb.append("\n\nComments:\n\n");
 		sb.append(estimate.getComments() == null ? "None" : estimate.getComments());
 		sb.append("\n\n\n");
 		
 		String fileName = "estimate_" + estimate.getModel() + "_" + String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS", new Date()) + ".xlsx";
 
+		// Simple reply to customer, no pricing detail
+		try {
+			MimeMessage mail = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+			helper.setTo(properties.getEstimateEmail());
+			helper.setCc(estimate.getEmail());
+			helper.setBcc("richard.gronback@gmail.com");
+			helper.setFrom(properties.getAdminEmail(), properties.getAdminEmailName());
+			helper.setReplyTo(properties.getAdminEmail());
+			helper.setSubject("Vehicle Estimate Submitted");
+			helper.setText(sb.toString());
+			mailSender.send(mail);
+		} catch (Exception e) {
+			LOGGER.error("Failed to send estimate email", e);
+		}
+		
 		try {
 			Workbook wb = createWorkbook(estimate);
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -163,8 +119,7 @@ public class EstimateController {
 			
 			MimeMessage mail = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mail, true);
-			helper.setTo(properties.getEstimateEmail());
-			helper.setCc(estimate.getEmail());
+			helper.setTo(estimate.getEmail());
 			helper.setBcc("richard.gronback@gmail.com");
 			helper.setFrom(properties.getAdminEmail(), properties.getAdminEmailName());
 			helper.setReplyTo(properties.getAdminEmail());
