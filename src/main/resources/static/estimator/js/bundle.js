@@ -60887,22 +60887,26 @@
 	    _id: 0,
 	    serviceNumber: 'MB-001',
 	    name: 'Media blast and epoxy seal',
-	    price: 850.00
+	    price: 0.00,
+	    labor: 850.00
 	}, {
 	    _id: 1,
 	    serviceNumber: 'DR-001-L',
 	    name: 'Door Re-skin (Left)',
-	    price: 275.00
+	    price: 0.00,
+	    labor: 275.00
 	}, {
 	    _id: 2,
 	    serviceNumber: 'DR-001-R',
 	    name: 'Door Re-skin (Right)',
-	    price: 275.00
+	    price: 0.00,
+	    labor: 275.00
 	}, {
 	    _id: 3,
 	    serviceNumber: 'HR-001',
 	    name: 'Door Hinge Rebuild (all)',
-	    price: 150.00
+	    price: 0.00,
+	    labor: 150.00
 	}];
 
 	var BLANK_PART = exports.BLANK_PART = {
@@ -73032,16 +73036,16 @@
 	                return a + b;
 	            }, 0).toFixed(2) : 0.00;
 	            var servicesTotal = services ? services.map(function (p) {
-	                return p.price;
-	            }).reduce(function (a, b) {
-	                return a + b;
-	            }, 0).toFixed(2) : 0.00;
-	            var laborTotal = parts ? parts.map(function (p) {
 	                return p.labor;
 	            }).reduce(function (a, b) {
 	                return a + b;
 	            }, 0).toFixed(2) : 0.00;
-	            var total = (parseFloat(partsTotal) + parseFloat(servicesTotal) + parseFloat(laborTotal)).toFixed(2);
+	            var laborTotal = (parseFloat(servicesTotal) + parseFloat(parts ? parts.map(function (p) {
+	                return p.labor;
+	            }).reduce(function (a, b) {
+	                return a + b;
+	            }, 0).toFixed(2) : 0.00)).toFixed(2);
+	            var total = (parseFloat(partsTotal) + parseFloat(laborTotal)).toFixed(2);
 	            var materialTotal = (laborTotal * 0.10).toFixed(2); // TODO make percentage configurable
 	            var tax = (partsTotal * 0.04).toFixed(2); // TODO make percentage configurable
 	            var grandTotal = (parseFloat(total) + parseFloat(materialTotal) + parseFloat(tax)).toFixed(2);
@@ -73149,17 +73153,17 @@
 	                                _react2.default.createElement(
 	                                    _Table.TableRowColumn,
 	                                    { style: { textAlign: 'right', width: 100 } },
-	                                    row.price.toFixed(2)
-	                                ),
-	                                _react2.default.createElement(
-	                                    _Table.TableRowColumn,
-	                                    { style: { textAlign: 'right', width: 120 } },
 	                                    0.00.toFixed(2)
 	                                ),
 	                                _react2.default.createElement(
 	                                    _Table.TableRowColumn,
+	                                    { style: { textAlign: 'right', width: 120 } },
+	                                    row.labor.toFixed(2)
+	                                ),
+	                                _react2.default.createElement(
+	                                    _Table.TableRowColumn,
 	                                    { style: { textAlign: 'right', width: 100 } },
-	                                    row.price.toFixed(2)
+	                                    row.labor.toFixed(2)
 	                                )
 	                            );
 	                        }) : _react2.default.createElement(

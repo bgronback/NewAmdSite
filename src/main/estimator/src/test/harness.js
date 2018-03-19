@@ -42,25 +42,29 @@ export const DEV_SERVICES = [
         _id: 0,
         serviceNumber: 'MB-001',
         name: 'Media blast and epoxy seal',
-        price: 850.00
+        price: 0.00,
+        labor: 850.00
     },
     {
         _id: 1,
         serviceNumber: 'DR-001-L',
         name: 'Door Re-skin (Left)',
-        price: 275.00
+        price: 0.00,
+        labor: 275.00
     },
     {
         _id: 2,
         serviceNumber: 'DR-001-R',
         name: 'Door Re-skin (Right)',
-        price: 275.00
+        price: 0.00,
+        labor: 275.00
     },
     {
         _id: 3,
         serviceNumber: 'HR-001',
         name: 'Door Hinge Rebuild (all)',
-        price: 150.00
+        price: 0.00,
+        labor: 150.00
     }
 ];
 

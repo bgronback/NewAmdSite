@@ -207,9 +207,9 @@ export class Home extends React.Component {
         this.state.services.forEach((selection) => { services.push(DEV_SERVICES[selection])});
 
         const partsTotal = parts ? parts.map(p => p.price).reduce((a, b) => (a + b), 0).toFixed(2) : 0.00;
-        const servicesTotal = services ? services.map(p => p.price).reduce((a, b) => (a + b), 0).toFixed(2) : 0.00;
-        const laborTotal = parts ? parts.map(p => p.labor).reduce((a, b) => (a + b), 0).toFixed(2) : 0.00;
-        const total = (parseFloat(partsTotal) + parseFloat(servicesTotal) + parseFloat(laborTotal)).toFixed(2);
+        const servicesTotal = services ? services.map(p => p.labor).reduce((a, b) => (a + b), 0).toFixed(2) : 0.00;
+        const laborTotal = (parseFloat(servicesTotal) + parseFloat((parts ? parts.map(p => p.labor).reduce((a, b) => (a + b), 0).toFixed(2) : 0.00))).toFixed(2);
+        const total = (parseFloat(partsTotal) + parseFloat(laborTotal)).toFixed(2);
         const materialTotal = (laborTotal * 0.10).toFixed(2); // TODO make percentage configurable
         const tax = (partsTotal * 0.04).toFixed(2); // TODO make percentage configurable
         const grandTotal = (parseFloat(total) + parseFloat(materialTotal) + parseFloat(tax)).toFixed(2);
@@ -241,9 +241,9 @@ export class Home extends React.Component {
                                 <TableRow key={index}>
                                     <TableRowColumn style={{ width: 150}}>{row.serviceNumber}</TableRowColumn>
                                     <TableRowColumn style={{ width: '90%' }}>{row.name}</TableRowColumn>
-                                    <TableRowColumn style={{textAlign: 'right', width: 100}}>{row.price.toFixed(2)}</TableRowColumn>
-                                    <TableRowColumn style={{textAlign: 'right', width: 120}}>{0.00.toFixed(2)}</TableRowColumn>
-                                    <TableRowColumn style={{textAlign: 'right', width: 100}}>{(row.price).toFixed(2)}</TableRowColumn>
+                                    <TableRowColumn style={{textAlign: 'right', width: 100}}>{0.00.toFixed(2)}</TableRowColumn>
+                                    <TableRowColumn style={{textAlign: 'right', width: 120}}>{row.labor.toFixed(2)}</TableRowColumn>
+                                    <TableRowColumn style={{textAlign: 'right', width: 100}}>{(row.labor).toFixed(2)}</TableRowColumn>
                                 </TableRow>
                             )) : <TableRow key={0}>
                                 <TableRowColumn>No services selected</TableRowColumn></TableRow>}
