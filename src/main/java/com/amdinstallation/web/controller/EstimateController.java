@@ -119,10 +119,8 @@ public class EstimateController {
 			
 			MimeMessage mail = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mail, true);
-			helper.setTo(estimate.getEmail());
 			helper.setBcc("richard.gronback@gmail.com");
 			helper.setFrom(properties.getAdminEmail(), properties.getAdminEmailName());
-			helper.setReplyTo(properties.getAdminEmail());
 			helper.setSubject("Vehicle Estimate");
 			helper.setText(sb.toString());
 			helper.addAttachment(fileName, new ByteArrayDataSource(bos.toByteArray(), "application/vnd.ms-excel"));
