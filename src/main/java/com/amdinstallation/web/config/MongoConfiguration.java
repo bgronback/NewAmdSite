@@ -1,5 +1,7 @@
 package com.amdinstallation.web.config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +42,7 @@ public class MongoConfiguration extends AbstractMongoConfiguration {
 	public Mongo mongo() throws Exception {
 		MongoCredential credential = MongoCredential.createScramSha1Credential(settings.getUser(), settings.getDatabase(), settings.getPassword().toCharArray());
 	    ServerAddress serverAddress = new ServerAddress(settings.getHost(), settings.getPort());
-	    return new MongoClient(serverAddress/*, Arrays.asList(credential)*/); 
+	    return new MongoClient(serverAddress, Arrays.asList(credential)); 
 	}
 
 }

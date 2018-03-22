@@ -14,11 +14,32 @@ services:
 #      - "/certs:/certs"
 
   mongo:
-    image: mongo:latest
+    image: aashreys/mongo-auth:latest
+    hostname: mongo
+    environment:
+      - AUTH=yes
+      - MONGODB_ADMIN_USER=admin
+      - MONGODB_ADMIN_PASS=notasecret
+      - MONGODB_APPLICATION_DATABASE=amd
+      - MONGODB_APPLICATION_USER=amd
+      - MONGODB_APPLICATION_PASS=amd@dmin
     restart: always
-    container_name: mongo
     ports:
       - "27017:27017"
+      
+  mongo-ui:
+    image: mongo-express:latest
+    hostname: mongo-ui
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=notasecret
+      - ME_CONFIG_BASICAUTH_USERNAME=amd
+      - ME_CONFIG_BASICAUTH_PASSWORD=amd@dmin
+    restart: always
+    ports:
+      - "8081:8081"
   
   amd:
     image: localhost:5000/amd/com.amdinstallation.service.web:latest
@@ -31,12 +52,4 @@ services:
       - mongo
     environment:
       - LOGGING_LEVEL=DEBUG
-  
-  mongo-ui:
-    image: mongo-express:latest
-    restart: always
-    container_name: mongo-ui
-    ports:
-      - "8081:8081"
-    links:
-      - mongo
+ 

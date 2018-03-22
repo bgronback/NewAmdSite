@@ -11,7 +11,7 @@ import com.amdinstallation.web.model.Part;
 public interface PartsRepository extends MongoRepository<Part, String> {
 	List<Part> findByApplicationsMakeAndApplicationsModelOrderByName(Make make, Model model);
 
-	List<Part> findByNameContainingIgnoreCase(String name);
+	List<Part> findByPartNumberContainingIgnoreCase(String name);
 
 	Part findByPartNumber(String partNumber);
 }

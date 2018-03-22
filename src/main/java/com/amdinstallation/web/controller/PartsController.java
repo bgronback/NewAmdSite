@@ -45,7 +45,7 @@ public class PartsController {
 	
 	@RequestMapping("/search/findByNameContaining")
 	public List<Part> findByNameContaining(@RequestParam String name) {
-		return repository.findByNameContainingIgnoreCase(name);
+		return repository.findByPartNumberContainingIgnoreCase(name);
 	}
 	
 	@RequestMapping("/{id}/doc")
