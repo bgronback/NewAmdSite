@@ -78028,7 +78028,9 @@
 	            });
 	            var services = [];
 	            this.state.services.forEach(function (selection) {
-	                services.push(DEV_SERVICES[selection]);
+	                services.push(his.props.estimate.parts.filter(function (p) {
+	                    return !p.price;
+	                })[selection]);
 	            });
 
 	            return new Promise(function (resolve, reject) {
