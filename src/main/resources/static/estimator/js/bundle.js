@@ -78028,7 +78028,7 @@
 	            });
 	            var services = [];
 	            this.state.services.forEach(function (selection) {
-	                services.push(his.props.estimate.parts.filter(function (p) {
+	                services.push(_this8.props.estimate.parts.filter(function (p) {
 	                    return !p.price;
 	                })[selection]);
 	            });

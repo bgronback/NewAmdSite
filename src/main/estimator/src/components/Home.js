@@ -370,7 +370,7 @@ export class Home extends React.Component {
         const parts = [];
         this.state.selected.forEach((selection) => { parts.push(this.props.estimate.parts[selection])});
         const services = [];
-        this.state.services.forEach((selection) => { services.push(his.props.estimate.parts.filter(p => !p.price)[selection])});
+        this.state.services.forEach((selection) => { services.push(this.props.estimate.parts.filter(p => !p.price)[selection])});
 
         return new Promise((resolve, reject) => {
             dispatch({
