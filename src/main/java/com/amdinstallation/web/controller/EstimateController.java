@@ -26,7 +26,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.assertj.core.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,7 +125,8 @@ public class EstimateController {
 			
 			MimeMessage mail = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mail, true);
-			helper.setBcc(Arrays.array("richard.gronback@gmail.com", "billc@chpvideos.com", "bill@amdinstallation.com"));
+			String[] bccs = {"richard.gronback@gmail.com", "billc@chpvideos.com", "bill@amdinstallation.com"};
+			helper.setBcc(bccs);
 			helper.setFrom(properties.getAdminEmail(), properties.getAdminEmailName());
 			helper.setSubject("Vehicle Estimate");
 			helper.setText(sb.toString() + "\n\n" + getPricingDetail(estimate));
