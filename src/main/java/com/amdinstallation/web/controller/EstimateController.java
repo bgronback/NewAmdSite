@@ -355,7 +355,7 @@ public class EstimateController {
 		laborTotal.setCellFormula("SUM(J9:J" + partRow + ")");
 		
 		row = sheet.createRow(partRow + 2);
-		Cell tax = row.createCell(LABOR_COST_COL);
+		Cell tax = row.createCell(AMD_INFO_COL);
 		tax.setCellStyle(right);
 		tax.setCellValue("Tax");
 		Cell laborCost = row.createCell(PART_COST_COL);
