@@ -4,5 +4,6 @@ export default [
     {text: "OER", value: "OER"},
     {text: "OPGI", value: "OPGI"},
     {text: "Triplus", value: "TRIPLUS"},
-    {text: "X-Parts", value: "X-PARTS"}
+    {text: "X-Parts", value: "X-PARTS"},
+    {text: "Dynacorn", value: "DYNACORN"}
 ];

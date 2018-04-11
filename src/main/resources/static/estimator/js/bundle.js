@@ -101554,7 +101554,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	var _default = [{ text: "AMD", value: "AMD" }, { text: "CHQ", value: "CHQ" }, { text: "OER", value: "OER" }, { text: "OPGI", value: "OPGI" }, { text: "Triplus", value: "TRIPLUS" }, { text: "X-Parts", value: "X-PARTS" }];
+	var _default = [{ text: "AMD", value: "AMD" }, { text: "CHQ", value: "CHQ" }, { text: "OER", value: "OER" }, { text: "OPGI", value: "OPGI" }, { text: "Triplus", value: "TRIPLUS" }, { text: "X-Parts", value: "X-PARTS" }, { text: "Dynacorn", value: "DYNACORN" }];
 	exports.default = _default;
 	;
 

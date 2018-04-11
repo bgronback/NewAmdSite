@@ -128,7 +128,7 @@ public class EstimateController {
 			helper.setBcc("richard.gronback@gmail.com");
 			helper.setFrom(properties.getAdminEmail(), properties.getAdminEmailName());
 			helper.setSubject("Vehicle Estimate");
-			helper.setText(sb.toString() + "\n\n" + getPricingDetail(estimate));
+			helper.setText(sb.toString() + getPricingDetail(estimate));
 			helper.addAttachment(fileName, new ByteArrayDataSource(bos.toByteArray(), "application/vnd.ms-excel"));
 			mailSender.send(mail);
 		} catch (Exception e) {
@@ -193,6 +193,7 @@ public class EstimateController {
 		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(tax));
 		sb.append("\n\nTotal: ");
 		sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(partsTotal.add(laborTotal).add(materials).add(servicesTotal).add(tax)));
+		sb.append("\n\n");
 		return sb.toString();
 	}
 
@@ -210,7 +211,7 @@ public class EstimateController {
 	    style.setFont(font);
 		
 		CellStyle dateStyle = wb.createCellStyle();
-		dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("mm/dd/yyyy hh:mm"));
+		dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("mm/dd/yyyy"));
 		dateStyle.setAlignment(HorizontalAlignment.LEFT);
 		dateStyle.setFont(font);
 		
@@ -248,7 +249,7 @@ public class EstimateController {
 		row.createCell(CUST_INFO_COL).setCellValue("Name");
 		row.createCell(CUST_DATA_COL).setCellValue(estimate.getName());
 		Cell titleCell = row.createCell(AMD_INFO_COL);
-		titleCell.setCellValue("AMD Installation");
+		titleCell.setCellValue("AMD Installation Center");
 		titleCell.setCellStyle(titleStyle);
 		row.createCell(CAR_INFO_COL).setCellValue("Date");
 		Cell dateCell = row.createCell(CAR_DATA_COL);
@@ -299,7 +300,7 @@ public class EstimateController {
 		Cell numCell = row.createCell(PART_COUNT_COL);
 		numCell.setCellStyle(right);
 		numCell.setCellValue("#");
-		row.createCell(PART_NO_COL).setCellValue("CATALOG NO");
+		row.createCell(PART_NO_COL).setCellValue("ITEM #");
 		row.createCell(PART_NAME_COL).setCellValue("DESCRIPTION");
 		Cell partCostCell = row.createCell(PART_COST_COL);
 		partCostCell.setCellStyle(right);
@@ -332,6 +333,15 @@ public class EstimateController {
 			price.setCellValue(item.getPrice() == null ? 0d : item.getPrice().doubleValue());
 		}
 		
+		row = sheet.createRow(partRow++);
+		Cell additional1 = row.createCell(AMD_INFO_COL);
+		additional1.setCellValue("Deposits");
+		additional1.setCellStyle(right);
+		
+		row = sheet.createRow(partRow++);
+		row = sheet.createRow(partRow++);
+		row = sheet.createRow(partRow++);
+		
 		row = sheet.createRow(partRow);
 		Cell subTotals = row.createCell(AMD_INFO_COL);
 		subTotals.setCellValue("Subtotal");
@@ -344,10 +354,10 @@ public class EstimateController {
 		laborTotal.setCellFormula("SUM(J9:J" + partRow + ")");
 		
 		row = sheet.createRow(partRow + 2);
-		Cell tax = row.createCell(PART_COST_COL);
+		Cell tax = row.createCell(LABOR_COST_COL);
 		tax.setCellStyle(right);
 		tax.setCellValue("Tax");
-		Cell laborCost = row.createCell(LABOR_COST_COL);
+		Cell laborCost = row.createCell(PART_COST_COL);
 		laborCost.setCellFormula("H" + (partRow + 1) + "*0.07"); // FIXME obtain tax rate
 		laborCost.setCellStyle(currency);
 		
