@@ -125,7 +125,8 @@ public class EstimateController {
 			
 			MimeMessage mail = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mail, true);
-			helper.setBcc("richard.gronback@gmail.com");
+			String[] bccs = {"richard.gronback@gmail.com", "billc@chpvideos.com", "bill@amdinstallation.com"};
+			helper.setBcc(bccs);
 			helper.setFrom(properties.getAdminEmail(), properties.getAdminEmailName());
 			helper.setSubject("Vehicle Estimate");
 			helper.setText(sb.toString() + getPricingDetail(estimate));

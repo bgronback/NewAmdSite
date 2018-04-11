@@ -40,6 +40,10 @@ public class PartsController {
 				.filter(part -> part.getApplications().stream()
 						.filter(app -> year >= app.getFrom() && year <= app.getTo()).findAny().isPresent())
 				.collect(Collectors.toList());
+		
+		// add all services to the list
+		List<Part> services = repository.findByPrice(null);
+		byYear.addAll(services);
 		return new ResponseEntity<List<Part>>(byYear, HttpStatus.OK);
 	}
 	

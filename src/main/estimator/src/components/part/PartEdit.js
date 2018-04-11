@@ -76,18 +76,21 @@ export class PartEdit extends React.Component {
                         <Tab value="part" label="Part">
                             <Col>
                                 <Row>
-                                    <Col sm={4}>
+                                    <Col sm={3}>
                                         <Field component={SelectInput} label="Brand" name="brand">
                                             {BRANDS.map((type, index) => {
                                                 return <MenuItem key={index} value={type.value} primaryText={type.text}/>
                                             })}
                                         </Field>
                                     </Col>
-                                    <Col sm={4}>
+                                    <Col sm={3}>
                                         <Field component={TextInput} name="partNumber" label="Part Number"/>
                                     </Col>
-                                    <Col sm={4}>
+                                    <Col sm={3}>
                                         <Field component={NumberInput} name="price" label="Price"/>
+                                    </Col>
+                                    <Col sm={3}>
+                                        <Field component={NumberInput} name="labor" label="Labor"/>
                                     </Col>
                                 </Row>
                                 <Row>
@@ -224,6 +227,7 @@ export class PartEdit extends React.Component {
                     partNumber: values.partNumber,
                     name: values.name,
                     price: values.price,
+                    labor: values.labor,
                     description: values.description,
                     image: values.image,
                     applications: values.applications

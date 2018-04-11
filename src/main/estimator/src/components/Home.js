@@ -18,7 +18,6 @@ import Snackbar from 'material-ui/Snackbar';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
 import TextInput from "./Widgets/FormFields/material/TextInput"
 import TextAreaInput from "./Widgets/FormFields/material/TextAreaInput"
-import { DEV_SERVICES } from '../test/harness'
 import normalizePhone from '../util/normalizePhone'
 
 export class Home extends React.Component {
@@ -160,22 +159,23 @@ export class Home extends React.Component {
     }
 
     renderSelectServices() {
+        var parts = this.props.estimate.parts;
         return <div className="container-fluid">
             <h4 style={{textAlign: 'center', marginTop: 10}}>Select additional services for your car</h4>
             <Table onRowSelection={(selection) => {this.handleServiceRowSelection(selection)}} multiSelectable={true} wrapperStyle={{ maxHeight: '400px' }}>
                 <TableHeader enableSelectAll={false} displaySelectAll={false}>
                     <TableRow>
                         <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 150 }}>Service</TableHeaderColumn>
-                        <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 100 }}>Price</TableHeaderColumn>
+                        <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: 100 }}>Labor</TableHeaderColumn>
                         <TableHeaderColumn style={{ whiteSpace: 'nowrap', width: '99%' }}>Name</TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
                 <TableBody showRowHover={true} deselectOnClickaway={false}>
-                    {DEV_SERVICES ? DEV_SERVICES.map((row, index) => (
+                    {parts ? parts.filter(p => !p.price).map((row, index) => (
                         <TableRow key={index} selected={this.state.services.includes(index)}>
-                            <TableRowColumn style={{ whiteSpace: 'nowrap', width: 150 }}>{row.serviceNumber}</TableRowColumn>
-                            <TableRowColumn style={{ whiteSpace: 'nowrap', width: 100 }}>{row.price.toFixed(2)}</TableRowColumn>
-                            <TableRowColumn style={{ whiteSpace: 'nowrap', width: '99%' }}>{row.name}</TableRowColumn>
+                            <TableRowColumn style={{ whiteSpace: 'nowrap', width: 150 }}>{row.partNumber}</TableRowColumn>
+                            <TableRowColumn style={{ whiteSpace: 'nowrap', width: 100 }}>{row.labor.toFixed(2)}</TableRowColumn>
+                            <TableRowColumn style={{ whiteSpace: 'nowrap', width: '99%' }} title={row.description}>{row.name}</TableRowColumn>
                         </TableRow>
                     )) : <TableRow key={0} selectable={false}>
                         <TableRowColumn>No services found</TableRowColumn></TableRow>}
@@ -186,13 +186,13 @@ export class Home extends React.Component {
 
     renderTable(parts) {
         return <TableBody showRowHover={true} deselectOnClickaway={false}>
-            {parts ? parts.map((row, index) => (
+            {parts ? parts.filter(p => p.price).map((row, index) => (
                 <TableRow key={index} selected={this.state.services.includes(index)}>
                     <TableRowColumn style={{ whiteSpace: 'nowrap', width: 50 }}><img src={row.image} alt={row.name} width="50"/></TableRowColumn>
                     <TableRowColumn style={{ whiteSpace: 'nowrap', width: 100 }}>{row.brand}</TableRowColumn>
                     <TableRowColumn style={{ whiteSpace: 'nowrap', width: 150 }}>{row.partNumber}</TableRowColumn>
                     <TableRowColumn style={{ whiteSpace: 'nowrap', width: 100 }}>{row.price.toFixed(2)}</TableRowColumn>
-                    <TableRowColumn style={{ whiteSpace: 'nowrap', width: '99%' }}>{row.name}</TableRowColumn>
+                    <TableRowColumn style={{ whiteSpace: 'nowrap', width: '99%' }} title={row.description}>{row.name}</TableRowColumn>
                 </TableRow>
             )) : <TableRow key={0} selectable={false}>
                 <TableRowColumn>No records found</TableRowColumn></TableRow>}
@@ -204,7 +204,7 @@ export class Home extends React.Component {
         const parts = [];
         this.state.selected.forEach((selection) => { parts.push(this.props.estimate.parts[selection])});
         const services = [];
-        this.state.services.forEach((selection) => { services.push(DEV_SERVICES[selection])});
+        this.state.services.forEach((selection) => { services.push(this.props.estimate.parts.filter(p => !p.price)[selection])});
 
         const partsTotal = parts ? parts.map(p => p.price).reduce((a, b) => (a + b), 0).toFixed(2) : 0.00;
         const servicesTotal = services ? services.map(p => p.labor).reduce((a, b) => (a + b), 0).toFixed(2) : 0.00;
@@ -239,7 +239,7 @@ export class Home extends React.Component {
                                 <TableRowColumn>No parts selected</TableRowColumn></TableRow>}
                             {services ? services.map((row, index) => (
                                 <TableRow key={index}>
-                                    <TableRowColumn style={{ width: 150}}>{row.serviceNumber}</TableRowColumn>
+                                    <TableRowColumn style={{ width: 150}}>{row.partNumber}</TableRowColumn>
                                     <TableRowColumn style={{ width: '90%' }}>{row.name}</TableRowColumn>
                                     <TableRowColumn style={{textAlign: 'right', width: 100}}>{0.00.toFixed(2)}</TableRowColumn>
                                     <TableRowColumn style={{textAlign: 'right', width: 120}}>{row.labor.toFixed(2)}</TableRowColumn>
@@ -370,7 +370,7 @@ export class Home extends React.Component {
         const parts = [];
         this.state.selected.forEach((selection) => { parts.push(this.props.estimate.parts[selection])});
         const services = [];
-        this.state.services.forEach((selection) => { services.push(DEV_SERVICES[selection])});
+        this.state.services.forEach((selection) => { services.push(this.props.estimate.parts.filter(p => !p.price)[selection])});
 
         return new Promise((resolve, reject) => {
             dispatch({
