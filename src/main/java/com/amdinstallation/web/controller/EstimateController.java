@@ -41,7 +41,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.amdinstallation.web.config.AmdProperties;
 import com.amdinstallation.web.model.Estimate;
 import com.amdinstallation.web.model.Part;
-import com.amdinstallation.web.model.Service;
 
 @RestController
 @RequestMapping("/api/v1/estimates")
@@ -178,8 +177,8 @@ public class EstimateController {
 
 		BigDecimal servicesTotal = BigDecimal.ZERO;
 
-		for (Service item : estimate.getServices()) {
-			sb.append(item.getServiceNumber());
+		for (Part item : estimate.getServices()) {
+			sb.append(item.getPartNumber());
 			sb.append(", ");
 			servicesTotal = servicesTotal.add(item.getPrice() == null ? BigDecimal.ZERO : item.getPrice());
 			sb.append(NumberFormat.getCurrencyInstance(Locale.US).format(item.getPrice() == null ? BigDecimal.ZERO : item.getPrice()));
@@ -324,14 +323,14 @@ public class EstimateController {
 			labor.setCellStyle(currency);
 			labor.setCellValue(item.getLabor() == null ? 0d : item.getLabor().doubleValue());
 		}
-		for (Service item : estimate.getServices()) {
+		for (Part item : estimate.getServices()) {
 			row = sheet.createRow(partRow++);
 			row.createCell(PART_COUNT_COL).setCellValue(partCount++);
-			row.createCell(PART_NO_COL).setCellValue(item.getServiceNumber());
+			row.createCell(PART_NO_COL).setCellValue(item.getPartNumber());
 			row.createCell(PART_NAME_COL).setCellValue(item.getName());
 			Cell price = row.createCell(LABOR_COST_COL);
 			price.setCellStyle(currency);
-			price.setCellValue(item.getPrice() == null ? 0d : item.getPrice().doubleValue());
+			price.setCellValue(item == null ? 0d : item.getPrice().doubleValue());
 		}
 		
 		row = sheet.createRow(partRow++);

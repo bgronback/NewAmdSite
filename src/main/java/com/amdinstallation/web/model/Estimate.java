@@ -13,7 +13,7 @@ public class Estimate {
 	private String comments;
 	private Integer year;
 	private List<Part> parts;
-	private List<Service> services;
+	private List<Part> services;
 	
 	public Estimate() {
 		
@@ -84,11 +84,11 @@ public class Estimate {
 		this.comments = comments;
 	}
 
-	public List<Service> getServices() {
+	public List<Part> getServices() {
 		return services;
 	}
 
-	public void setServices(List<Service> services) {
+	public void setServices(List<Part> services) {
 		this.services = services;
 	}
 
